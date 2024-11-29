@@ -17,6 +17,11 @@
 		FFF8DE2B2CFA5F4200E5D2A7 /* IconTextOption.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE2A2CFA5F4200E5D2A7 /* IconTextOption.swift */; };
 		FFF8DE352CFA61F400E5D2A7 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE342CFA61F400E5D2A7 /* Extensions.swift */; };
 		FFF8DE372CFA667700E5D2A7 /* IconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE362CFA667700E5D2A7 /* IconTextView.swift */; };
+		FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE382CFA82D500E5D2A7 /* OptionsData.swift */; };
+		FFF8DE3E2CFA860B00E5D2A7 /* Garet-Heavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFF8DE3C2CFA85F700E5D2A7 /* Garet-Heavy.ttf */; };
+		FFF8DE3F2CFA860B00E5D2A7 /* Garet-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFF8DE3B2CFA85F700E5D2A7 /* Garet-Bold.ttf */; };
+		FFF8DE402CFA860B00E5D2A7 /* Garet-Book.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFF8DE3D2CFA85F700E5D2A7 /* Garet-Book.ttf */; };
+		FFF8DE462CFA886900E5D2A7 /* GaretW05-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = FFF8DE452CFA886900E5D2A7 /* GaretW05-Regular.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +37,11 @@
 		FFF8DE2A2CFA5F4200E5D2A7 /* IconTextOption.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTextOption.swift; sourceTree = "<group>"; };
 		FFF8DE342CFA61F400E5D2A7 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		FFF8DE362CFA667700E5D2A7 /* IconTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTextView.swift; sourceTree = "<group>"; };
+		FFF8DE382CFA82D500E5D2A7 /* OptionsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionsData.swift; sourceTree = "<group>"; };
+		FFF8DE3B2CFA85F700E5D2A7 /* Garet-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Garet-Bold.ttf"; sourceTree = "<group>"; };
+		FFF8DE3C2CFA85F700E5D2A7 /* Garet-Heavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Garet-Heavy.ttf"; sourceTree = "<group>"; };
+		FFF8DE3D2CFA85F700E5D2A7 /* Garet-Book.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Garet-Book.ttf"; sourceTree = "<group>"; };
+		FFF8DE452CFA886900E5D2A7 /* GaretW05-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "GaretW05-Regular.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -73,6 +83,7 @@
 				FFF8DE122CFA5A5200E5D2A7 /* Assets.xcassets */,
 				FFF8DE142CFA5A5200E5D2A7 /* LaunchScreen.storyboard */,
 				FFF8DE172CFA5A5200E5D2A7 /* Info.plist */,
+				FFF8DE3A2CFA85E800E5D2A7 /* Fonts */,
 			);
 			path = LockedIn;
 			sourceTree = "<group>";
@@ -98,6 +109,7 @@
 			isa = PBXGroup;
 			children = (
 				FFF8DE2A2CFA5F4200E5D2A7 /* IconTextOption.swift */,
+				FFF8DE382CFA82D500E5D2A7 /* OptionsData.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -117,6 +129,17 @@
 				FFF8DE362CFA667700E5D2A7 /* IconTextView.swift */,
 			);
 			path = AccountSetup;
+			sourceTree = "<group>";
+		};
+		FFF8DE3A2CFA85E800E5D2A7 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				FFF8DE3B2CFA85F700E5D2A7 /* Garet-Bold.ttf */,
+				FFF8DE3D2CFA85F700E5D2A7 /* Garet-Book.ttf */,
+				FFF8DE3C2CFA85F700E5D2A7 /* Garet-Heavy.ttf */,
+				FFF8DE452CFA886900E5D2A7 /* GaretW05-Regular.ttf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -179,6 +202,10 @@
 			files = (
 				FFF8DE132CFA5A5200E5D2A7 /* Assets.xcassets in Resources */,
 				FFF8DE162CFA5A5200E5D2A7 /* Base in Resources */,
+				FFF8DE462CFA886900E5D2A7 /* GaretW05-Regular.ttf in Resources */,
+				FFF8DE3E2CFA860B00E5D2A7 /* Garet-Heavy.ttf in Resources */,
+				FFF8DE3F2CFA860B00E5D2A7 /* Garet-Bold.ttf in Resources */,
+				FFF8DE402CFA860B00E5D2A7 /* Garet-Book.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,6 +222,7 @@
 				FFF8DE0A2CFA5A5100E5D2A7 /* AppDelegate.swift in Sources */,
 				FFF8DE222CFA5D6800E5D2A7 /* SignInVC.swift in Sources */,
 				FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */,
+				FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */,
 				FFF8DE272CFA5EDB00E5D2A7 /* MultiChoiceView.swift in Sources */,
 				FFF8DE352CFA61F400E5D2A7 /* Extensions.swift in Sources */,
 			);
