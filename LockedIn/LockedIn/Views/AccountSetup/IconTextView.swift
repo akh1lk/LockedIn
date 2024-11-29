@@ -28,7 +28,7 @@ class IconTextView: UIView {
         let label = UILabel()
         label.textColor = .palette.offBlack
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 18, weight: .regular)
+        label.font = UIFont(name: "GaretW05-Regular", size: 18)
         label.text = "Lorem Ipsum"
         return label
     }()
@@ -44,7 +44,7 @@ class IconTextView: UIView {
     private lazy var button: UIButton = {
         let button = UIButton()
         button.tintColor = .clear
-        button.layer.cornerRadius = 25
+        button.layer.cornerRadius = 20
         button.backgroundColor = .clear
         button.addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
         return button
@@ -83,6 +83,9 @@ class IconTextView: UIView {
         self.addSubview(textLabel)
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         
+        self.addSubview(button)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             iconImageView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
             iconImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
@@ -90,19 +93,24 @@ class IconTextView: UIView {
             iconImageView.widthAnchor.constraint(equalToConstant: 20),
             iconImageView.heightAnchor.constraint(equalToConstant: 20),
             
-            textLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: -0.5),
+            textLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: 0),
             textLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 5),
             
             backgroundView.topAnchor.constraint(equalTo: self.topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: textLabel.trailingAnchor, constant: 15),
             backgroundView.heightAnchor.constraint(equalToConstant: 40),
+            
+            button.topAnchor.constraint(equalTo: self.topAnchor),
+            button.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            button.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            button.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
     }
     
     var totalWidth: CGFloat {
         let textLabelWidth = textLabel.intrinsicContentSize.width
-        let totalWidth = 20 + 5 + textLabelWidth
+        let totalWidth = 50 + textLabelWidth // don't ask why.
         return totalWidth
     }
     

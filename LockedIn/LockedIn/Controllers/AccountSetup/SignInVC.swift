@@ -13,19 +13,7 @@ class SignInVC: UIViewController {
     // MARK: - UI Components
     
     // MARK: - Data
-    let options: [IconTextOption] = [
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "noobmaste"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "no"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "asdfsadfs"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "asdfdf"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "bbbbb"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "googogog"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "giglgediglgle"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "bob"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "bob"),
-        IconTextOption(icon: UIImage(systemName: "house.fill"), text: "bob"),
-    
-    ]
+    let options = OptionsData.careerGoalOptions
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -36,6 +24,11 @@ class SignInVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        for family in UIFont.familyNames.sorted() {
+            let names = UIFont.fontNames(forFamilyName: family)
+            print("Family: \(family) Font names: \(names)")
+        }
+        
         self.view.backgroundColor = .white
         
         let multiChoiceView = MultiChoiceView(options: options, limit: 3, screenWidth: self.view.frame.width)

@@ -67,10 +67,10 @@ class MultiChoiceView: UIView {
                 containerView.addSubview(view)
                 view.translatesAutoresizingMaskIntoConstraints = false
                 
-                view.backgroundColor = .green
                 NSLayoutConstraint.activate([
                     view.widthAnchor.constraint(equalToConstant: view.totalWidth),
-                    view.leadingAnchor.constraint(equalTo: trailingAnchor, constant: padding + 20),
+                    view.heightAnchor.constraint(equalToConstant: 40),
+                    view.leadingAnchor.constraint(equalTo: trailingAnchor, constant: padding),
                 ])
                   
                 trailingAnchor = view.trailingAnchor
@@ -81,7 +81,7 @@ class MultiChoiceView: UIView {
             NSLayoutConstraint.activate([
                 containerView.heightAnchor.constraint(equalToConstant: 40),
                 containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
-                containerView.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -20),
+                containerView.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -5),
                 containerView.topAnchor.constraint(equalTo: currentTopAnchor, constant: padding),
             ])
             currentTopAnchor = containerView.bottomAnchor
