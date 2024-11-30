@@ -35,16 +35,12 @@ class InternshipFieldView: UIView {
         padding: 10,
         options: InternshipData.dates)
     
-    private func generateLabel(for text: String) -> UILabel {
-        let label = UILabel()
-        label.textColor = .palette.offBlack
-        label.textAlignment = .left
-        label.font = UIFont(name: "GaretW05-Regular", size: 18)
-        label.text = text
-        return label
-    }
+    
     
     // MARK: - Data
+    private let companyLabel = Utils.generateFieldLabel(for: "Company")
+    private let positionLabel = Utils.generateFieldLabel(for: "Position")
+    private let dateLabel = Utils.generateFieldLabel(for: "Date")
     
     // MARK: - Life Cycle
     init() {
@@ -58,10 +54,6 @@ class InternshipFieldView: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        let companyLabel = self.generateLabel(for: "Company")
-        let positionLabel = self.generateLabel(for: "Position")
-        let dateLabel = self.generateLabel(for: "Date")
-        
         self.addSubview(companyLabel)
         companyLabel.translatesAutoresizingMaskIntoConstraints = false
         

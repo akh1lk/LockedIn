@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FF795CE82CFBC47F008E2C5B /* ProjectFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CE72CFBC47F008E2C5B /* ProjectFieldView.swift */; };
+		FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CE92CFBCD28008E2C5B /* TextField.swift */; };
 		FFA857702CFB8F9D00ED5C9D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */; };
 		FFA857722CFB903E00ED5C9D /* TextIconBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */; };
 		FFA857742CFB9F3500ED5C9D /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA857732CFB9F3500ED5C9D /* PickerView.swift */; };
@@ -33,6 +35,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FF795CE72CFBC47F008E2C5B /* ProjectFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFieldView.swift; sourceTree = "<group>"; };
+		FF795CE92CFBCD28008E2C5B /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextIconBtnView.swift; sourceTree = "<group>"; };
 		FFA857732CFB9F3500ED5C9D /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
@@ -78,17 +82,18 @@
 				FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */,
 				FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */,
 				FFA857762CFBA71B00ED5C9D /* InternshipFieldView.swift */,
+				FF795CE72CFBC47F008E2C5B /* ProjectFieldView.swift */,
 			);
 			path = StatsScreen;
 			sourceTree = "<group>";
 		};
-		FFA857782CFBAA1600ED5C9D /* LocalData */ = {
+		FFA857782CFBAA1600ED5C9D /* Data */ = {
 			isa = PBXGroup;
 			children = (
 				FFF8DE382CFA82D500E5D2A7 /* OptionsData.swift */,
 				FFA857792CFBAA3300ED5C9D /* InternshipData.swift */,
 			);
-			path = LocalData;
+			path = Data;
 			sourceTree = "<group>";
 		};
 		FFBF3B9E2CFACC73008FD882 /* Other */ = {
@@ -130,7 +135,7 @@
 		FFF8DE082CFA5A5100E5D2A7 /* LockedIn */ = {
 			isa = PBXGroup;
 			children = (
-				FFA857782CFBAA1600ED5C9D /* LocalData */,
+				FFA857782CFBAA1600ED5C9D /* Data */,
 				FFF8DE1F2CFA5A9D00E5D2A7 /* Models */,
 				FFF8DE1E2CFA5A9800E5D2A7 /* Views */,
 				FFF8DE1D2CFA5A8D00E5D2A7 /* Controllers */,
@@ -154,6 +159,7 @@
 		FFF8DE1E2CFA5A9800E5D2A7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FF795CE92CFBCD28008E2C5B /* TextField.swift */,
 				FFF8DE252CFA5EA800E5D2A7 /* AccountSetup */,
 			);
 			path = Views;
@@ -279,7 +285,9 @@
 				FFF8DE0A2CFA5A5100E5D2A7 /* AppDelegate.swift in Sources */,
 				FFBF3BA32CFAD2D7008FD882 /* WebViewerController.swift in Sources */,
 				FFF8DE222CFA5D6800E5D2A7 /* SignInVC.swift in Sources */,
+				FF795CE82CFBC47F008E2C5B /* ProjectFieldView.swift in Sources */,
 				FFA857772CFBA71B00ED5C9D /* InternshipFieldView.swift in Sources */,
+				FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */,
 				FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */,
 				FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */,
 				FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */,

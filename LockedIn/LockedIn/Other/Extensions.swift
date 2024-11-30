@@ -29,6 +29,7 @@ extension UIColor {
     }
 }
 
+// MARK: - UITextField Padding
 extension UITextField {
     func setLeftPaddingPoints(_ amount:CGFloat){
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
@@ -40,5 +41,12 @@ extension UITextField {
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: amount, height: self.frame.size.height))
         self.rightView = paddingView
         self.rightViewMode = .always
+    }
+}
+
+// MARK: - UITextView Padding
+extension UITextView {
+    func setPadding(amount: CGFloat) {
+        self.textContainerInset = UIEdgeInsets(top: amount, left: amount, bottom: amount, right: amount)
     }
 }
