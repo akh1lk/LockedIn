@@ -20,7 +20,7 @@ class IconTextView: UIView {
         view.layer.cornerRadius = 20
         view.clipsToBounds = true
         view.layer.borderColor = UIColor.palette.purple.cgColor
-        view.layer.borderWidth = 2.5
+        view.layer.borderWidth = 2
         return view
     }()
     
@@ -28,7 +28,7 @@ class IconTextView: UIView {
         let label = UILabel()
         label.textColor = .palette.offBlack
         label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Regular", size: 18)
+        label.font = UIFont(name: "GaretW05-Regular", size: 16)
         label.text = "Lorem Ipsum"
         return label
     }()
@@ -53,6 +53,7 @@ class IconTextView: UIView {
     // MARK: - Data
     public var delegate: IconTextViewDelegate?
     public let data: IconTextOption
+    private var isTapped = false
     
     // MARK: - Life Cycle
     init(with option: IconTextOption) {
@@ -90,15 +91,15 @@ class IconTextView: UIView {
             iconImageView.centerYAnchor.constraint(equalTo: backgroundView.centerYAnchor),
             iconImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 10),
             
-            iconImageView.widthAnchor.constraint(equalToConstant: 20),
-            iconImageView.heightAnchor.constraint(equalToConstant: 20),
+            iconImageView.widthAnchor.constraint(equalToConstant: 25),
+            iconImageView.heightAnchor.constraint(equalToConstant: 25),
             
-            textLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: 0),
+            textLabel.centerYAnchor.constraint(equalTo: iconImageView.centerYAnchor, constant: 1),
             textLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 5),
             
             backgroundView.topAnchor.constraint(equalTo: self.topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-            backgroundView.trailingAnchor.constraint(equalTo: textLabel.trailingAnchor, constant: 15),
+            backgroundView.trailingAnchor.constraint(equalTo: textLabel.trailingAnchor, constant: 12),
             backgroundView.heightAnchor.constraint(equalToConstant: 40),
             
             button.topAnchor.constraint(equalTo: self.topAnchor),
@@ -110,14 +111,24 @@ class IconTextView: UIView {
     
     var totalWidth: CGFloat {
         let textLabelWidth = textLabel.intrinsicContentSize.width
-        let totalWidth = 50 + textLabelWidth // don't ask why.
+        let totalWidth = 52 + textLabelWidth // don't ask why.
         return totalWidth
     }
     
     
     // MARK: - Selectors
     @objc private func buttonTapped() {
-        print("noob")
+        if !isTapped {
+            self.backgroundView.backgroundColor = .palette.purple
+            self.iconImageView.tintColor = .white
+            self.textLabel.textColor = .white
+        } else {
+            self.backgroundView.backgroundColor = .white
+            self.iconImageView.tintColor = .palette.offBlack
+            self.textLabel.textColor = .palette.offBlack
+        }
+        
+        self.isTapped.toggle()
         delegate?.didTap(self)
     }
 }

@@ -47,7 +47,8 @@ class MultiChoiceView: UIView {
     func setupUI() {
         // Semi-randomly formats options.
         var currentTopAnchor = self.topAnchor
-        let padding: CGFloat = 15.0
+        let paddingColumn: CGFloat = 7
+        let paddingRow: CGFloat = 15
         var viewsWidth: CGFloat = 0
         var numViews = 3
         
@@ -70,7 +71,7 @@ class MultiChoiceView: UIView {
                 NSLayoutConstraint.activate([
                     view.widthAnchor.constraint(equalToConstant: view.totalWidth),
                     view.heightAnchor.constraint(equalToConstant: 40),
-                    view.leadingAnchor.constraint(equalTo: trailingAnchor, constant: padding),
+                    view.leadingAnchor.constraint(equalTo: trailingAnchor, constant: paddingColumn),
                 ])
                   
                 trailingAnchor = view.trailingAnchor
@@ -82,7 +83,7 @@ class MultiChoiceView: UIView {
                 containerView.heightAnchor.constraint(equalToConstant: 40),
                 containerView.trailingAnchor.constraint(equalTo: trailingAnchor),
                 containerView.centerXAnchor.constraint(equalTo: self.centerXAnchor, constant: -5),
-                containerView.topAnchor.constraint(equalTo: currentTopAnchor, constant: padding),
+                containerView.topAnchor.constraint(equalTo: currentTopAnchor, constant: paddingRow),
             ])
             currentTopAnchor = containerView.bottomAnchor
         }
