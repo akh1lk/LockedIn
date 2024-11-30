@@ -1,5 +1,5 @@
 //
-//  UniversityPickerView.swift
+//  PickerView.swift
 //  LockedIn
 //
 //  Created by Gabriel Castillo on 11/30/24.
@@ -7,15 +7,7 @@
 
 import UIKit
 
-class UniversityPickerView: UIView {
-    
-    // MARK: - Variables
-    var universities: [String] = [
-        "Cornell University",
-        "Harvard University",
-        "Stanford University"
-    ]
-    
+class PickerView: UIView {
     
     // MARK: - UI Components
     private let pickerView: UIPickerView = {
@@ -27,12 +19,7 @@ class UniversityPickerView: UIView {
     private let pickerTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = .palette.offWhite
-        textField.attributedPlaceholder = Utils.createPlaceholder(for: "Select your university...")
-        textField.layer.cornerRadius = 10
-        textField.font = UIFont(name: "GaretW05-Regular", size: 19)
-        textField.textAlignment = .left
         textField.tintColor = .clear // hide caret.
-        textField.setLeftPaddingPoints(20)
         return textField
     }()
     
@@ -55,15 +42,33 @@ class UniversityPickerView: UIView {
         action: nil
     )
     
+    // MARK: - Data
+    let options: [String]
+    
     // MARK: - Life Cycle
-    init() {
+    init(
+        placeholder: String,
+        aligment: NSTextAlignment = .left,
+        cornerRadius: CGFloat = 10,
+        fontSize: CGFloat = 20,
+        padding: CGFloat = 20,
+        options: [String]
+    ) {
+        self.options = options
         super.init(frame: .zero)
         
-        self.pickerView.delegate = self
-        self.pickerView.dataSource = self
+        pickerTextField.setLeftPaddingPoints(padding)
+        pickerTextField.setRightPaddingPoints(padding)
+        pickerTextField.font = UIFont(name: "GaretW05-Regular", size: fontSize)
+        pickerTextField.layer.cornerRadius = cornerRadius
+        pickerTextField.textAlignment = aligment
+        pickerTextField.attributedPlaceholder = Utils.createPlaceholder(for: placeholder)
+        
+        pickerView.delegate = self
+        pickerView.dataSource = self
         pickerTextField.inputView = pickerView
         pickerTextField.delegate = self
-        self.setupUI()
+        setupUI()
     }
     
     required init?(coder: NSCoder) {
@@ -94,27 +99,27 @@ class UniversityPickerView: UIView {
 }
 
 // MARK: - Picker View Delegate
-extension UniversityPickerView: UIPickerViewDelegate, UIPickerViewDataSource {
+extension PickerView: UIPickerViewDelegate, UIPickerViewDataSource {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return self.universities.count
+        return self.options.count
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return self.universities[row]
+        return self.options[row]
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        pickerTextField.text = self.universities[row]
+        pickerTextField.text = self.options[row]
     }
 }
 
 
 // MARK: - Text Field Delegate
-extension UniversityPickerView: UITextFieldDelegate {
+extension PickerView: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         return false
     }
