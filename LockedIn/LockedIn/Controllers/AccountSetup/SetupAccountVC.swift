@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol SetupAccountSubview {
+    func canContinue() -> Bool
+}
+
 class SetupAccountVC: UIViewController {
 
     // MARK: - UI Components
@@ -41,7 +45,7 @@ class SetupAccountVC: UIViewController {
     
     
     // MARK: - Data
-    private let views = [
+    private let views: [UIView & SetupAccountSubview] = [
         MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
         MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3)
     
@@ -115,7 +119,7 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - Selectors
     @objc func continueButtonTapped() {
-        if views[currentStep - 1].canTap() { return }
+        if views[currentStep - 1].canContinue() { return }
         
         if currentStep != totalSteps {
             views[currentStep - 1].isHidden = true
