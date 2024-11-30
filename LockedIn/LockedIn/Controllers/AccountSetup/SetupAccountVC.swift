@@ -10,6 +10,13 @@ import UIKit
 class SetupAccountVC: UIViewController {
 
     // MARK: - UI Components
+    private lazy var backButton = UIBarButtonItem(
+        image: UIImage(systemName: "chevron.left"),
+        style: .plain,
+        target: self,
+        action: #selector(backBtnTapped)
+    )
+    
     private lazy var continueButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .brown
@@ -34,15 +41,22 @@ class SetupAccountVC: UIViewController {
     
     
     // MARK: - Data
-    private let options = OptionsData.careerGoalOptions
-    private var currentStep = 0.0
-    private let totalSteps = 5.0
+    private let views = [
+        MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
+        MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3)
+    
+    ]
+    
+    /// NOTE: Step is index 1, not index 0. Must be converted when accessing views.
+    private var currentStep = 1
+    private let totalSteps = 5
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        progressForwards()
         setupUI()
+        setupSubviews()
+        refreshProgressBar()
     }
     
     override func viewDidLayoutSubviews() {
@@ -51,12 +65,10 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        backButton.tintColor = .palette.offBlack
+        navigationItem.leftBarButtonItem = backButton
         
         self.view.backgroundColor = .white
-        let multiChoiceView = MultiChoiceView(title: "Select up to 4 career goals", options: options, limit: 3)
-        
-        self.view.addSubview(multiChoiceView)
-        multiChoiceView.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(progressBar)
         progressBar.translatesAutoresizingMaskIntoConstraints = false
@@ -65,11 +77,6 @@ class SetupAccountVC: UIViewController {
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            multiChoiceView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
-            multiChoiceView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
-            multiChoiceView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            multiChoiceView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            
             progressBar.heightAnchor.constraint(equalToConstant: 16),
             progressBar.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.75),
             progressBar.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 68),
@@ -83,13 +90,59 @@ class SetupAccountVC: UIViewController {
     }
     
     // MARK: - Methods
-    func progressForwards() {
-        currentStep += 1
-        self.progressBar.setProgress(Float(self.currentStep / self.totalSteps), animated: true)
+    /// Setups all the subviews that will be shown here, and then hides them.
+    private func setupSubviews() {
+        for index in 0...(views.count - 1) {
+            let view = views[index]
+            
+            self.view.addSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
+                view.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor, constant: -30),
+                view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+                view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            ])
+            
+            view.isHidden = index == 0 ? false : true
+        }
+    }
+    
+    private func refreshProgressBar() {
+        self.progressBar.setProgress(Float(Float(self.currentStep) / Float(self.totalSteps)), animated: true)
     }
     
     // MARK: - Selectors
     @objc func continueButtonTapped() {
-        progressForwards()
+        if views[currentStep - 1].canTap() { return }
+        
+        if currentStep != totalSteps {
+            views[currentStep - 1].isHidden = true
+            currentStep += 1
+            views[currentStep - 1].isHidden = false
+            
+        } else {
+            // TODO: Finish setting up account
+            print("finished setuping account")
+        }
+        
+        refreshProgressBar()
+    }
+    
+    @objc func backBtnTapped() {
+        
+        if currentStep != totalSteps {
+            views[currentStep - 1].isHidden = true
+            currentStep -= 1
+            views[currentStep - 1].isHidden = false
+            
+        } else {
+            // TODO: Cancel account setup
+            print("cancled account setup")
+            self.navigationController?.popViewController(animated: true)
+        }
+        
+        refreshProgressBar()
     }
 }
