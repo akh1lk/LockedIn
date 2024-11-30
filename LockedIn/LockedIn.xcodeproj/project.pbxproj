@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		FFBF3B9D2CFAC65C008FD882 /* SetupAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBF3B9C2CFAC65C008FD882 /* SetupAccountVC.swift */; };
+		FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBF3BA02CFACC9C008FD882 /* Utils.swift */; };
+		FFBF3BA32CFAD2D7008FD882 /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBF3BA22CFAD2D7008FD882 /* WebViewerController.swift */; };
 		FFF8DE0A2CFA5A5100E5D2A7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */; };
 		FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */; };
 		FFF8DE0E2CFA5A5100E5D2A7 /* SwipeScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE0D2CFA5A5100E5D2A7 /* SwipeScreenVC.swift */; };
@@ -25,6 +28,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		FFBF3B9C2CFAC65C008FD882 /* SetupAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupAccountVC.swift; sourceTree = "<group>"; };
+		FFBF3BA02CFACC9C008FD882 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		FFBF3BA22CFAD2D7008FD882 /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
 		FFF8DE062CFA5A5100E5D2A7 /* LockedIn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LockedIn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -55,6 +61,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FFBF3B9E2CFACC73008FD882 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				FFF8DE342CFA61F400E5D2A7 /* Extensions.swift */,
+				FFBF3BA02CFACC9C008FD882 /* Utils.swift */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		FFBF3B9F2CFACC80008FD882 /* Suppporting */ = {
+			isa = PBXGroup;
+			children = (
+				FFF8DE122CFA5A5200E5D2A7 /* Assets.xcassets */,
+				FFF8DE142CFA5A5200E5D2A7 /* LaunchScreen.storyboard */,
+				FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */,
+				FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */,
+			);
+			path = Suppporting;
+			sourceTree = "<group>";
+		};
 		FFF8DDFD2CFA5A5100E5D2A7 = {
 			isa = PBXGroup;
 			children = (
@@ -77,13 +103,10 @@
 				FFF8DE1F2CFA5A9D00E5D2A7 /* Models */,
 				FFF8DE1E2CFA5A9800E5D2A7 /* Views */,
 				FFF8DE1D2CFA5A8D00E5D2A7 /* Controllers */,
-				FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */,
-				FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */,
-				FFF8DE342CFA61F400E5D2A7 /* Extensions.swift */,
-				FFF8DE122CFA5A5200E5D2A7 /* Assets.xcassets */,
-				FFF8DE142CFA5A5200E5D2A7 /* LaunchScreen.storyboard */,
-				FFF8DE172CFA5A5200E5D2A7 /* Info.plist */,
+				FFBF3B9F2CFACC80008FD882 /* Suppporting */,
+				FFBF3B9E2CFACC73008FD882 /* Other */,
 				FFF8DE3A2CFA85E800E5D2A7 /* Fonts */,
+				FFF8DE172CFA5A5200E5D2A7 /* Info.plist */,
 			);
 			path = LockedIn;
 			sourceTree = "<group>";
@@ -118,6 +141,8 @@
 			isa = PBXGroup;
 			children = (
 				FFF8DE212CFA5D6800E5D2A7 /* SignInVC.swift */,
+				FFBF3B9C2CFAC65C008FD882 /* SetupAccountVC.swift */,
+				FFBF3BA22CFAD2D7008FD882 /* WebViewerController.swift */,
 			);
 			path = AccountSetup;
 			sourceTree = "<group>";
@@ -220,10 +245,13 @@
 				FFF8DE372CFA667700E5D2A7 /* IconTextView.swift in Sources */,
 				FFF8DE0E2CFA5A5100E5D2A7 /* SwipeScreenVC.swift in Sources */,
 				FFF8DE0A2CFA5A5100E5D2A7 /* AppDelegate.swift in Sources */,
+				FFBF3BA32CFAD2D7008FD882 /* WebViewerController.swift in Sources */,
 				FFF8DE222CFA5D6800E5D2A7 /* SignInVC.swift in Sources */,
 				FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */,
 				FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */,
+				FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */,
 				FFF8DE272CFA5EDB00E5D2A7 /* MultiChoiceView.swift in Sources */,
+				FFBF3B9D2CFAC65C008FD882 /* SetupAccountVC.swift in Sources */,
 				FFF8DE352CFA61F400E5D2A7 /* Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

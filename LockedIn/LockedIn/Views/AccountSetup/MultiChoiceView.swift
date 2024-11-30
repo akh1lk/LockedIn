@@ -64,7 +64,7 @@ class MultiChoiceView: UIView {
             var trailingAnchor = containerView.leadingAnchor
             
             for _ in 1...numViews {
-                let view = IconTextView(with: allOptions[index])
+                let view = IconTextView(with: allOptions[index], delegate: self)
                 containerView.addSubview(view)
                 view.translatesAutoresizingMaskIntoConstraints = false
                 
@@ -88,8 +88,19 @@ class MultiChoiceView: UIView {
             currentTopAnchor = containerView.bottomAnchor
         }
     }
+}
+
+// MARK: - IconTextViewDelegate
+extension MultiChoiceView: IconTextViewDelegate {
+    func canTap() -> Bool {
+        return selectedOptions.count < limit
+    }
     
-    
-    // MARK: - Selectors
-    
+    func didTap(_ iconTextView: IconTextView) {
+        if iconTextView.isSelected {
+            selectedOptions.removeAll { $0.text == iconTextView.data.text}
+        } else {
+            selectedOptions.append(iconTextView.data)
+        }
+    }
 }
