@@ -125,6 +125,6 @@ extension MultiChoiceView: IconTextViewDelegate {
 // MARK: - SetupAccountSubview
 extension MultiChoiceView: SetupAccountSubview {
     func canContinue() -> Bool {
-        return canTap()
+        return !canTap()
     }
 }

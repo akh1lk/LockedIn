@@ -17,4 +17,13 @@ class Utils {
         gradientLayer.cornerRadius = view.layer.cornerRadius
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
+    
+    static func createPlaceholder(for text: String) -> NSAttributedString {
+        return NSAttributedString(
+            string: text,
+            attributes: [
+                NSAttributedString.Key.foregroundColor: UIColor.palette.offBlack.withAlphaComponent(0.7),
+            ]
+        )
+    }
 }
