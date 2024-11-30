@@ -10,27 +10,33 @@ import UIKit
 /// A view presenting multiple options in a semi random order.
 class MultiChoiceView: UIView {
     // MARK: - UI Components
-    
+    private let heading: UILabel = {
+        let label = UILabel()
+        label.textColor = .label
+        label.textAlignment = .center
+        label.font = UIFont(name: "GaretW05-Bold", size: 32)
+        label.text = "Lorem Ipsum"
+        label.numberOfLines = 2
+        return label
+    }()
     
     // MARK: - Data
     private var allOptions: [IconTextOption] = []
     private var limit: Int
-    private var screenWidth: CGFloat
     public var selectedOptions: [IconTextOption] = []
     
     // MARK: - Life Cycle
-    /// Creates a MultiChoiceView
-    ///
+    /// Creates a MultiChoiceView for a given array of `IconTextOption` with a heading of `title`
     ///
     /// - Parameters:
     ///     - options: the list of IconTextOption objects that you'd like to be shown
     ///     - limit: the maximum number of options that can be selected.
     ///     - screenWidth: the width of the screen.
     ///
-    init(options: [IconTextOption], limit: Int, screenWidth: CGFloat) {
+    init(title: String, options: [IconTextOption], limit: Int) {
         self.allOptions = options
         self.limit = limit
-        self.screenWidth = screenWidth
+        self.heading.text = title
         
         super.init(frame: .zero)
         
@@ -45,8 +51,19 @@ class MultiChoiceView: UIView {
     // MARK: - UI Setup
     
     func setupUI() {
+        self.addSubview(heading)
+        heading.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            heading.heightAnchor.constraint(equalToConstant: 120),
+            heading.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
+            heading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            heading.topAnchor.constraint(equalTo: self.topAnchor)
+        ])
+        
+        
         // Semi-randomly formats options.
-        var currentTopAnchor = self.topAnchor
+        var currentTopAnchor = heading.bottomAnchor
         let paddingColumn: CGFloat = 7
         let paddingRow: CGFloat = 15
         var viewsWidth: CGFloat = 0
