@@ -8,7 +8,7 @@
 import UIKit
 
 class StatsView: UIView {
-
+    
     // MARK: - UI Components
     private let educationHeading: UILabel = {
         let label = UILabel()
@@ -40,9 +40,17 @@ class StatsView: UIView {
         return label
     }()
     
-    private let univeristyPicker = UniversityPickerView()
+    private let univeristyPicker = PickerView(
+        placeholder: "Select your university...",
+        options: [
+            "Cornell University",
+            "Harvard University",
+            "Stanford University"
+        ])
+    
     private let internshipButton = TextIconBtnView(id: "internship", text: "Add an experience")
     private let projectButton = TextIconBtnView(id: "project", text: "Add a project")
+    private let internshipFieldView = InternshipFieldView()
     
     // MARK: - Data
     
@@ -53,6 +61,7 @@ class StatsView: UIView {
         internshipButton.delegate = self
         projectButton.delegate = self
         setupUI()
+        setupSecondaryUI()
     }
     
     required init?(coder: NSCoder) {
@@ -87,23 +96,37 @@ class StatsView: UIView {
             univeristyPicker.heightAnchor.constraint(equalToConstant: 60),
             univeristyPicker.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             univeristyPicker.topAnchor.constraint(equalTo: educationHeading.bottomAnchor, constant: 10),
-        
+            
             internshipHeading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            internshipHeading.topAnchor.constraint(equalTo: self.univeristyPicker.bottomAnchor, constant: 30),
-
+            internshipHeading.topAnchor.constraint(equalTo: self.univeristyPicker.bottomAnchor, constant: 20),
+            
             internshipButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
             internshipButton.heightAnchor.constraint(equalToConstant: 60),
             internshipButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             internshipButton.topAnchor.constraint(equalTo: internshipHeading.bottomAnchor, constant: 10),
             
             projectHeading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            projectHeading.topAnchor.constraint(equalTo: internshipHeading.bottomAnchor, constant: 150),
+            projectHeading.topAnchor.constraint(equalTo: internshipHeading.bottomAnchor, constant: 160),
             
             projectButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
             projectButton.heightAnchor.constraint(equalToConstant: 60),
             projectButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             projectButton.topAnchor.constraint(equalTo: projectHeading.bottomAnchor, constant: 10),
-
+            
+        ])
+    }
+    
+    func setupSecondaryUI() {
+        internshipButton.isHidden = true
+        
+        self.addSubview(internshipFieldView)
+        internshipFieldView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            internshipFieldView.topAnchor.constraint(equalTo: internshipButton.topAnchor, constant: -10),
+            internshipFieldView.leadingAnchor.constraint(equalTo: internshipButton.leadingAnchor),
+            internshipFieldView.trailingAnchor.constraint(equalTo: internshipButton.trailingAnchor),
+            internshipFieldView.heightAnchor.constraint(equalToConstant: 150),
         ])
     }
 }
