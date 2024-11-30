@@ -51,6 +51,7 @@ class StatsView: UIView {
     private let internshipButton = TextIconBtnView(id: "internship", text: "Add an experience")
     private let projectButton = TextIconBtnView(id: "project", text: "Add a project")
     private let internshipFieldView = InternshipFieldView()
+    private let projectFieldView = ProjectFieldView()
     
     // MARK: - Data
     
@@ -118,15 +119,24 @@ class StatsView: UIView {
     
     func setupSecondaryUI() {
         internshipButton.isHidden = true
+        projectButton.isHidden = true
         
         self.addSubview(internshipFieldView)
         internshipFieldView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(projectFieldView)
+        projectFieldView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             internshipFieldView.topAnchor.constraint(equalTo: internshipButton.topAnchor, constant: -10),
             internshipFieldView.leadingAnchor.constraint(equalTo: internshipButton.leadingAnchor),
             internshipFieldView.trailingAnchor.constraint(equalTo: internshipButton.trailingAnchor),
             internshipFieldView.heightAnchor.constraint(equalToConstant: 150),
+            
+            projectFieldView.topAnchor.constraint(equalTo: projectButton.topAnchor, constant: -10),
+            projectFieldView.leadingAnchor.constraint(equalTo: projectButton.leadingAnchor),
+            projectFieldView.trailingAnchor.constraint(equalTo: projectButton.trailingAnchor),
+            projectFieldView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
 }

@@ -61,6 +61,7 @@ class SetupAccountVC: UIViewController {
         setupUI()
         setupSubviews()
         refreshProgressBar()
+        // TODO: Katherine, make a branch of this repository and test installing: https://github.com/hackiftekhar/IQKeyboardManager to see if it works. 
     }
     
     override func viewDidLayoutSubviews() {
@@ -104,7 +105,7 @@ class SetupAccountVC: UIViewController {
             
             NSLayoutConstraint.activate([
                 view.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
-                view.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor, constant: -30),
+                view.bottomAnchor.constraint(equalTo: self.continueButton.topAnchor, constant: -20),
                 view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
                 view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             ])

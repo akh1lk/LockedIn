@@ -16,8 +16,8 @@ class PickerView: UIView {
         return picker
     }()
     
-    private let pickerTextField: UITextField = {
-        let textField = UITextField()
+    private let pickerTextField: TextField = {
+        let textField = TextField()
         textField.backgroundColor = .palette.offWhite
         textField.tintColor = .clear // hide caret.
         return textField
@@ -55,10 +55,11 @@ class PickerView: UIView {
         options: [String]
     ) {
         self.options = options
+        
         super.init(frame: .zero)
         
-        pickerTextField.setLeftPaddingPoints(padding)
-        pickerTextField.setRightPaddingPoints(padding)
+        pickerTextField.setHorizontalPadding(amount: padding)
+        
         pickerTextField.font = UIFont(name: "GaretW05-Regular", size: fontSize)
         pickerTextField.layer.cornerRadius = cornerRadius
         pickerTextField.textAlignment = aligment
