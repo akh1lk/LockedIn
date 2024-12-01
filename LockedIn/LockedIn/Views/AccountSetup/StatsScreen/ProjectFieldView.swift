@@ -12,7 +12,7 @@ class ProjectFieldView: UIView {
     // MARK: - UI Components
     private static func generateTextField(with placeholder: String) -> TextField {
         let textField = TextField()
-        textField.setPadding(amount: 10)
+        textField.setHorizontalPadding(amount: 10)
         
         textField.font = UIFont(name: "GaretW05-Regular", size: 18)
         textField.layer.cornerRadius = 7
