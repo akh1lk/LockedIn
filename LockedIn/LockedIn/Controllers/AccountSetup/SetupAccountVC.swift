@@ -138,7 +138,7 @@ class SetupAccountVC: UIViewController {
             print("finished setuping account")
             
             if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.changeRootViewController(to: SwipeScreenVC())
+                sceneDelegate.resetRootViewController()
             }
 
         }
