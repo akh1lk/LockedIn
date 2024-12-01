@@ -137,7 +137,10 @@ class SetupAccountVC: UIViewController {
             // TODO: Finish setting up account
             print("finished setuping account")
             
-            
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                sceneDelegate.changeRootViewController(to: SwipeScreenVC())
+            }
+
         }
         
         refreshProgressBar()
