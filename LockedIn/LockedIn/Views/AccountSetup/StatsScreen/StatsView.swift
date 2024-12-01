@@ -40,6 +40,34 @@ class StatsView: UIView {
         return label
     }()
     
+    private lazy var internshipCancelButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "x.circle"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.tintColor = .palette.offBlack.withAlphaComponent(0.5)
+        button.layer.cornerRadius = 15
+        button.clipsToBounds = true
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(internshipCancelTapped), for: .touchUpInside)
+        return button
+    }()
+    
+    private lazy var projectCancelButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "x.circle"), for: .normal)
+        button.imageView?.contentMode = .scaleAspectFit
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.tintColor = .palette.offBlack.withAlphaComponent(0.5)
+        button.layer.cornerRadius = 15
+        button.clipsToBounds = true
+        button.backgroundColor = .clear
+        button.addTarget(self, action: #selector(projectCancelTapped), for: .touchUpInside)
+        return button
+    }()
+    
     private let univeristyPicker = PickerView(
         placeholder: "Select your university...",
         options: [
@@ -54,7 +82,6 @@ class StatsView: UIView {
     private let projectFieldView = ProjectFieldView()
     
     // MARK: - Data
-    
     
     // MARK: - Life Cycle
     init() {
@@ -113,19 +140,27 @@ class StatsView: UIView {
             projectButton.heightAnchor.constraint(equalToConstant: 60),
             projectButton.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             projectButton.topAnchor.constraint(equalTo: projectHeading.bottomAnchor, constant: 10),
-            
         ])
     }
     
     func setupSecondaryUI() {
-        internshipButton.isHidden = true
-        projectButton.isHidden = true
+        internshipFieldView.isHidden = true
+        internshipCancelButton.isHidden = true
+        
+        projectFieldView.isHidden = true
+        projectCancelButton.isHidden = true
         
         self.addSubview(internshipFieldView)
         internshipFieldView.translatesAutoresizingMaskIntoConstraints = false
         
+        self.addSubview(internshipCancelButton)
+        internshipCancelButton.translatesAutoresizingMaskIntoConstraints = false
+        
         self.addSubview(projectFieldView)
         projectFieldView.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(projectCancelButton)
+        projectCancelButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             internshipFieldView.topAnchor.constraint(equalTo: internshipButton.topAnchor, constant: -10),
@@ -133,17 +168,82 @@ class StatsView: UIView {
             internshipFieldView.trailingAnchor.constraint(equalTo: internshipButton.trailingAnchor),
             internshipFieldView.heightAnchor.constraint(equalToConstant: 150),
             
+            internshipCancelButton.heightAnchor.constraint(equalToConstant: 30),
+            internshipCancelButton.widthAnchor.constraint(equalToConstant: 30),
+            internshipCancelButton.centerYAnchor.constraint(equalTo: internshipHeading.centerYAnchor),
+            internshipCancelButton.trailingAnchor.constraint(equalTo: internshipFieldView.trailingAnchor),
+            
             projectFieldView.topAnchor.constraint(equalTo: projectButton.topAnchor, constant: -10),
             projectFieldView.leadingAnchor.constraint(equalTo: projectButton.leadingAnchor),
             projectFieldView.trailingAnchor.constraint(equalTo: projectButton.trailingAnchor),
-            projectFieldView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
+            projectFieldView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+            
+            projectCancelButton.heightAnchor.constraint(equalToConstant: 30),
+            projectCancelButton.widthAnchor.constraint(equalToConstant: 30),
+            projectCancelButton.centerYAnchor.constraint(equalTo: projectHeading.centerYAnchor),
+            projectCancelButton.trailingAnchor.constraint(equalTo: projectFieldView.trailingAnchor),
         ])
+    }
+    
+    // MARK: - Selectors
+    @objc func internshipCancelTapped() {
+        internshipButton.isHidden.toggle()
+        internshipFieldView.isHidden.toggle()
+        internshipCancelButton.isHidden.toggle()
+    }
+    
+    @objc func projectCancelTapped() {
+        projectButton.isHidden.toggle()
+        projectFieldView.isHidden.toggle()
+        projectCancelButton.isHidden.toggle()
+    }
+    
+    // MARK: - Methods
+    public func fetchData() -> (Internship?, Project?) {
+        var internshipData: Internship? = nil
+        var projectData: Project? = nil
+        
+        if !internshipFieldView.isHidden {
+            internshipData = Internship(
+                company: internshipFieldView.companyPickerView.getText() ?? "",
+                position: internshipFieldView.positionPickerView.getText() ?? "",
+                date: internshipFieldView.datePickerView.getText() ?? ""
+            )
+        }
+        
+        if !projectFieldView.isHidden {
+            projectData = Project(
+                name: projectFieldView.nameTextField.text ?? "",
+                role: projectFieldView.roleTextField.text ?? "",
+                description: projectFieldView.descriptionTextView.text ?? ""
+            )
+        }
+        
+        return (internshipData, projectData)
     }
 }
 
 // MARK: - Setup Account Subview
 extension StatsView: SetupAccountSubview {
     func canContinue() -> Bool {
+        // Must enter at least internship or project or both, but at least 1
+        if internshipFieldView.isHidden && projectFieldView.isHidden { return false }
+        
+        if !internshipFieldView.isHidden { // if internship fields are shown, all must be filled in.
+            if internshipFieldView.companyPickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
+                internshipFieldView.positionPickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
+                internshipFieldView.datePickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+                return false
+            }
+        }
+        
+        if !projectFieldView.isHidden { // if project fields are shown, all must be filled in.
+            if projectFieldView.nameTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
+                projectFieldView.roleTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
+                projectFieldView.descriptionTextView.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+                return false
+            }
+        }
         return true
     }
 }
@@ -152,9 +252,9 @@ extension StatsView: SetupAccountSubview {
 extension StatsView: TextIconView {
     func didTapButton(_ id: String) {
         if id == "internship" {
-            print("you're a noob")
+            internshipCancelTapped()
         } else if id == "project" {
-            print("supda noob")
+            projectCancelTapped()
         }
     }
 }

@@ -46,9 +46,9 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - Data
     private let views: [UIView & SetupAccountSubview] = [
-        StatsView(),
         MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
         MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3),
+        StatsView()
     ]
     
     /// NOTE: Step is index 1, not index 0. Must be converted when accessing views.
@@ -120,6 +120,10 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - Selectors
     @objc func continueButtonTapped() {
+        if let statsView = views[currentStep - 1] as? StatsView {
+            print(statsView.fetchData())
+        }
+        
         if !views[currentStep - 1].canContinue() { return }
         
         if currentStep != totalSteps {

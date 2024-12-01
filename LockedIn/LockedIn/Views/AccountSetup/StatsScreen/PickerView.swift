@@ -93,9 +93,14 @@ class PickerView: UIView {
         ])
     }
     
-    // MARK: - Selectors
+    // MARK: - Selectors & Methods
     @objc func pickerToolbarDonePressed() {
         pickerTextField.resignFirstResponder()
+    }
+    
+    /// Returns the current text stored in the picker view.
+    public func getText() -> String? {
+        return pickerTextField.text
     }
 }
 
