@@ -13,18 +13,34 @@ class CompleteSwipeView: UIView {
     // MARK: - UI Components
     private lazy var rightButton: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 0
-        button.backgroundColor = .palette.pink.withAlphaComponent(0.2)
+        button.backgroundColor = .clear
         button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
         return button
     }()
     
     private lazy var leftButton: UIButton = {
         let button = UIButton()
-        button.layer.cornerRadius = 0
-        button.backgroundColor = .palette.purple.withAlphaComponent(0.2)
+        button.backgroundColor = .clear
         button.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
         return button
+    }()
+    
+    public let checkImage: UIImageView = {
+        let iv = UIImageView()
+        iv.tintColor = .palette.green
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage(systemName: "checkmark.circle.fill")
+        iv.layer.opacity = 0
+        return iv
+    }()
+    
+    public let xImage: UIImageView = {
+        let iv = UIImageView()
+        iv.tintColor = .palette.red
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage(systemName: "x.circle.fill")
+        iv.layer.opacity = 0
+        return iv
     }()
     
     // MARK: - Data
@@ -35,6 +51,9 @@ class CompleteSwipeView: UIView {
     // MARK: - Life Cycle
     init() {
         super.init(frame: .zero)
+        
+        self.layer.cornerRadius = 30
+        self.clipsToBounds = true
         
         setupSubviews()
         setupUI()
@@ -48,6 +67,12 @@ class CompleteSwipeView: UIView {
     private func setupUI() {
         self.backgroundColor = .gray
         
+        self.addSubview(checkImage)
+        checkImage.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(xImage)
+        xImage.translatesAutoresizingMaskIntoConstraints = false
+        
         self.addSubview(rightButton)
         rightButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -55,6 +80,16 @@ class CompleteSwipeView: UIView {
         leftButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
+            checkImage.heightAnchor.constraint(equalToConstant: 180),
+            checkImage.widthAnchor.constraint(equalToConstant: 180),
+            checkImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            checkImage.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
+            
+            xImage.heightAnchor.constraint(equalToConstant: 180),
+            xImage.widthAnchor.constraint(equalToConstant: 180),
+            xImage.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
+            xImage.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -20),
+            
             rightButton.topAnchor.constraint(equalTo: self.topAnchor),
             rightButton.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             rightButton.trailingAnchor.constraint(equalTo: self.trailingAnchor),

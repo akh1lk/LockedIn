@@ -16,6 +16,7 @@
 		FF795CF42CFC117E008E2C5B /* TabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CF32CFC117E008E2C5B /* TabController.swift */; };
 		FF795CF72CFC1A6D008E2C5B /* ProfileInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CF62CFC1A6D008E2C5B /* ProfileInfoView.swift */; };
 		FF795CF92CFC1FAA008E2C5B /* CompleteSwipeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CF82CFC1FAA008E2C5B /* CompleteSwipeView.swift */; };
+		FF795CFB2CFC2A61008E2C5B /* SimpleIconTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CFA2CFC2A61008E2C5B /* SimpleIconTextView.swift */; };
 		FFA857702CFB8F9D00ED5C9D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */; };
 		FFA857722CFB903E00ED5C9D /* TextIconBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */; };
 		FFA857742CFB9F3500ED5C9D /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA857732CFB9F3500ED5C9D /* PickerView.swift */; };
@@ -51,6 +52,7 @@
 		FF795CF32CFC117E008E2C5B /* TabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabController.swift; sourceTree = "<group>"; };
 		FF795CF62CFC1A6D008E2C5B /* ProfileInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfoView.swift; sourceTree = "<group>"; };
 		FF795CF82CFC1FAA008E2C5B /* CompleteSwipeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteSwipeView.swift; sourceTree = "<group>"; };
+		FF795CFA2CFC2A61008E2C5B /* SimpleIconTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SimpleIconTextView.swift; sourceTree = "<group>"; };
 		FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextIconBtnView.swift; sourceTree = "<group>"; };
 		FFA857732CFB9F3500ED5C9D /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 			children = (
 				FF795CF62CFC1A6D008E2C5B /* ProfileInfoView.swift */,
 				FF795CF82CFC1FAA008E2C5B /* CompleteSwipeView.swift */,
+				FF795CFA2CFC2A61008E2C5B /* SimpleIconTextView.swift */,
 			);
 			path = SwipeScreen;
 			sourceTree = "<group>";
@@ -313,6 +316,7 @@
 				FFF8DE372CFA667700E5D2A7 /* IconTextView.swift in Sources */,
 				FFF8DE0E2CFA5A5100E5D2A7 /* SwipeScreenVC.swift in Sources */,
 				FF795CF72CFC1A6D008E2C5B /* ProfileInfoView.swift in Sources */,
+				FF795CFB2CFC2A61008E2C5B /* SimpleIconTextView.swift in Sources */,
 				FFA857722CFB903E00ED5C9D /* TextIconBtnView.swift in Sources */,
 				FFF8DE0A2CFA5A5100E5D2A7 /* AppDelegate.swift in Sources */,
 				FF795CEE2CFBF55A008E2C5B /* AlertManager.swift in Sources */,

@@ -10,7 +10,7 @@ import UIKit
 class SwipeScreenVC: UIViewController {
     
     // MARK: - UI Components
-    let profileInfoView = CompleteSwipeView()
+    let completeSwipeView = CompleteSwipeView()
     
     // MARK: - Properties
     private let SWIPE_THRESHOLD: CGFloat = 220
@@ -35,21 +35,21 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.view.addSubview(profileInfoView)
-        profileInfoView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(completeSwipeView)
+        completeSwipeView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            profileInfoView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
-            profileInfoView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -200),
-            profileInfoView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
-            profileInfoView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
+            completeSwipeView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
+            completeSwipeView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -200),
+            completeSwipeView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
+            completeSwipeView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
         ])
     }
     
     // MARK: - Gesture Recognizers
     private func setupGestureRecognizers() {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(beingDragged(_:)))
-        profileInfoView.addGestureRecognizer(panGesture)
+        completeSwipeView.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Selectors
@@ -60,18 +60,18 @@ class SwipeScreenVC: UIViewController {
         
         switch gestureRecognizer.state {
         case .began:
-            originalPoint = profileInfoView.center
+            originalPoint = completeSwipeView.center
         case .changed:
             let rotationStrength = min(xFromCenter / ROTATION_STRENGTH, ROTATION_MAX)
             let rotationAngle = .pi / 8 * rotationStrength
             let scale = max(1 - abs(rotationStrength) / SCALE_STRENGTH, SCALE_MAX)
             
-            profileInfoView.center = CGPoint(x: originalPoint.x + xFromCenter, y: originalPoint.y + yFromCenter)
+            completeSwipeView.center = CGPoint(x: originalPoint.x + xFromCenter, y: originalPoint.y + yFromCenter)
             let transform = CGAffineTransform(rotationAngle: rotationAngle).scaledBy(x: scale, y: scale)
-            profileInfoView.transform = transform
+            completeSwipeView.transform = transform
             
-            // Adjust color gradually based on swipe distance
-            updateColorForSwipe(distance: xFromCenter)
+            // Adjust opacity of images based on swipe distance
+            updateImageOpacityForSwipe(distance: xFromCenter)
         case .ended:
             afterSwipeAction()
         default:
@@ -80,25 +80,29 @@ class SwipeScreenVC: UIViewController {
     }
     
     // MARK: - Helper Methods
-    private func updateColorForSwipe(distance: CGFloat) {
+    private func updateImageOpacityForSwipe(distance: CGFloat) {
         let normalizedDistance = min(abs(distance) / SWIPE_THRESHOLD, 1.0)
+        
         if distance > 0 {
-            // Swiping right - green tint
-            profileInfoView.backgroundColor = UIColor(red: 1 - normalizedDistance, green: 1, blue: 1 - normalizedDistance, alpha: 1)
+            // Swiping right - increase opacity of checkImage
+            completeSwipeView.checkImage.layer.opacity = Float(normalizedDistance*1.2)
+            completeSwipeView.xImage.layer.opacity = 0
         } else {
-            // Swiping left - red tint
-            profileInfoView.backgroundColor = UIColor(red: 1, green: 1 - normalizedDistance, blue: 1 - normalizedDistance, alpha: 1)
+            // Swiping left - increase opacity of xImage
+            completeSwipeView.xImage.layer.opacity = Float(normalizedDistance*1.2)
+            completeSwipeView.checkImage.layer.opacity = 0
         }
     }
     
     private func resetProfilePosition() {
         UIView.animate(withDuration: 0.2) {
-            self.profileInfoView.center = self.originalPoint
-            self.profileInfoView.transform = .identity
-            self.profileInfoView.backgroundColor = .white
+            self.completeSwipeView.center = self.originalPoint
+            self.completeSwipeView.transform = .identity
+            self.completeSwipeView.checkImage.layer.opacity = 0
+            self.completeSwipeView.xImage.layer.opacity = 0
         }
     }
-    
+
     private func afterSwipeAction() {
         if abs(xFromCenter) > SWIPE_THRESHOLD {
             if xFromCenter > 0 {
@@ -106,8 +110,7 @@ class SwipeScreenVC: UIViewController {
             } else {
                 print("Swiped left!")
             }
-            // Remove the view after successful swipe and reset it
-            self.resetProfilePosition()
+            resetProfilePosition()
         } else {
             resetProfilePosition()
         }
