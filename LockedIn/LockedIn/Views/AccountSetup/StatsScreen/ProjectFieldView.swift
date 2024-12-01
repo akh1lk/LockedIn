@@ -27,10 +27,10 @@ class ProjectFieldView: UIView {
     let nameLabel = Utils.generateFieldLabel(for: "Name")
     let roleLabel = Utils.generateFieldLabel(for: "Role")
     
-    let nameTextField = ProjectFieldView.generateTextField(with: "John Doe")
+    let nameTextField = ProjectFieldView.generateTextField(with: "Survival App")
     let roleTextField = ProjectFieldView.generateTextField(with: "Founder")
     
-    private let descriptionTextView: UITextView = {
+    let descriptionTextView: UITextView = {
         let textView = UITextView()
         textView.text = "Describe your project..."
         textView.textColor = .palette.offBlack.withAlphaComponent(0.65)
@@ -89,6 +89,8 @@ class ProjectFieldView: UIView {
         self.addSubview(descriptionTextView)
         descriptionTextView.translatesAutoresizingMaskIntoConstraints = false
         
+        nameTextField.inputAccessoryView = descriptionToolbar
+        roleTextField.inputAccessoryView = descriptionToolbar
         descriptionTextView.inputAccessoryView = descriptionToolbar
         
         descriptionToolbar.frame = CGRect(x: 0, y: 0, width: self.frame.size.width, height: 40)
@@ -120,6 +122,8 @@ class ProjectFieldView: UIView {
     
     // MARK: - Selectors
     @objc func doneButtonPressed() {
+        nameTextField.resignFirstResponder()
+        roleTextField.resignFirstResponder()
         descriptionTextView.resignFirstResponder()
     }
 }

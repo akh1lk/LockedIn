@@ -35,8 +35,6 @@ class InternshipFieldView: UIView {
         padding: 10,
         options: InternshipData.dates)
     
-    
-    
     // MARK: - Data
     private let companyLabel = Utils.generateFieldLabel(for: "Company")
     private let positionLabel = Utils.generateFieldLabel(for: "Position")
@@ -98,6 +96,4 @@ class InternshipFieldView: UIView {
             datePickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
     }
-    
-    // MARK: - Selectors
 }
