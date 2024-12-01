@@ -1,5 +1,5 @@
 //
-//  CompleteSwipeView.swift
+//  CompleteCardView:.swift
 //  LockedIn
 //
 //  Created by Gabriel Castillo on 11/30/24.
@@ -7,8 +7,8 @@
 
 import UIKit
 
-/// A complete swipe view that contains three different subviews that can be gone through.
-class CompleteSwipeView: UIView {
+/// A complete swipe view that contains three different subviews that can be tapped through for a user card.
+class CompleteCardView: UIView {
     
     // MARK: - UI Components
     private lazy var rightButton: UIButton = {
@@ -46,7 +46,16 @@ class CompleteSwipeView: UIView {
     // MARK: - Data
     var currentIndex = 0
     let maxIndex = 2 // this is equal to views.count - 1
-    let views = [ProfileInfoView(color: .blue), ProfileInfoView(color: .systemPink), ProfileInfoView(color: .systemBrown)]
+    let views = [ProfileInfoView(), InternshipInfoView(), ProjectInfoView()] // all the views that can be tapped through
+    
+    // thin progress views.
+    let progressViews: [UIView] = (0..<3).map { i in
+        let view = UIView()
+        view.backgroundColor = i == 0 ? .white : .palette.gray
+        view.layer.cornerRadius = 2
+        view.clipsToBounds = true
+        return view
+    }
     
     // MARK: - Life Cycle
     init() {
@@ -56,6 +65,7 @@ class CompleteSwipeView: UIView {
         self.clipsToBounds = true
         
         setupSubviews()
+        setupProgressViews()
         setupUI()
     }
     
@@ -103,7 +113,7 @@ class CompleteSwipeView: UIView {
     }
     
     private func setupSubviews() {
-        for i in 0...(views.count - 1) {
+        for i in 0..<views.count {
             let view = views[i]
             
             view.isHidden = !(i == 0)
@@ -119,6 +129,30 @@ class CompleteSwipeView: UIView {
             ])
         }
     }
+    
+    private func setupProgressViews() {
+        for i in 0..<progressViews.count {
+            self.addSubview(progressViews[i])
+            progressViews[i].translatesAutoresizingMaskIntoConstraints = false
+        }
+        
+        NSLayoutConstraint.activate([
+            progressViews[1].centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            progressViews[1].widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.275),
+            progressViews[1].heightAnchor.constraint(equalToConstant: 4),
+            progressViews[1].topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
+            
+            progressViews[0].trailingAnchor.constraint(equalTo: progressViews[1].leadingAnchor, constant: -10),
+            progressViews[0].widthAnchor.constraint(equalTo: progressViews[1].widthAnchor),
+            progressViews[0].heightAnchor.constraint(equalTo: progressViews[1].heightAnchor),
+            progressViews[0].topAnchor.constraint(equalTo: progressViews[1].topAnchor),
+            
+            progressViews[2].leadingAnchor.constraint(equalTo: progressViews[1].trailingAnchor, constant: 10),
+            progressViews[2].widthAnchor.constraint(equalTo: progressViews[1].widthAnchor),
+            progressViews[2].heightAnchor.constraint(equalTo: progressViews[1].heightAnchor),
+            progressViews[2].topAnchor.constraint(equalTo: progressViews[1].topAnchor),
+        ])
+    }
 
     // MARK: - Selectors
     @objc func leftButtonTapped() {
@@ -126,8 +160,10 @@ class CompleteSwipeView: UIView {
             print("can't keep on going there buddy")
         } else {
             views[currentIndex].isHidden = true
+            progressViews[currentIndex].backgroundColor = .palette.gray
             currentIndex -= 1
             views[currentIndex].isHidden = false
+            progressViews[currentIndex].backgroundColor = .white
         }
     }
     
@@ -136,8 +172,10 @@ class CompleteSwipeView: UIView {
             print("can't keep on going there buddy")
         } else {
             views[currentIndex].isHidden = true
+            progressViews[currentIndex].backgroundColor = .palette.gray
             currentIndex += 1
             views[currentIndex].isHidden = false
+            progressViews[currentIndex].backgroundColor = .white
         }
     }
 }

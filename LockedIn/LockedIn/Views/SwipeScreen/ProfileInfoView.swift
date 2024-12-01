@@ -66,8 +66,6 @@ class ProfileInfoView: UIView {
         return iv
     }()
     
-    
-    
     let universityIconText = SimpleIconTextView(icon: UIImage(systemName: "location.circle.fill"), text: "Cornell University")
     let yearIconText = SimpleIconTextView(icon: UIImage(systemName: "clock.fill"), text: "Sophomore")
     let degreeIconText = SimpleIconTextView(icon: UIImage(systemName: "graduationcap.fill"), text: "Computer Science")
@@ -75,10 +73,8 @@ class ProfileInfoView: UIView {
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init(color: UIColor) {
+    init() {
         super.init(frame: .zero)
-        
-        self.backgroundColor = color
         setupUI()
     }
     

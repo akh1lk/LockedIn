@@ -22,7 +22,7 @@ class SimpleIconTextView: UIView {
     private let textLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 16)
+        label.font = UIFont(name: "GaretW05-Regular", size: 15)
         label.textAlignment = .left
         return label
     }()
