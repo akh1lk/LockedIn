@@ -67,4 +67,14 @@ class Utils {
         label.text = text
         return label
     }
+    
+    
+    /// Used to generate a thin view for the compelte swipe screen view.
+    static func createThinView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .palette.gray
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
+        return view
+    }
 }
