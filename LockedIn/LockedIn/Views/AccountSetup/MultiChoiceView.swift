@@ -25,6 +25,8 @@ class MultiChoiceView: UIView {
     private var limit: Int
     public var selectedOptions: [IconTextOption] = []
     
+    var parent: SetupAccountVC? // Protocol requires it!
+    
     // MARK: - Life Cycle
     /// Creates a MultiChoiceView for a given array of `IconTextOption` with a heading of `title`
     ///

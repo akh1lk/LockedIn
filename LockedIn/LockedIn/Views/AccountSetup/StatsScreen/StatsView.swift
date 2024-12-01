@@ -82,6 +82,8 @@ class StatsView: UIView {
     private let projectFieldView = ProjectFieldView()
     
     // MARK: - Data
+    /// Alerts will be displayed on parent
+    var parent: SetupAccountVC?
     
     // MARK: - Life Cycle
     init() {
@@ -227,12 +229,16 @@ class StatsView: UIView {
 extension StatsView: SetupAccountSubview {
     func canContinue() -> Bool {
         // Must enter at least internship or project or both, but at least 1
-        if internshipFieldView.isHidden && projectFieldView.isHidden { return false }
+        if internshipFieldView.isHidden && projectFieldView.isHidden {
+            if let p = parent { AlertManager.showMissingProjectInternshipAlert(on: p) }
+            return false
+        }
         
         if !internshipFieldView.isHidden { // if internship fields are shown, all must be filled in.
             if internshipFieldView.companyPickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
                 internshipFieldView.positionPickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
                 internshipFieldView.datePickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+                if let p = parent { AlertManager.showEmptyFieldsAlert(on: p) }
                 return false
             }
         }
@@ -241,6 +247,7 @@ extension StatsView: SetupAccountSubview {
             if projectFieldView.nameTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
                 projectFieldView.roleTextField.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
                 projectFieldView.descriptionTextView.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+                if let p = parent { AlertManager.showEmptyFieldsAlert(on: p) }
                 return false
             }
         }

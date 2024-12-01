@@ -9,6 +9,7 @@ import UIKit
 
 protocol SetupAccountSubview {
     func canContinue() -> Bool
+    var parent: SetupAccountVC? { get set }
 }
 
 class SetupAccountVC: UIViewController {
@@ -48,12 +49,13 @@ class SetupAccountVC: UIViewController {
     private let views: [UIView & SetupAccountSubview] = [
         MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
         MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3),
-        StatsView()
+        StatsView(),
+        SelectPhotoView()
     ]
     
     /// NOTE: Step is index 1, not index 0. Must be converted when accessing views.
     private var currentStep = 1
-    private let totalSteps = 5
+    private let totalSteps = 4
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -98,7 +100,8 @@ class SetupAccountVC: UIViewController {
     /// Setups all the subviews that will be shown here, and then hides them.
     private func setupSubviews() {
         for index in 0...(views.count - 1) {
-            let view = views[index]
+            var view = views[index]
+            view.parent = self
             
             self.view.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -120,10 +123,6 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - Selectors
     @objc func continueButtonTapped() {
-        if let statsView = views[currentStep - 1] as? StatsView {
-            print(statsView.fetchData())
-        }
-        
         if !views[currentStep - 1].canContinue() { return }
         
         if currentStep != totalSteps {
@@ -132,8 +131,13 @@ class SetupAccountVC: UIViewController {
             views[currentStep - 1].isHidden = false
             
         } else {
+            if let statsView = views[currentStep - 1] as? StatsView {
+                print(statsView.fetchData())
+            }
             // TODO: Finish setting up account
             print("finished setuping account")
+            
+            
         }
         
         refreshProgressBar()
