@@ -15,7 +15,7 @@ protocol IconTextViewDelegate {
 /// Custom view that behaves as a button that has an icon and text.
 class IconTextView: UIView {
     // MARK: - UI Components
-    private let backgroundView: UIView = {
+    public let backgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .clear
         view.layer.cornerRadius = 20
@@ -56,7 +56,19 @@ class IconTextView: UIView {
     public let data: IconTextOption
     public var isSelected = false
     
-    // MARK: - Life Cycle
+    // MARK: - Life Cycle (Two Initializers)
+    init(icon: UIImage, text: String, delegate: IconTextViewDelegate) {
+        data = IconTextOption(icon: icon, text: text)
+        self.delegate = delegate
+        
+        super.init(frame: .zero)
+        
+        iconImageView.image = icon
+        textLabel.text = text
+        
+        setupUI()
+    }
+    
     init(with option: IconTextOption, delegate: IconTextViewDelegate) {
         data = option
         self.delegate = delegate

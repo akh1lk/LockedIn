@@ -21,6 +21,33 @@ class Utils {
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
     
+    
+    /// Adds a gradient border to a given UILabel.
+    /// The border is created using the same colors as the `addGradient` function.
+    static func addGradientBorder(to label: UILabel) {
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = [UIColor.palette.blue.cgColor, UIColor.palette.pink.cgColor]
+        gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
+        
+        // Ensure layout is calculated before applying the gradient
+        label.layoutIfNeeded()
+        
+        // Apply the gradient border to the label
+        gradientLayer.frame = label.bounds
+        let shapeLayer = CAShapeLayer()
+        shapeLayer.lineWidth = 8  // Adjust border width
+        shapeLayer.path = UIBezierPath(roundedRect: label.bounds, cornerRadius: 50).cgPath
+        shapeLayer.strokeColor = UIColor.black.cgColor  // Border color
+        shapeLayer.fillColor = UIColor.clear.cgColor
+        gradientLayer.mask = shapeLayer
+        
+        // Set gradient layer's opacity to 1 to ensure it is fully opaque
+        gradientLayer.opacity = 1.0
+        
+        label.layer.addSublayer(gradientLayer)
+    }
+    
     /// Creates a placeholder NSAttributedString that is more opaque than regular text.
     static func createPlaceholder(for text: String) -> NSAttributedString {
         return NSAttributedString(
@@ -31,7 +58,7 @@ class Utils {
         )
     }
     
-    /// Used to generate labels for text fields in account setup screen. 
+    /// Used to generate labels for text fields in account setup screen.
     static func generateFieldLabel(for text: String) -> UILabel {
         let label = UILabel()
         label.textColor = .palette.offBlack
