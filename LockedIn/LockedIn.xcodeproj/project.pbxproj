@@ -12,6 +12,7 @@
 		FF795CEC2CFBDB3A008E2C5B /* AccountSetupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CEB2CFBDB3A008E2C5B /* AccountSetupData.swift */; };
 		FF795CEE2CFBF55A008E2C5B /* AlertManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CED2CFBF55A008E2C5B /* AlertManager.swift */; };
 		FF795CF02CFBF92F008E2C5B /* SelectPhotoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CEF2CFBF92F008E2C5B /* SelectPhotoView.swift */; };
+		FF795CF22CFC0A94008E2C5B /* LocationAccessVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CF12CFC0A94008E2C5B /* LocationAccessVC.swift */; };
 		FFA857702CFB8F9D00ED5C9D /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */; };
 		FFA857722CFB903E00ED5C9D /* TextIconBtnView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */; };
 		FFA857742CFB9F3500ED5C9D /* PickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFA857732CFB9F3500ED5C9D /* PickerView.swift */; };
@@ -43,6 +44,7 @@
 		FF795CEB2CFBDB3A008E2C5B /* AccountSetupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSetupData.swift; sourceTree = "<group>"; };
 		FF795CED2CFBF55A008E2C5B /* AlertManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertManager.swift; sourceTree = "<group>"; };
 		FF795CEF2CFBF92F008E2C5B /* SelectPhotoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectPhotoView.swift; sourceTree = "<group>"; };
+		FF795CF12CFC0A94008E2C5B /* LocationAccessVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAccessVC.swift; sourceTree = "<group>"; };
 		FFA8576F2CFB8F9D00ED5C9D /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		FFA857712CFB903E00ED5C9D /* TextIconBtnView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextIconBtnView.swift; sourceTree = "<group>"; };
 		FFA857732CFB9F3500ED5C9D /* PickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickerView.swift; sourceTree = "<group>"; };
@@ -159,6 +161,7 @@
 			children = (
 				FFF8DE202CFA5D2100E5D2A7 /* AccountSetup */,
 				FFF8DE0D2CFA5A5100E5D2A7 /* SwipeScreenVC.swift */,
+				FF795CF12CFC0A94008E2C5B /* LocationAccessVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -299,6 +302,7 @@
 				FF795CF02CFBF92F008E2C5B /* SelectPhotoView.swift in Sources */,
 				FFA857772CFBA71B00ED5C9D /* InternshipFieldView.swift in Sources */,
 				FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */,
+				FF795CF22CFC0A94008E2C5B /* LocationAccessVC.swift in Sources */,
 				FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */,
 				FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */,
 				FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */,
