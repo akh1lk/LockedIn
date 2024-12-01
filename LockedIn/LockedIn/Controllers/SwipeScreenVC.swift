@@ -17,7 +17,7 @@ class SwipeScreenVC: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .white
+        view.backgroundColor = .palette.offWhite
         
         // TODO: Add location checking functionality here!
         let vc = LocationAccessVC()
