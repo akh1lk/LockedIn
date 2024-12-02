@@ -134,8 +134,8 @@ class SetupAccountVC: UIViewController {
             if let statsView = views[currentStep - 1] as? StatsView {
                 print(statsView.fetchData())
             }
+            
             // TODO: Finish setting up account
-            print("finished setuping account")
             
             if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.resetRootViewController()
@@ -154,7 +154,6 @@ class SetupAccountVC: UIViewController {
             
         } else {
             // TODO: Cancel account setup
-            print("cancled account setup")
             self.navigationController?.popViewController(animated: true)
         }
         

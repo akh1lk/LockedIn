@@ -6,6 +6,11 @@
 //
 import UIKit
 
+private enum SwipeDirection {
+    case right
+    case left
+}
+
 /// The screen where users swipe on people they want to network with.
 class SwipeScreenVC: UIViewController {
     
@@ -34,7 +39,7 @@ class SwipeScreenVC: UIViewController {
     private let moreInfoButton = InteractiveButton(imageName: "arrow-icon", color: .palette.lightPurple, action: #selector(undoButtonTapped), cornerRadius: 25, borderWidth: 3)
     
     // MARK: - Properties
-    private let SWIPE_THRESHOLD: CGFloat = 200
+    private let SWIPE_THRESHOLD: CGFloat = 180
     
     private var originalPoint: CGPoint = .zero
     private let ROTATION_STRENGTH: CGFloat = 320.0
@@ -46,68 +51,12 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
-    let cardViews: [CompleteCardView]
+    let cardViews: [CompleteCardView] = TestingData.users
     var activeCardView: CompleteCardView?
+    private var isAnimating: Bool = false
     
     // MARK: - Life Cycle
     init() {
-        cardViews = [
-            CompleteCardView(with: UserCardData(
-                image: UIImage(named: "john-pork"),
-                name: "John Pork",
-                university: .brown,
-                year: .junior,
-                degree: .finance,
-                crackedRating: 69,
-                internship: nil,
-                project: nil
-            )),
-            
-            CompleteCardView(with: UserCardData(
-                image: UIImage(named: "andy"),
-                name: "Andrew Myers",
-                university: .harvard,
-                year: .sophomore,
-                degree: .computerScience,
-                crackedRating: 999,
-                internship: nil,
-                project: nil
-            )),
-            
-            CompleteCardView(with: UserCardData(
-                image: UIImage(named: "daddy-noel"),
-                name: "Daddy Noel",
-                university: .mit,
-                year: .freshmen,
-                degree: .business,
-                crackedRating: 100,
-                internship: nil,
-                project: nil
-            )),
-            
-            CompleteCardView(with: UserCardData(
-                image: UIImage(named: "ye"),
-                name: "Ye",
-                university: .harvard,
-                year: .senior,
-                degree: .business,
-                crackedRating: 99,
-                internship: nil,
-                project: nil
-            )),
-            
-            CompleteCardView(with: UserCardData(
-                image: UIImage(named: "diddy"),
-                name: "Sean J. Combs",
-                university: .cornell,
-                year: .sophomore,
-                degree: .softwareEngineering,
-                crackedRating: 95,
-                internship: nil,
-                project: nil
-            )),
-        ]
-        
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -212,7 +161,8 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Gesture Selector
     @objc func beingDragged(_ gestureRecognizer: UIPanGestureRecognizer) {
-    
+        guard !isAnimating else { return } // Prevent drag interactions during animation
+        
         if let cardView = activeCardView {
             
             let translation = gestureRecognizer.translation(in: view)
@@ -243,12 +193,15 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Button Selectors
     @objc func checkButtonTapped() {
-        print("check baby!")
+        guard !isAnimating else { return }
+        swipe(.right, longDuration: true)
     }
-    
+
     @objc func xButtonTapped() {
-        print("cross baby!")
+        guard !isAnimating else { return }
+        swipe(.left, longDuration: true)
     }
+
     
     @objc func undoButtonTapped() {
         print("undo baby!")
@@ -302,21 +255,23 @@ class SwipeScreenVC: UIViewController {
     private func afterSwipeAction() {
         if abs(xFromCenter) > SWIPE_THRESHOLD {
             if xFromCenter > 0 {
-                swipeRight()
+                swipe(.right)
             } else {
-                swipeLeft()
+                swipe(.left)
             }
             resetProfilePosition()
         } else {
             resetProfilePosition()
         }
     }
-    
-    /// Removes the active card view from the view with a right swipe animation and triggers follow-up actions.
-    private func swipeRight() {
-        guard let cardView = activeCardView else { return }
 
-        // Prepare the next card first
+    /// Removes the active card view from the view with a swipe animation in the specified direction and triggers follow-up actions.
+    private func swipe(_ direction: SwipeDirection, longDuration: Bool = false) {
+        guard let cardView = activeCardView, !isAnimating else { return }
+
+        isAnimating = true // Lock animation
+
+        // Prepare the next card
         if let currentIndex = cardViews.firstIndex(of: cardView), currentIndex > 0 {
             activeCardView = cardViews[currentIndex - 1]
             setupGestureRecognizers()
@@ -324,21 +279,40 @@ class SwipeScreenVC: UIViewController {
             activeCardView = nil
         }
 
-        // Animate the card off-screen to the right
-        UIView.animate(withDuration: 0.3, animations: {
-            cardView.center = CGPoint(x: self.view.frame.width + cardView.frame.width, y: cardView.center.y)
-            cardView.transform = CGAffineTransform(rotationAngle: .pi / 8)
-            cardView.alpha = 0
-        }) { _ in
-            // Remove the card from the view hierarchy
-            cardView.removeFromSuperview()
-            print("Swiped right on \(cardView.userData.name) baby!")
-            
-            //TODO: Add networking logic here.
+        let offScreenX = direction == .right ? self.view.frame.width + cardView.frame.width : -cardView.frame.width
+        let rotationAngle: CGFloat = direction == .right ? .pi / 8 : -.pi / 8
+
+        let targetImageView = direction == .right ? cardView.checkImage : cardView.xImage
+        let checkImageOpacity: Float = 1
+
+        let animateCardOffScreen = {
+            UIView.animate(withDuration: 0.3, animations: {
+                cardView.center = CGPoint(x: offScreenX, y: cardView.center.y)
+                cardView.transform = CGAffineTransform(rotationAngle: rotationAngle)
+            }) { _ in
+                // Animation completed
+                cardView.removeFromSuperview()
+                let directionText = direction == .right ? "right" : "left"
+                print("Swiped \(directionText) on \(cardView.userData.name) baby!")
+
+                self.isAnimating = false // Unlock animation
+
+                // TODO: Add networking logic here.
+            }
+        }
+
+        if longDuration {
+            // First animate opacity
+            UIView.animate(withDuration: 0.3, animations: {
+                targetImageView.layer.opacity = checkImageOpacity
+            }, completion: { _ in
+                animateCardOffScreen()
+            })
+        } else {
+            // Directly animate card off screen
+            animateCardOffScreen()
         }
     }
-    
-    private func swipeLeft() {
-        swipeRight() // temporarily just for testing purposes
-    }
+
+
 }

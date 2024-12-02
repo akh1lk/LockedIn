@@ -168,9 +168,7 @@ class CompleteCardView: UIView {
 
     // MARK: - Selectors
     @objc func leftButtonTapped() {
-        if currentIndex == 0 {
-            print("can't keep on going there buddy")
-        } else {
+        if currentIndex != 0 {
             views[currentIndex].isHidden = true
             progressViews[currentIndex].backgroundColor = .palette.gray
             currentIndex -= 1
@@ -180,9 +178,7 @@ class CompleteCardView: UIView {
     }
     
     @objc func rightButtonTapped() {
-        if currentIndex == maxIndex {
-            print("can't keep on going there buddy")
-        } else {
+        if currentIndex != maxIndex {
             views[currentIndex].isHidden = true
             progressViews[currentIndex].backgroundColor = .palette.gray
             currentIndex += 1
