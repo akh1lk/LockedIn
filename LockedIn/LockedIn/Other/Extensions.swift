@@ -25,6 +25,7 @@ extension UIColor {
         let red = UIColor(red: 0.87, green: 0.47, blue: 0.58, alpha: 1.00)
         let lightPurple = UIColor(red: 0.47, green: 0.37, blue: 0.81, alpha: 1.00)
         let gray = UIColor(red: 0.73, green: 0.73, blue: 0.81, alpha: 1.00)
+        let offPurple = UIColor(red: 0.95, green: 0.94, blue: 1.00, alpha: 1.00)
         
     }
 }
