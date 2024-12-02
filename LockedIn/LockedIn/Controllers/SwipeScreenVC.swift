@@ -20,6 +20,13 @@ class SwipeScreenVC: UIViewController {
         return iv
     }()
     
+    private let logoImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.image = UIImage(named: "logo-heading")
+        return iv
+    }()
+    
     private let checkButton = InteractiveButton(imageName: "check-icon", color: .palette.green, action: #selector(checkButtonTapped))
 
     private let xButton = InteractiveButton(imageName: "x-icon", color: .palette.red, action: #selector(xButtonTapped))
@@ -42,7 +49,7 @@ class SwipeScreenVC: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .palette.offWhite
+        view.backgroundColor = .palette.offPurple
         navigationController?.setNavigationBarHidden(true, animated: false)
         
         setupUI()
@@ -51,6 +58,9 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        self.view.addSubview(logoImageView)
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(cardDepthImage)
         cardDepthImage.translatesAutoresizingMaskIntoConstraints = false
         
@@ -70,8 +80,13 @@ class SwipeScreenVC: UIViewController {
         moreInfoButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            completeCardView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
-            completeCardView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -200),
+            logoImageView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -30),
+            logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            logoImageView.heightAnchor.constraint(equalToConstant: 50),
+            logoImageView.widthAnchor.constraint(equalToConstant: 150),
+            
+            completeCardView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 20),
+            completeCardView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -175),
             completeCardView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
             completeCardView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
             
