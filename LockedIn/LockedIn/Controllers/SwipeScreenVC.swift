@@ -20,42 +20,13 @@ class SwipeScreenVC: UIViewController {
         return iv
     }()
     
-    private lazy var checkButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "check-icon")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.backgroundColor = .clear
-        button.tintColor = .palette.green
-        button.layer.borderColor = UIColor.palette.green.cgColor
-        button.layer.borderWidth = 4
-        button.layer.cornerRadius = 50
-        button.adjustsImageWhenHighlighted = false  // Prevent tint color change
-        button.addTarget(self, action: #selector(checkButtonTapped), for: .touchUpInside)
-        button.addTarget(self, action: #selector(handleCheckButtonPressDown), for: .touchDown)
-        button.addTarget(self, action: #selector(resetButtonColors), for: .touchUpInside)
-        button.addTarget(self, action: #selector(resetButtonColors), for: .touchCancel)
-        button.addTarget(self, action: #selector(resetButtonColors), for: .touchDragExit)
-        return button
-    }()
+    private let checkButton = InteractiveButton(imageName: "check-icon", color: .palette.green, action: #selector(checkButtonTapped))
 
-    private lazy var xButton: UIButton = {
-        let button = UIButton()
-        button.setImage(UIImage(named: "x-icon")?.withRenderingMode(.alwaysTemplate), for: .normal)
-        button.imageView?.contentMode = .scaleAspectFit
-        button.backgroundColor = .clear
-        button.tintColor = .palette.red
-        button.layer.borderColor = UIColor.palette.red.cgColor
-        button.layer.borderWidth = 4
-        button.layer.cornerRadius = 50
-        button.adjustsImageWhenHighlighted = false  // Prevent tint color change
-        button.addTarget(self, action: #selector(xButtonTapped), for: .touchUpInside)
-        button.addTarget(self, action: #selector(handleXButtonPressDown), for: .touchDown)
-        button.addTarget(self, action: #selector(resetButtonColors), for: .touchUpInside)
-        button.addTarget(self, action: #selector(resetButtonColors), for: .touchCancel)
-        button.addTarget(self, action: #selector(resetButtonColors), for: .touchDragExit)
-        return button
-    }()
-
+    private let xButton = InteractiveButton(imageName: "x-icon", color: .palette.red, action: #selector(xButtonTapped))
+    
+    private let undoButton = InteractiveButton(imageName: "undo-icon", color: .palette.lightBlue, action: #selector(undoButtonTapped), cornerRadius: 25, borderWidth: 3)
+    
+    private let moreInfoButton = InteractiveButton(imageName: "arrow-icon", color: .palette.lightPurple, action: #selector(undoButtonTapped), cornerRadius: 25, borderWidth: 3)
     
     // MARK: - Properties
     private let SWIPE_THRESHOLD: CGFloat = 200
@@ -92,6 +63,12 @@ class SwipeScreenVC: UIViewController {
         self.view.addSubview(xButton)
         xButton.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(undoButton)
+        undoButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.view.addSubview(moreInfoButton)
+        moreInfoButton.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             completeCardView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100),
             completeCardView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -200),
@@ -105,14 +82,25 @@ class SwipeScreenVC: UIViewController {
             
             checkButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 10),
             checkButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -120),
-            checkButton.heightAnchor.constraint(equalToConstant: 100),
-            checkButton.widthAnchor.constraint(equalToConstant: 100),
+            checkButton.heightAnchor.constraint(equalToConstant: 90),
+            checkButton.widthAnchor.constraint(equalToConstant: 90),
             
             xButton.trailingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: -10),
             xButton.bottomAnchor.constraint(equalTo: checkButton.bottomAnchor),
             xButton.heightAnchor.constraint(equalTo: checkButton.heightAnchor),
             xButton.widthAnchor.constraint(equalTo: checkButton.widthAnchor),
             
+            undoButton.trailingAnchor.constraint(equalTo: xButton.leadingAnchor, constant: -15),
+            undoButton.centerYAnchor.constraint(equalTo: xButton.centerYAnchor),
+            undoButton.heightAnchor.constraint(equalToConstant: 50),
+            undoButton.widthAnchor.constraint(equalToConstant: 50),
+            
+            
+            moreInfoButton.leadingAnchor.constraint(equalTo: checkButton.trailingAnchor, constant: 15),
+            moreInfoButton.centerYAnchor.constraint(equalTo: checkButton.centerYAnchor),
+            moreInfoButton.heightAnchor.constraint(equalToConstant: 50),
+            moreInfoButton.widthAnchor.constraint(equalToConstant: 50),
+
         ])
     }
     
@@ -158,28 +146,10 @@ class SwipeScreenVC: UIViewController {
         print("cross baby!")
     }
     
-    @objc private func handleCheckButtonPressDown() {
-        UIView.animate(withDuration: 0.1) {
-            self.checkButton.backgroundColor = .palette.green
-            self.checkButton.tintColor = .white
-        }
+    @objc func undoButtonTapped() {
+        print("undo baby!")
     }
 
-    @objc private func handleXButtonPressDown() {
-        UIView.animate(withDuration: 0.1) {
-            self.xButton.backgroundColor = .palette.red
-            self.xButton.tintColor = .white
-        }
-    }
-
-    @objc private func resetButtonColors() {
-        UIView.animate(withDuration: 0.1) {
-            self.checkButton.backgroundColor = .clear
-            self.checkButton.tintColor = .palette.green
-            self.xButton.backgroundColor = .clear
-            self.xButton.tintColor = .palette.red
-        }
-    }
 
     
     // MARK: - Helper Methods

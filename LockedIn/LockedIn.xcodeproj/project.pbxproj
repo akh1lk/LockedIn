@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		FF654E702CFD18D9000E111E /* InternshipInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E6F2CFD18D9000E111E /* InternshipInfoView.swift */; };
 		FF654E722CFD18F9000E111E /* ProjectInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E712CFD18F9000E111E /* ProjectInfoView.swift */; };
+		FF654E742CFD2A16000E111E /* InteractiveButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E732CFD2A16000E111E /* InteractiveButton.swift */; };
 		FF795CE82CFBC47F008E2C5B /* ProjectFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CE72CFBC47F008E2C5B /* ProjectFieldView.swift */; };
 		FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CE92CFBCD28008E2C5B /* TextField.swift */; };
 		FF795CEC2CFBDB3A008E2C5B /* AccountSetupData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF795CEB2CFBDB3A008E2C5B /* AccountSetupData.swift */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		FF654E6F2CFD18D9000E111E /* InternshipInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InternshipInfoView.swift; sourceTree = "<group>"; };
 		FF654E712CFD18F9000E111E /* ProjectInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectInfoView.swift; sourceTree = "<group>"; };
+		FF654E732CFD2A16000E111E /* InteractiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveButton.swift; sourceTree = "<group>"; };
 		FF795CE72CFBC47F008E2C5B /* ProjectFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectFieldView.swift; sourceTree = "<group>"; };
 		FF795CE92CFBCD28008E2C5B /* TextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		FF795CEB2CFBDB3A008E2C5B /* AccountSetupData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSetupData.swift; sourceTree = "<group>"; };
@@ -103,6 +105,7 @@
 				FF795CF62CFC1A6D008E2C5B /* ProfileInfoView.swift */,
 				FF654E6F2CFD18D9000E111E /* InternshipInfoView.swift */,
 				FF654E712CFD18F9000E111E /* ProjectInfoView.swift */,
+				FF654E732CFD2A16000E111E /* InteractiveButton.swift */,
 			);
 			path = SwipeScreen;
 			sourceTree = "<group>";
@@ -334,6 +337,7 @@
 				FFA857772CFBA71B00ED5C9D /* InternshipFieldView.swift in Sources */,
 				FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */,
 				FF795CF22CFC0A94008E2C5B /* LocationAccessVC.swift in Sources */,
+				FF654E742CFD2A16000E111E /* InteractiveButton.swift in Sources */,
 				FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */,
 				FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */,
 				FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */,
