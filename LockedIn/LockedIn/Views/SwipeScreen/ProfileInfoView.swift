@@ -16,7 +16,7 @@ class ProfileInfoView: UIView {
         label.textAlignment = .center
         label.font = UIFont(name: "GaretW05-Regular", size: 32)
         
-        let fullText = "Sean J. Combs"
+        let fullText = "Lorem Ipsum"
         let attributedString = NSMutableAttributedString(string: fullText)
         
         // Decrease letter spacing (kern)
@@ -35,20 +35,6 @@ class ProfileInfoView: UIView {
         label.backgroundColor = .palette.offBlack.withAlphaComponent(0.69)
         label.layer.cornerRadius = 50
         label.clipsToBounds = true
-        
-        let fullText = "95%\nCracked"
-        let attributedString = NSMutableAttributedString(string: fullText)
-        
-        // Style for "95%"
-        let percentageRange = (fullText as NSString).range(of: "95%")
-        attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 26, weight: .heavy), range: percentageRange)
-        
-        // Style for "Cracked"
-        let crackedRange = (fullText as NSString).range(of: "Cracked")
-        attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 18), range: crackedRange)
-        
-        label.attributedText = attributedString
-        
         return label
     }()
     
@@ -66,15 +52,25 @@ class ProfileInfoView: UIView {
         return iv
     }()
     
-    let universityIconText = SimpleIconTextView(icon: UIImage(systemName: "location.circle.fill"), text: "Cornell University")
-    let yearIconText = SimpleIconTextView(icon: UIImage(systemName: "clock.fill"), text: "Sophomore")
-    let degreeIconText = SimpleIconTextView(icon: UIImage(systemName: "graduationcap.fill"), text: "Computer Science")
+    let universityIconText: SimpleIconTextView
+    let yearIconText: SimpleIconTextView
+    let degreeIconText: SimpleIconTextView
     
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init() {
+    init(with data: UserCardData) {
+        profileImageView.image = data.image
+        nameLabel.text = data.name
+        
+        universityIconText = SimpleIconTextView(icon: UIImage(systemName: "location.circle.fill"), text: data.university.rawValue)
+        yearIconText = SimpleIconTextView(icon: UIImage(systemName: "clock.fill"), text: data.year.rawValue)
+        degreeIconText = SimpleIconTextView(icon: UIImage(systemName: "graduationcap.fill"), text: data.degree.rawValue)
+        
+        crackedLabel.attributedText = Utils.createBoldPercentageAttributedString(percentage: data.crackedRating)
         super.init(frame: .zero)
+        
+        
         setupUI()
     }
     

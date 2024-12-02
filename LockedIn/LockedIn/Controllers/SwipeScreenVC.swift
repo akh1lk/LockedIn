@@ -46,17 +46,82 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
-    let cardViews = [CompleteCardView(), CompleteCardView()]
+    let cardViews: [CompleteCardView]
     var activeCardView: CompleteCardView?
     
     // MARK: - Life Cycle
+    init() {
+        cardViews = [
+            CompleteCardView(with: UserCardData(
+                image: UIImage(named: "john-pork"),
+                name: "John Pork",
+                university: .brown,
+                year: .junior,
+                degree: .finance,
+                crackedRating: 69,
+                internship: nil,
+                project: nil
+            )),
+            
+            CompleteCardView(with: UserCardData(
+                image: UIImage(named: "andy"),
+                name: "Andrew Myers",
+                university: .harvard,
+                year: .sophomore,
+                degree: .computerScience,
+                crackedRating: 999,
+                internship: nil,
+                project: nil
+            )),
+            
+            CompleteCardView(with: UserCardData(
+                image: UIImage(named: "daddy-noel"),
+                name: "Daddy Noel",
+                university: .mit,
+                year: .freshmen,
+                degree: .business,
+                crackedRating: 100,
+                internship: nil,
+                project: nil
+            )),
+            
+            CompleteCardView(with: UserCardData(
+                image: UIImage(named: "ye"),
+                name: "Ye",
+                university: .harvard,
+                year: .senior,
+                degree: .business,
+                crackedRating: 99,
+                internship: nil,
+                project: nil
+            )),
+            
+            CompleteCardView(with: UserCardData(
+                image: UIImage(named: "diddy"),
+                name: "Sean J. Combs",
+                university: .cornell,
+                year: .sophomore,
+                degree: .softwareEngineering,
+                crackedRating: 95,
+                internship: nil,
+                project: nil
+            )),
+        ]
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .palette.offPurple
         navigationController?.setNavigationBarHidden(true, animated: false)
         
         // TODO: Read from the database
-        activeCardView = cardViews[cardViews.count - 1]
+        activeCardView = cardViews.last
         
         setupCardViews()
         
@@ -141,17 +206,14 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Gesture Recognizers
     private func setupGestureRecognizers() {
-        print("running2")
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(beingDragged(_:)))
-        if activeCardView == nil { print("card view is optional jj!") }
         activeCardView?.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Gesture Selector
     @objc func beingDragged(_ gestureRecognizer: UIPanGestureRecognizer) {
-        print("running!")
+    
         if let cardView = activeCardView {
-            print("card view is not optional bitch!")
             
             let translation = gestureRecognizer.translation(in: view)
             xFromCenter = translation.x
@@ -240,13 +302,43 @@ class SwipeScreenVC: UIViewController {
     private func afterSwipeAction() {
         if abs(xFromCenter) > SWIPE_THRESHOLD {
             if xFromCenter > 0 {
-                print("Swiped right!")
+                swipeRight()
             } else {
-                print("Swiped left!")
+                swipeLeft()
             }
             resetProfilePosition()
         } else {
             resetProfilePosition()
         }
+    }
+    
+    /// Removes the active card view from the view with a right swipe animation and triggers follow-up actions.
+    private func swipeRight() {
+        guard let cardView = activeCardView else { return }
+
+        // Prepare the next card first
+        if let currentIndex = cardViews.firstIndex(of: cardView), currentIndex > 0 {
+            activeCardView = cardViews[currentIndex - 1]
+            setupGestureRecognizers()
+        } else {
+            activeCardView = nil
+        }
+
+        // Animate the card off-screen to the right
+        UIView.animate(withDuration: 0.3, animations: {
+            cardView.center = CGPoint(x: self.view.frame.width + cardView.frame.width, y: cardView.center.y)
+            cardView.transform = CGAffineTransform(rotationAngle: .pi / 8)
+            cardView.alpha = 0
+        }) { _ in
+            // Remove the card from the view hierarchy
+            cardView.removeFromSuperview()
+            print("Swiped right on \(cardView.userData.name) baby!")
+            
+            //TODO: Add networking logic here.
+        }
+    }
+    
+    private func swipeLeft() {
+        swipeRight() // temporarily just for testing purposes
     }
 }
