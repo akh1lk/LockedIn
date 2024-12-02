@@ -14,7 +14,7 @@ class InternshipInfoView: UIView {
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init() {
+    init(with data: UserCardData) {
         super.init(frame: .zero)
         setupUI()
     }

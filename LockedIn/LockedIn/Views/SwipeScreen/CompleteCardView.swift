@@ -44,9 +44,12 @@ class CompleteCardView: UIView {
     }()
     
     // MARK: - Data
+    let userData: UserCardData
     var currentIndex = 0
     let maxIndex = 2 // this is equal to views.count - 1
-    let views = [ProfileInfoView(), InternshipInfoView(), ProjectInfoView()] // all the views that can be tapped through
+    
+    /// All the views that can be tapped through in this card
+    let views: [UIView]
     
     // thin progress views.
     let progressViews: [UIView] = (0..<3).map { i in
@@ -58,7 +61,16 @@ class CompleteCardView: UIView {
     }
     
     // MARK: - Life Cycle
-    init() {
+    init(with data: UserCardData) {
+        
+        self.userData = data
+        
+        self.views = [ // set views with data.
+            ProfileInfoView(with: userData),
+            InternshipInfoView(with: userData),
+            ProjectInfoView(with: userData)
+        ]
+        
         super.init(frame: .zero)
         
         self.layer.cornerRadius = 30

@@ -28,6 +28,10 @@
 		FFBF3B9D2CFAC65C008FD882 /* SetupAccountVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBF3B9C2CFAC65C008FD882 /* SetupAccountVC.swift */; };
 		FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBF3BA02CFACC9C008FD882 /* Utils.swift */; };
 		FFBF3BA32CFAD2D7008FD882 /* WebViewerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFBF3BA22CFAD2D7008FD882 /* WebViewerController.swift */; };
+		FFDC470C2CFD6D0F001466FB /* UserCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDC470B2CFD6D0F001466FB /* UserCardData.swift */; };
+		FFDC470E2CFD6FFB001466FB /* Year.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDC470D2CFD6FFB001466FB /* Year.swift */; };
+		FFDC47102CFD7002001466FB /* Degree.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDC470F2CFD7002001466FB /* Degree.swift */; };
+		FFDC47122CFD70B8001466FB /* Universities.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFDC47112CFD70B8001466FB /* Universities.swift */; };
 		FFF8DE0A2CFA5A5100E5D2A7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */; };
 		FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */; };
 		FFF8DE0E2CFA5A5100E5D2A7 /* SwipeScreenVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFF8DE0D2CFA5A5100E5D2A7 /* SwipeScreenVC.swift */; };
@@ -67,6 +71,10 @@
 		FFBF3B9C2CFAC65C008FD882 /* SetupAccountVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetupAccountVC.swift; sourceTree = "<group>"; };
 		FFBF3BA02CFACC9C008FD882 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 		FFBF3BA22CFAD2D7008FD882 /* WebViewerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewerController.swift; sourceTree = "<group>"; };
+		FFDC470B2CFD6D0F001466FB /* UserCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserCardData.swift; sourceTree = "<group>"; };
+		FFDC470D2CFD6FFB001466FB /* Year.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Year.swift; sourceTree = "<group>"; };
+		FFDC470F2CFD7002001466FB /* Degree.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Degree.swift; sourceTree = "<group>"; };
+		FFDC47112CFD70B8001466FB /* Universities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Universities.swift; sourceTree = "<group>"; };
 		FFF8DE062CFA5A5100E5D2A7 /* LockedIn.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LockedIn.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -127,6 +135,9 @@
 			children = (
 				FFF8DE382CFA82D500E5D2A7 /* OptionsData.swift */,
 				FFA857792CFBAA3300ED5C9D /* InternshipData.swift */,
+				FFDC470D2CFD6FFB001466FB /* Year.swift */,
+				FFDC470F2CFD7002001466FB /* Degree.swift */,
+				FFDC47112CFD70B8001466FB /* Universities.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -207,6 +218,7 @@
 		FFF8DE1F2CFA5A9D00E5D2A7 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				FFDC470B2CFD6D0F001466FB /* UserCardData.swift */,
 				FFF8DE2A2CFA5F4200E5D2A7 /* IconTextOption.swift */,
 				FF795CEB2CFBDB3A008E2C5B /* AccountSetupData.swift */,
 			);
@@ -338,11 +350,15 @@
 				FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */,
 				FF795CF22CFC0A94008E2C5B /* LocationAccessVC.swift in Sources */,
 				FF654E742CFD2A16000E111E /* InteractiveButton.swift in Sources */,
+				FFDC47102CFD7002001466FB /* Degree.swift in Sources */,
 				FFF8DE0C2CFA5A5100E5D2A7 /* SceneDelegate.swift in Sources */,
+				FFDC470C2CFD6D0F001466FB /* UserCardData.swift in Sources */,
 				FFF8DE392CFA82D500E5D2A7 /* OptionsData.swift in Sources */,
+				FFDC470E2CFD6FFB001466FB /* Year.swift in Sources */,
 				FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */,
 				FF795CEC2CFBDB3A008E2C5B /* AccountSetupData.swift in Sources */,
 				FFA857702CFB8F9D00ED5C9D /* StatsView.swift in Sources */,
+				FFDC47122CFD70B8001466FB /* Universities.swift in Sources */,
 				FFF8DE272CFA5EDB00E5D2A7 /* MultiChoiceView.swift in Sources */,
 				FFA857742CFB9F3500ED5C9D /* PickerView.swift in Sources */,
 				FFBF3B9D2CFAC65C008FD882 /* SetupAccountVC.swift in Sources */,

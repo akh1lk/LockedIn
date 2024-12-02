@@ -77,4 +77,20 @@ class Utils {
         view.clipsToBounds = true
         return view
     }
+    
+    /// Create a bold attributed text for the cracked label
+    static func createBoldPercentageAttributedString(percentage: Int, crackedText: String = "Cracked") -> NSAttributedString {
+        let fullText = "\(percentage)%\n\(crackedText)"
+        let attributedString = NSMutableAttributedString(string: fullText)
+        
+        // Bold the percentage part
+        let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
+        attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 26, weight: .heavy), range: percentageRange)
+        
+        // Style for the "Cracked" text
+        let crackedRange = (fullText as NSString).range(of: crackedText)
+        attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 18), range: crackedRange)
+        
+        return attributedString
+    }
 }
