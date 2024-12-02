@@ -1,130 +1,143 @@
+#Team #3 MidPoint for AppDev Hackathon FA24
+
 from flask_sqlalchemy import SQLAlchemy
+from cryptography.fernet import Fernet
+#SQL Alchemy, Encrypt Messages implementation
 
 db = SQLAlchemy()
 
-# your classes here
-
-#association_table
-
-course_user_association_table = db.Table(
-    "course_user_association_table",
+# assocation table for connections (many to many)
+connection_table = db.Table(
+    "connections",
     db.Model.metadata,
-    db.Column("course_id", db.Integer, db.ForeignKey("courses.id")),
-    db.Column("user_id", db.Integer, db.ForeignKey("users.id")),
-    db.Column("role", db.String, nullable=False) # student or instructor
+    db.Column("id", db.Integer, primary_key=True, autoincrement=True),
+    db.Column("user1_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
+    db.Column("user2_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
 )
-
-class Course(db.Model):
-    """
-    Course Model
-    One-To-Many -> Assignments
-    Many-To-Many -> Instructors
-    Many-To-Many -> Students
-    """
-
-    #columns
-    __tablename__ = "courses"
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    code = db.Column(db.String, nullable=False)
-    name = db.Column(db.String,nullable=False)
-    #foreign columns
-    assignments = db.relationship("Assignment",cascade="delete")
-    users = db.relationship("User", 
-                                  secondary = course_user_association_table, 
-                                  back_populates = "courses") 
-    
-    def __init__(self, **kwargs):
-        """
-        Initialize Course object
-        """
-        self.code = kwargs.get("code","")
-        self.name = kwargs.get("name","")
-         
-    def serialize(self):
-        return {
-            "id":self.id,
-            "name":self.name,
-            "code":self.code,
-            "assignments": [a.s_serialize() for a in self.assignments],
-            "instructors": [user.s_serialize() for user in self.users if 
-                             self.get_user_role(user.id) == "instructor"],
-            "students": [user.s_serialize() for user in self.users if 
-                             self.get_user_role(user.id) == "student"]
-        }
-
-    def s_serialize(self):
-        return {
-            "id":self.id,
-            "name":self.name,
-            "code":self.code
-        }
-    
-    def get_user_role(self, user_id):
-        # Helper method to fetch the role of a user in this course
-        association = db.session.query(course_user_association_table).filter_by(
-            course_id=self.id, user_id=user_id).first()
-        return association.role if association else None
-     
-class Assignment(db.Model):
-    """
-    Assignment Model
-    Many-To-One -> Course
-    """
-    __tablename__ = "assignments"
-    id = db.Column(db.Integer, primary_key=True,autoincrement=True)
-    title = db.Column(db.String, nullable=False)
-    due_date = db.Column(db.Integer, nullable=False)
-    course_id = db.Column(db.String, db.ForeignKey("courses.id"),nullable=False)
-
-    def __init__(self, **kwargs):
-        self.title = kwargs.get("title","")
-        self.due_date = int(kwargs.get("due_date",""))
-        self.course_id = kwargs.get("course_id","")
-        self.course = Course.query.filter_by(id=self.course_id).first()
-
-    def serialize(self):
-        return {
-            "id":self.id,
-            "title":self.title,
-            "due_date":self.due_date,
-            "course": self.course.s_serialize()
-        }
-    
-    def s_serialize(self):
-        return {
-            "id":self.id,
-            "title":self.title,
-            "due_date":self.due_date,
-        }
 
 class User(db.Model):
     """
-    Many-To-Many -> Courses
+    User Model
+
+    Many-To-Many -> Connections
+    One-To-Many -> Chat
+    One-To
     """
     __tablename__ = "users"
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    linkedin_username = db.Column(db.String, unique=True, nullable=False)
     name = db.Column(db.String, nullable=False)
-    netid = db.Column(db.String, nullable=False)
-    courses = db.relationship("Course",
-                              secondary=course_user_association_table, 
-                              back_populates="users")
+    goals = db.Column(db.String, nullable=False)  # Store as comma-separated values
+    interests = db.Column(db.String, nullable=False)  # Store as comma-separated values
+    university = db.Column(db.String, nullable=True) # Users can choose to show University/Major AND/OR Company/JobTitle
+    major = db.Column(db.String, nullable=True)
+    company = db.Column(db.String, nullable=True)
+    job_title = db.Column(db.String, nullable=True)
+    project = db.Column(db.String(150), nullable=True)
+    location = db.Column(db.String, nullable=False)
+    cracked_rating = db.Column(db.Integer, default=0) # functionality will be implemented in app.py
+    chat = db.relationship("Chat", cascade="delete")
+
+    connections = db.relationship(
+        "User",
+        secondary=connection_table,
+        back_populates="connections"
+    )
 
     def __init__(self, **kwargs):
-        self.name = kwargs.get("name","")
-        self.netid = kwargs.get("netid","")
+        """
+        Initialize User object
+        """
+        self.linkedin_username = kwargs.get("linkedin_username")
+        self.name = kwargs.get("name")
+        self.goals = kwargs.get("goals")
+        self.interests = kwargs.get("interests")
+        self.university = kwargs.get("university")
+        self.major = kwargs.get("major")
+        self.company = kwargs.get("company")
+        self.job_title = kwargs.get("job_title")
+        self.project = kwargs.get("project")
+        self.location = kwargs.get("location")
+        self.cracked_rating = kwargs.get("cracked_rating", 0)
 
     def serialize(self):
+        """
+        Serialize User object
+        """
         return {
             "id": self.id,
-            "name":self.name,
-            "netid":self.netid,
-            "courses": [c.s_serialize() for c in self.courses]
+            "linkedin_username": self.linkedin_username,
+            "linkedin_url": f"https://www.linkedin.com/in/{self.linkedin_username}",
+            "name": self.name,
+            "goals": self.goals.split(","),
+            "interests": self.interests.split(","),
+            "university": self.university,
+            "major": self.major,
+            "company": self.company,
+            "job_title": self.job_title,
+            "project": self.project,
+            "location": self.location,
+            "cracked_rating": self.cracked_rating,
         }
-    
-    def s_serialize(self):
+
+class Message(db.Model):
+    """
+    Message Model
+    """
+    __tablename__ = "messages"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    chat_id = db.Column(db.Integer, db.ForeignKey("chats.id"), nullable=False)
+    sender_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.now())
+
+    def __init__(self, **kwargs):
+        """
+        Initialize Message object
+        """
+        self.chat_id = kwargs.get("chat_id")
+        self.sender_id = kwargs.get("sender_id")
+        self.content = Fernet.encrypt(kwargs.get("content").encode()).decode()
+
+    def serialize(self):
+        """
+        Serialize Message
+        """
         return {
             "id": self.id,
-            "name":self.name,
-            "netid":self.netid,
+            "chat_id": self.chat_id,
+            "sender_id": self.sender_id,
+            "content": Fernet.decrypt(self.content.encode()).decode(),
+            "timestamp": self.timestamp,
         }
+
+class Chat(db.Model):
+    """
+    Chat Model
+    """
+    __tablename__ = "chats"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user1_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    messages = db.relationship("Message", cascade="all, delete")
     
+    def __init__(self, **kwargs):
+        """
+        Initialize Chat object
+        """
+        self.user1_id = kwargs.get("user1_id")
+        self.user2_id = kwargs.get("user2_id")
+
+    def serialize(self):
+        """
+        Serialize Chat
+        """
+        return {
+            "id": self.id,
+            "user1_id": self.user1_id,
+            "user2_id": self.user2_id,
+            "messages": [m.serialize() for m in self.messages],
+        }
