@@ -10,8 +10,6 @@ import UIKit
 class SwipeScreenVC: UIViewController {
     
     // MARK: - UI Components
-    let completeCardView = CompleteCardView()
-    
     private let cardDepthImage: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
@@ -28,7 +26,7 @@ class SwipeScreenVC: UIViewController {
     }()
     
     private let checkButton = InteractiveButton(imageName: "check-icon", color: .palette.green, action: #selector(checkButtonTapped))
-
+    
     private let xButton = InteractiveButton(imageName: "x-icon", color: .palette.red, action: #selector(xButtonTapped))
     
     private let undoButton = InteractiveButton(imageName: "undo-icon", color: .palette.lightBlue, action: #selector(undoButtonTapped), cornerRadius: 25, borderWidth: 3)
@@ -46,27 +44,64 @@ class SwipeScreenVC: UIViewController {
     private var xFromCenter: CGFloat = 0
     private var yFromCenter: CGFloat = 0
     
+    // MARK: - Data
+    /// Stores the card views currently present. where the last one is the one on top.
+    let cardViews = [CompleteCardView(), CompleteCardView()]
+    var activeCardView: CompleteCardView?
+    
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .palette.offPurple
         navigationController?.setNavigationBarHidden(true, animated: false)
         
+        // TODO: Read from the database
+        activeCardView = cardViews[cardViews.count - 1]
+        
+        setupCardViews()
+        
         setupUI()
         setupGestureRecognizers()
     }
     
     // MARK: - UI Setup
-    private func setupUI() {
-        self.view.addSubview(logoImageView)
-        logoImageView.translatesAutoresizingMaskIntoConstraints = false
-        
+    func setupCardViews() {
+        // Logo & Depth View need to be placed before cards.
         self.view.addSubview(cardDepthImage)
         cardDepthImage.translatesAutoresizingMaskIntoConstraints = false
         
-        self.view.addSubview(completeCardView)
-        completeCardView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(logoImageView)
+        logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
+        for i in 0..<cardViews.count {
+            let view = cardViews[i]
+            
+            self.view.addSubview(view)
+            view.translatesAutoresizingMaskIntoConstraints = false
+            
+            NSLayoutConstraint.activate([
+                view.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 20),
+                view.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -175),
+                view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
+                view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
+            ])
+        }
+        
+        NSLayoutConstraint.activate([
+            cardDepthImage.topAnchor.constraint(equalTo: cardViews[0].bottomAnchor, constant: -88),
+            cardDepthImage.heightAnchor.constraint(equalToConstant: 120),
+            cardDepthImage.leadingAnchor.constraint(equalTo:  cardViews[0].leadingAnchor, constant: 5),
+            cardDepthImage.trailingAnchor.constraint(equalTo:  cardViews[0].trailingAnchor, constant: -5),
+            
+            logoImageView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -30),
+            logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            logoImageView.heightAnchor.constraint(equalToConstant: 50),
+            logoImageView.widthAnchor.constraint(equalToConstant: 150),
+            
+        ])
+    }
+    
+    private func setupUI() {
         self.view.addSubview(checkButton)
         checkButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -80,21 +115,6 @@ class SwipeScreenVC: UIViewController {
         moreInfoButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            logoImageView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -30),
-            logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            logoImageView.heightAnchor.constraint(equalToConstant: 50),
-            logoImageView.widthAnchor.constraint(equalToConstant: 150),
-            
-            completeCardView.topAnchor.constraint(equalTo: self.logoImageView.bottomAnchor, constant: 20),
-            completeCardView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -175),
-            completeCardView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
-            completeCardView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
-            
-            cardDepthImage.topAnchor.constraint(equalTo: completeCardView.bottomAnchor, constant: -88),
-            cardDepthImage.heightAnchor.constraint(equalToConstant: 120),
-            cardDepthImage.leadingAnchor.constraint(equalTo: completeCardView.leadingAnchor, constant: 5),
-            cardDepthImage.trailingAnchor.constraint(equalTo: completeCardView.trailingAnchor, constant: -5),
-            
             checkButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 10),
             checkButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -120),
             checkButton.heightAnchor.constraint(equalToConstant: 90),
@@ -115,40 +135,47 @@ class SwipeScreenVC: UIViewController {
             moreInfoButton.centerYAnchor.constraint(equalTo: checkButton.centerYAnchor),
             moreInfoButton.heightAnchor.constraint(equalToConstant: 50),
             moreInfoButton.widthAnchor.constraint(equalToConstant: 50),
-
+            
         ])
     }
     
     // MARK: - Gesture Recognizers
     private func setupGestureRecognizers() {
+        print("running2")
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(beingDragged(_:)))
-        completeCardView.addGestureRecognizer(panGesture)
+        if activeCardView == nil { print("card view is optional jj!") }
+        activeCardView?.addGestureRecognizer(panGesture)
     }
     
     // MARK: - Gesture Selector
     @objc func beingDragged(_ gestureRecognizer: UIPanGestureRecognizer) {
-        let translation = gestureRecognizer.translation(in: view)
-        xFromCenter = translation.x
-        yFromCenter = translation.y
-        
-        switch gestureRecognizer.state {
-        case .began:
-            originalPoint = completeCardView.center
-        case .changed:
-            let rotationStrength = min(xFromCenter / ROTATION_STRENGTH, ROTATION_MAX)
-            let rotationAngle = .pi / 8 * rotationStrength
-            let scale = max(1 - abs(rotationStrength) / SCALE_STRENGTH, SCALE_MAX)
+        print("running!")
+        if let cardView = activeCardView {
+            print("card view is not optional bitch!")
             
-            completeCardView.center = CGPoint(x: originalPoint.x + xFromCenter, y: originalPoint.y + yFromCenter)
-            let transform = CGAffineTransform(rotationAngle: rotationAngle).scaledBy(x: scale, y: scale)
-            completeCardView.transform = transform
+            let translation = gestureRecognizer.translation(in: view)
+            xFromCenter = translation.x
+            yFromCenter = translation.y
             
-            // Adjust opacity of images based on swipe distance
-            updateUIOnSwipe(distance: xFromCenter)
-        case .ended:
-            afterSwipeAction()
-        default:
-            resetProfilePosition()
+            switch gestureRecognizer.state {
+            case .began:
+                originalPoint = cardView.center
+            case .changed:
+                let rotationStrength = min(xFromCenter / ROTATION_STRENGTH, ROTATION_MAX)
+                let rotationAngle = .pi / 8 * rotationStrength
+                let scale = max(1 - abs(rotationStrength) / SCALE_STRENGTH, SCALE_MAX)
+                
+                cardView.center = CGPoint(x: originalPoint.x + xFromCenter, y: originalPoint.y + yFromCenter)
+                let transform = CGAffineTransform(rotationAngle: rotationAngle).scaledBy(x: scale, y: scale)
+                cardView.transform = transform
+                
+                // Adjust opacity of images based on swipe distance
+                updateUIOnSwipe(distance: xFromCenter)
+            case .ended:
+                afterSwipeAction()
+            default:
+                resetProfilePosition()
+            }
         }
     }
     
@@ -164,40 +191,43 @@ class SwipeScreenVC: UIViewController {
     @objc func undoButtonTapped() {
         print("undo baby!")
     }
-
-
+    
+    
     
     // MARK: - Helper Methods
     private func updateUIOnSwipe(distance: CGFloat) {
-        let normalizedDistance = min(abs(distance) / SWIPE_THRESHOLD, 1.0)
-        
-        if distance > 0 {
-            // Swiping right - increase opacity of checkImage and update button color
-            completeCardView.checkImage.layer.opacity = Float(normalizedDistance * 1.2)
-            completeCardView.xImage.layer.opacity = 0
+        if let cardView = activeCardView {
             
-            UIView.animate(withDuration: 0.2) {
-                self.checkButton.backgroundColor = UIColor.palette.green.withAlphaComponent(normalizedDistance * 1.2)
-                self.checkButton.tintColor = .white
-            }
-        } else {
-            // Swiping left - increase opacity of xImage and update button color
-            completeCardView.xImage.layer.opacity = Float(normalizedDistance * 1.2)
-            completeCardView.checkImage.layer.opacity = 0
+            let normalizedDistance = min(abs(distance) / SWIPE_THRESHOLD, 1.0)
             
-            UIView.animate(withDuration: 0.2) {
-                self.xButton.backgroundColor = UIColor.palette.red.withAlphaComponent(normalizedDistance * 1.2)
-                self.xButton.tintColor = .white
+            if distance > 0 {
+                // Swiping right - increase opacity of checkImage and update button color
+                cardView.checkImage.layer.opacity = Float(normalizedDistance * 1.2)
+                cardView.xImage.layer.opacity = 0
+                
+                UIView.animate(withDuration: 0.2) {
+                    self.checkButton.backgroundColor = UIColor.palette.green.withAlphaComponent(normalizedDistance * 1.2)
+                    self.checkButton.tintColor = .white
+                }
+            } else {
+                // Swiping left - increase opacity of xImage and update button color
+                cardView.xImage.layer.opacity = Float(normalizedDistance * 1.2)
+                cardView.checkImage.layer.opacity = 0
+                
+                UIView.animate(withDuration: 0.2) {
+                    self.xButton.backgroundColor = UIColor.palette.red.withAlphaComponent(normalizedDistance * 1.2)
+                    self.xButton.tintColor = .white
+                }
             }
         }
     }
-
+    
     private func resetProfilePosition() {
         UIView.animate(withDuration: 0.2) {
-            self.completeCardView.center = self.originalPoint
-            self.completeCardView.transform = .identity
-            self.completeCardView.checkImage.layer.opacity = 0
-            self.completeCardView.xImage.layer.opacity = 0
+            self.activeCardView?.center = self.originalPoint
+            self.activeCardView?.transform = .identity
+            self.activeCardView?.checkImage.layer.opacity = 0
+            self.activeCardView?.xImage.layer.opacity = 0
             
             // Reset button colors
             self.checkButton.backgroundColor = .clear
@@ -206,7 +236,7 @@ class SwipeScreenVC: UIViewController {
             self.xButton.tintColor = .palette.red
         }
     }
-
+    
     private func afterSwipeAction() {
         if abs(xFromCenter) > SWIPE_THRESHOLD {
             if xFromCenter > 0 {
