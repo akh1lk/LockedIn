@@ -202,12 +202,9 @@ class SwipeScreenVC: UIViewController {
         swipe(.left, longDuration: true)
     }
 
-    
     @objc func undoButtonTapped() {
         print("undo baby!")
     }
-    
-    
     
     // MARK: - Helper Methods
     private func updateUIOnSwipe(distance: CGFloat) {
@@ -313,6 +310,4 @@ class SwipeScreenVC: UIViewController {
             animateCardOffScreen()
         }
     }
-
-
 }
