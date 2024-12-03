@@ -191,7 +191,7 @@ extension StatsView: SetupAccountSubview {
             }
         }
         
-        if aboutMeFieldView.aboutMeTextView.text?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+        if aboutMeFieldView.aboutMeTextView.text ?? aboutMeFieldView.placeholder == aboutMeFieldView.placeholder {
             if let p = parent { AlertManager.showEmptyFieldsAlert(on: p) }
             return false
         }
