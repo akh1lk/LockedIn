@@ -172,6 +172,44 @@ class User(db.Model):
             "location": self.location,
             "cracked_rating": self.cracked_rating,
         }
+    
+    def recommend_users(self, max_results=10):
+        """
+        Recommend users based on cracked_rating, similar interests/goals, and location.
+        """
+        # Query all users except the current one
+        all_users = User.query.filter(User.id != self.id).all()
+
+        recommendations = []
+        #Don't add connected ids again
+        connected_ids = {connection.id for connection in self.connections}
+
+        for user in all_users:
+            if user.id in connected_ids:
+                continue
+            # Compute similarity metrics
+            cracked_rating_diff = abs(self.cracked_rating - user.cracked_rating)
+            common_interests = len(set(self.interests.split(",")) & set(user.interests.split(",")))
+            common_goals = len(set(self.goals.split(",")) & set(user.goals.split(",")))
+            location_match = 1 if self.location == user.location else 0
+
+            # Weight factors (customize as needed)
+            score = (
+                (5 - cracked_rating_diff) * 0.4 +  # Cracked rating weight
+                common_interests * 0.3 +          # Common interests weight
+                common_goals * 0.2 +              # Common goals weight
+                location_match * 0.1              # Location weight
+            )
+
+            recommendations.append((user, score))
+
+        # Sort by score in descending order and get top results
+        recommendations = sorted(recommendations, key=lambda x: x[1], reverse=True)
+        top_recommendations = [rec[0] for rec in recommendations[:max_results]]
+
+        # Serialize recommended users
+        return [user.serialize() for user in top_recommendations]
+
 
 
 class Message(db.Model):

@@ -124,6 +124,52 @@ def get_user(id):
     user = User.query.filter_by(id=id).first()
     return success_response(user.serialize()) if user else failure_response("User not found")
 
+@app.route("/api/users/<int:id>/", methods=["POST"])
+def update_user(id):
+    body = json.loads(request.data)
+    linkedin_username = body.get("linkedin_username")
+    name = body.get("name")
+    goals = body.get("goals", "")
+    interests = body.get("interests", "")
+    university = body.get("university", "")
+    major = body.get("major", "")
+    company = body.get("company", "")
+    job_title = body.get("job_title", "")
+    experience = body.get("experience", "")
+    location = body.get("location", "")
+
+    user = User.query.filter_by(id=id).first()
+    if not user:
+        return failure_response("User not found", 404)
+    
+    # Update each field only if it is not an empty string
+    if linkedin_username:
+        user.linkedin_username = linkedin_username
+    if name:
+        user.name = name
+    if goals:
+        user.goals = goals
+    if interests:
+        user.interests = interests
+    if university:
+        user.university = university
+    if major:
+        user.major = major
+    if company:
+        user.company = company
+    if job_title:
+        user.job_title = job_title
+    if experience:
+        user.experience = experience
+    if location:
+        user.location = location
+
+    db.session.commit()
+
+    return success_response(user.serialize())
+
+
+
 # Routes for connections
 @app.route("/api/connections/", methods=["POST"])
 def create_connection():
@@ -133,6 +179,16 @@ def create_connection():
 
     if any(x is None for x in [user1_id, user2_id]):
         return failure_response("Improper Arguments", 400)
+    
+    # Check if the connection already exists
+    existing_connection = Connection.query.filter(
+        ((Connection.user1_id == user1_id) & (Connection.user2_id == user2_id)) |
+        ((Connection.user1_id == user2_id) & (Connection.user2_id == user1_id))
+    ).first()
+
+    #do
+    if existing_connection:
+        return success_response(existing_connection.serialize(), 200)
 
     new_connection = Connection(user1_id=user1_id, user2_id=user2_id)
     db.session.add(new_connection)
@@ -145,12 +201,17 @@ def get_user_connections(user_id):
     connections = Connection.query.filter((Connection.user1_id == user_id) | (Connection.user2_id == user_id)).all()
     return success_response({"connections": [conn.serialize() for conn in connections]})
 
-@app.route("/api/connections/<int:user_id>/recommended", methods=["GET"])
-def get_recommended_connections(user_id):
-    # Logic for recommending up to 10 connections based on some criteria
-    # Placeholder for actual recommendation logic
-    recommended = User.query.limit(10).all()
-    return success_response({"recommended": [user.serialize() for user in recommended]})
+@app.route('/recommendations/<int:user_id>', methods=['GET'])
+def get_recommendations(user_id):
+    """
+    Get user recommendations.
+    """
+    user = User.query.get(user_id)
+    if not user:
+        return {"error": "User not found"}, 404
+
+    recommendations = user.recommend_users(max_results=10)
+    return {"recommendations": recommendations}, 200
 
 # Routes for chats and messages
 @app.route("/api/chats/", methods=["POST"])
