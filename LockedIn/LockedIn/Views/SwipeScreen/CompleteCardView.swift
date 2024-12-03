@@ -46,7 +46,7 @@ class CompleteCardView: UIView {
     // MARK: - Data
     let userData: UserData
     var currentIndex = 0
-    let maxIndex = 2 // this is equal to views.count - 1
+    let maxIndex = 1 // this is equal to views.count - 1
     
     /// All the views that can be tapped through in this card
     let views: [UIView]

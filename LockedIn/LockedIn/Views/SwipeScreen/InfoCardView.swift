@@ -19,8 +19,7 @@ class InfoCardView: UIView {
     
     private let gradientBackgroundView: UIView = {
         let view = UIView()
-        view.layer.opacity = 0.87
-        view.backgroundColor = .green
+        view.layer.opacity = 0.9
         return view
     }()
     
@@ -28,27 +27,56 @@ class InfoCardView: UIView {
         let label = UILabel()
         label.textColor = .white
         label.textAlignment = .center
-        label.font = .italicSystemFont(ofSize: 13)
+        label.font = .italicSystemFont(ofSize: 18)
         label.text = "Internship/Studies at"
         return label
     }()
     
     private let headingLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Bold", size: 32)
+        label.font = UIFont(name: "GaretW05-Bold", size: 36)
         label.text = "Company/Uni"
         return label
     }()
     
     private let subheadingLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .label
+        label.textColor = .white
         label.textAlignment = .center
         label.font = UIFont(name: "GaretW05-Regular", size: 24)
         label.text = "Job/Degree"
         return label
+    }()
+    
+    private let aboutMeHeading: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .center
+        label.font = UIFont(name: "GaretW05-Bold", size: 24)
+        label.text = "About Me"
+        return label
+    }()
+    
+    private let aboutMeText: UILabel = {
+        let label = UILabel()
+        label.textColor = .white
+        label.textAlignment = .left
+        label.font = UIFont(name: "GaretW05-Regular", size: 16)
+        label.text = "Lorem Ipsum."
+        label.numberOfLines = 9
+        return label
+    }()
+    
+    public lazy var linkedInButton: UIButton = {
+        let button = UIButton()
+        button.imageView?.contentMode = .scaleAspectFit
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.setImage(UIImage(named: "linkedin-logo-small"), for: .normal)
+        button.addTarget(self, action: #selector(linkedInButtonTapped), for: .touchUpInside)
+        return button
     }()
     
     // MARK: - Data
@@ -57,11 +85,15 @@ class InfoCardView: UIView {
     init(with data: UserData) {
         super.init(frame: .zero)
         
+        backgroundImage.image = data.image
+        
         if let internship = data.internship {
             setupInternship(for: internship)
         } else {
             setupUniversity(for: data.university, studying: data.degree)
         }
+        
+        self.aboutMeText.text = data.aboutMe
         
         setupUI()
     }
@@ -92,6 +124,15 @@ class InfoCardView: UIView {
         
         self.addSubview(subheadingLabel)
         subheadingLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(aboutMeHeading)
+        aboutMeHeading.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(aboutMeText)
+        aboutMeText.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(linkedInButton)
+        linkedInButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             backgroundImage.topAnchor.constraint(equalTo: self.topAnchor),
@@ -104,14 +145,26 @@ class InfoCardView: UIView {
             gradientBackgroundView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             gradientBackgroundView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            smallHeadingLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 20),
-            smallHeadingLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 20),
+            smallHeadingLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 50),
+            smallHeadingLabel.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 30),
             
-            headingLabel.topAnchor.constraint(equalTo: smallHeadingLabel.bottomAnchor, constant: 0),
+            headingLabel.topAnchor.constraint(equalTo: smallHeadingLabel.bottomAnchor, constant: -1),
             headingLabel.leadingAnchor.constraint(equalTo: smallHeadingLabel.leadingAnchor),
             
-            subheadingLabel.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 5),
+            subheadingLabel.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: -3),
             subheadingLabel.leadingAnchor.constraint(equalTo: smallHeadingLabel.leadingAnchor),
+            
+            aboutMeHeading.topAnchor.constraint(equalTo: subheadingLabel.bottomAnchor, constant: 50),
+            aboutMeHeading.leadingAnchor.constraint(equalTo: smallHeadingLabel.leadingAnchor),
+            
+            aboutMeText.topAnchor.constraint(equalTo: aboutMeHeading.bottomAnchor, constant: 5),
+            aboutMeText.leadingAnchor.constraint(equalTo: smallHeadingLabel.leadingAnchor),
+            aboutMeText.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            
+            linkedInButton.topAnchor.constraint(equalTo: smallHeadingLabel.topAnchor),
+            linkedInButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            linkedInButton.heightAnchor.constraint(equalToConstant: 60),
+            linkedInButton.widthAnchor.constraint(equalToConstant: 60),
         ])
     }
     
@@ -129,5 +182,8 @@ class InfoCardView: UIView {
     }
     
     // MARK: - Selectors
+    @objc func linkedInButtonTapped() {
+        print("noob")
+    }
 
 }
