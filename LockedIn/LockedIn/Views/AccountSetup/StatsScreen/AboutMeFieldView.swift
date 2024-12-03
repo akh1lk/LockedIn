@@ -12,7 +12,7 @@ class AboutMeFieldView: UIView {
     // MARK: - UI Components
     let aboutMeTextView: UITextView = {
         let textView = UITextView()
-        textView.text = "Talk about yourself, your projects, etc in 50 words!"
+        textView.text = ""
         textView.textColor = .palette.offBlack.withAlphaComponent(0.65)
         textView.backgroundColor = .palette.offWhite
         textView.layer.cornerRadius = 10
@@ -42,9 +42,13 @@ class AboutMeFieldView: UIView {
         )
     
     // MARK: - Life Cycle
+    let placeholder = "In 300 characters talk about yourself, your projects, etc!"
+    
     init() {
         super.init(frame: .zero)
         aboutMeTextView.delegate = self
+        aboutMeTextView.text = placeholder
+        
         setupUI()
     }
     
@@ -86,9 +90,15 @@ extension AboutMeFieldView: UITextViewDelegate {
     
     func textViewDidEndEditing(_ textView: UITextView) {
         if textView.text.isEmpty {
-            textView.text = "Talk about yourself, your projects, etc in 50 words!"
+            textView.text = placeholder
             textView.textColor = .palette.offBlack.withAlphaComponent(0.65)
         }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let currentText = textView.text ?? ""
+        let updatedText = (currentText as NSString).replacingCharacters(in: range, with: text)
+        return updatedText.count <= 300
     }
 }
 

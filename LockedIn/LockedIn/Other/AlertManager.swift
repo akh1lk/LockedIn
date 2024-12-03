@@ -25,7 +25,7 @@ extension AlertManager {
     }
     
     public static func showEmptyFieldsAlert(on vc: UIViewController) {
-        showAlert(on: vc, title: "Fill in All Fields", message: "Please fill in all available internship or project fields.")
+        showAlert(on: vc, title: "Fill in All Fields", message: "Please fill in the 'About Me' field or the 'Internship' fields (if applicable).")
     }
 }
 
