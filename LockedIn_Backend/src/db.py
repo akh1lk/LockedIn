@@ -61,6 +61,48 @@ class User(db.Model):
         self.location = kwargs.get("location")
         self.cracked_rating = kwargs.get("cracked_rating", 0)
 
+    def calculate_cracked_rating(self):
+        """
+        Calculate the cracked rating based on weighted factors.
+        """
+        college_weight = 0.3
+        major_weight = 0.2
+        job_title_weight = 0.3
+        company_weight = 0.2
+
+        college_score = self.get_college_score(self.university)
+        major_score = self.get_major_score(self.major)
+        job_title_score = self.get_job_title_score(self.job_title)
+        company_score = self.get_company_score(self.company)
+
+        cracked_rating = (
+            college_score * college_weight
+            + major_score * major_weight
+            + job_title_score * job_title_weight
+            + company_score * company_weight
+        )
+        return round(cracked_rating, 2)
+
+    @staticmethod
+    def get_college_score(college):
+        ivy_league = ["Harvard", "Yale", "Princeton"]
+        return 90 if college in ivy_league else 60
+
+    @staticmethod
+    def get_major_score(major):
+        stem_fields = ["Computer Science", "Engineering"]
+        return 85 if major in stem_fields else 60
+
+    @staticmethod
+    def get_job_title_score(title):
+        high_paying_roles = ["Software Engineer", "Data Scientist"]
+        return 80 if title in high_paying_roles else 50
+
+    @staticmethod
+    def get_company_score(company):
+        prestigious_companies = ["Google", "Amazon", "Meta"]
+        return 90 if company in prestigious_companies else 60
+
     def serialize(self):
         """
         Serialize User object
