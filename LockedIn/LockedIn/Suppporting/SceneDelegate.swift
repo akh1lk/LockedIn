@@ -14,7 +14,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let signInVC = TabController() // TODO: change this to SignInVC
+        let signInVC = ChatVC(with: Sender(avatar: UIImage(named: "ye"), senderId: "ye", displayName: "Ye")) // TODO: change this to SignInVC
         let navigationController = UINavigationController(rootViewController: signInVC)
         
         let window = UIWindow(windowScene: windowScene)

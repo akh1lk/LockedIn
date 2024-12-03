@@ -6,8 +6,10 @@
 //
 
 import UIKit
+import MessageKit
 
 struct UserData {
+    let id: String
     let image: UIImage?
     let name: String
     let university: University
