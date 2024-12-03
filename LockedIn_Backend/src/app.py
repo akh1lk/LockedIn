@@ -6,7 +6,7 @@ import os
 from db import db, User, Connection, Chat, Message  # Import models from db.py
 
 app = Flask(__name__)
-app.secret_key = 'WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ=='  # Secret key for session management
+app.secret_key = 'b1f849a9870a6137b4d34f5d703ce70e'  # Secret key for session management
 db_filename = "lockedin.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_filename}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -17,8 +17,8 @@ oauth = OAuth(app)
 
 linkedin = oauth.register(
     name="linkedin",
-    client_id="YOUR_CLIENT_ID",
-    client_secret="YOUR_CLIENT_SECRET",
+    client_id="77w8k8tmep8y6p",
+    client_secret="WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ==",
     authorize_url="https://www.linkedin.com/oauth/v2/authorization",
     authorize_params=None,
     access_token_url="https://www.linkedin.com/oauth/v2/accessToken",
