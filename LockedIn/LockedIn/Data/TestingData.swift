@@ -16,7 +16,7 @@ struct TestingData {
             year: .junior,
             degree: .finance,
             crackedRating: 69,
-            aboutMe: "I am a noob",
+            aboutMe: "I am a noob LockedIn is just Tinder for LinkedIn. People connect their linkedin to form their profiles and get assigned a “Cracked Rating”. In the home screen of the app you are presented with a specific profile and get to swipe right to “like” or left to “skip”. If the person you swiped right ",
             internship: nil
         )),
         
@@ -45,7 +45,7 @@ struct TestingData {
         CompleteCardView(with: UserData(
             image: UIImage(named: "ye"),
             name: "Ye",
-            university: .harvard,
+            university: .dropout,
             year: .senior,
             degree: .business,
             crackedRating: 99,
@@ -60,8 +60,8 @@ struct TestingData {
             year: .sophomore,
             degree: .softwareEngineering,
             crackedRating: 95,
-            aboutMe: "I am a noob",
-            internship: nil
+            aboutMe: "Lorem ipsum odor amet, consectetuer adipiscing elit. Porttitor natoque sem turpis pretium dictumst eget suspendisse. Aad aliquam quam duis donec dictum eros. Molestie bibendum fringilla tortor fringilla netus fermentum lectus libero. Faucibus urna vehicula iaculis urna consequat duis elementum non. ",
+            internship: Internship(company: "Amazon", position: "Software Engineer", date: "Summer dady")
         )),
     ]
 }
