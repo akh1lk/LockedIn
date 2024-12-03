@@ -14,6 +14,7 @@ connection_table = db.Table(
     db.Column("id", db.Integer, primary_key=True, autoincrement=True),
     db.Column("user1_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
     db.Column("user2_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
+    db.Column("timestamp", db.Date)
 )
 
 
@@ -39,7 +40,9 @@ class User(db.Model):
     chat = db.relationship("Chat", cascade="delete")
 
     connections = db.relationship(
-        "User", secondary=connection_table, back_populates="connections"
+        "Connection", 
+        primaryjoin = "or_(Connection.user1_id == User.id, Connection.user2_id == User.id)",
+        backref="users"
     )
 
     def __init__(self, **kwargs):
@@ -182,7 +185,10 @@ class User(db.Model):
 
         recommendations = []
         #Don't add connected ids again
-        connected_ids = {connection.id for connection in self.connections}
+        connected_ids = {
+            connection.user1_id if connection.user2_id == self.id else connection.user2_id
+            for connection in self.connections
+        }
 
         for user in all_users:
             if user.id in connected_ids:
@@ -210,7 +216,35 @@ class User(db.Model):
         # Serialize recommended users
         return [user.serialize() for user in top_recommendations]
 
+class Connection(db.Model):
+    """
+    Connection Model for managing user connections.
+    """
 
+    __tablename__ = "connections"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user1_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    timestamp = db.Column(db.DateTime, default=db.func.now())
+
+    user1 = db.relationship("User", foreign_keys=[user1_id])
+    user2 = db.relationship("User", foreign_keys=[user2_id])
+
+    def __init__(self, **kwargs):
+        self.user1_id = kwargs.get("user1_id")
+        self.user2_id = kwargs.get("user2_id")
+
+    def serialize(self):
+        """
+        Serialize Connection
+        """
+        return {
+            "id": self.id,
+            "user1_id": self.user1_id,
+            "user2_id": self.user2_id,
+            "timestamp": self.timestamp,
+        }
 
 class Message(db.Model):
     """
