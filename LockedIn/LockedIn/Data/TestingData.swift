@@ -8,8 +8,15 @@
 import UIKit
 
 struct TestingData {
+    
+    static let messages = [
+        Message(sender: Sender(avatar: UIImage(named: "ye"), senderId: "user1", displayName: "John Pork"), messageId: "1", sentDate: Date(), kind: .text("Hello there!")),
+        Message(sender: Sender(avatar: UIImage(named: "diddy"), senderId: "user2", displayName: "Jane Doe"), messageId: "2", sentDate: Date().addingTimeInterval(-3600), kind: .text("Hi, how can I help you?")),
+    ]
+    
     static let users = [
         CompleteCardView(with: UserData(
+            id: "hello",
             image: UIImage(named: "john-pork"),
             name: "John Pork",
             university: .brown,
@@ -21,6 +28,7 @@ struct TestingData {
         )),
         
         CompleteCardView(with: UserData(
+            id: "hello1",
             image: UIImage(named: "andy"),
             name: "Andrew Myers",
             university: .harvard,
@@ -32,6 +40,7 @@ struct TestingData {
         )),
         
         CompleteCardView(with: UserData(
+            id: "hello2",
             image: UIImage(named: "daddy-noel"),
             name: "Daddy Noel",
             university: .mit,
@@ -43,6 +52,7 @@ struct TestingData {
         )),
         
         CompleteCardView(with: UserData(
+            id: "hello3",
             image: UIImage(named: "ye"),
             name: "Ye",
             university: .dropout,
@@ -54,6 +64,7 @@ struct TestingData {
         )),
         
         CompleteCardView(with: UserData(
+            id: "hello4",
             image: UIImage(named: "diddy"),
             name: "Sean J. Combs",
             university: .cornell,
