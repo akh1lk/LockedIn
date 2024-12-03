@@ -28,4 +28,6 @@ enum Degree: String, CaseIterable {
     case chemicalEngineering = "Chemical Engineering"
     case law = "Law"
     case medicine = "Medicine"
+    case mathematics = "Mathematics"
+    case droput = "Dropout"
 }
