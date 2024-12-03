@@ -28,4 +28,5 @@ enum University: String, CaseIterable {
     case rice = "Rice University"
     case ucla = "University of California, Los Angeles"
     case ucBerkeley = "University of California, Berkeley"
+    case dropout = "Dropout"
 }
