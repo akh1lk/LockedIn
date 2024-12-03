@@ -59,7 +59,7 @@ class ProfileInfoView: UIView {
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init(with data: UserCardData) {
+    init(with data: UserData) {
         profileImageView.image = data.image
         nameLabel.text = data.name
         

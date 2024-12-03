@@ -44,7 +44,7 @@ class CompleteCardView: UIView {
     }()
     
     // MARK: - Data
-    let userData: UserCardData
+    let userData: UserData
     var currentIndex = 0
     let maxIndex = 2 // this is equal to views.count - 1
     
@@ -52,7 +52,7 @@ class CompleteCardView: UIView {
     let views: [UIView]
     
     // thin progress views.
-    let progressViews: [UIView] = (0..<3).map { i in
+    let progressViews: [UIView] = (0..<2).map { i in
         let view = UIView()
         view.backgroundColor = i == 0 ? .white : .palette.gray
         view.layer.cornerRadius = 2
@@ -61,14 +61,13 @@ class CompleteCardView: UIView {
     }
     
     // MARK: - Life Cycle
-    init(with data: UserCardData) {
+    init(with data: UserData) {
         
         self.userData = data
         
         self.views = [ // set views with data.
             ProfileInfoView(with: userData),
-            InternshipInfoView(with: userData),
-            ProjectInfoView(with: userData)
+            InfoCardView(with: userData),
         ]
         
         super.init(frame: .zero)
@@ -149,20 +148,15 @@ class CompleteCardView: UIView {
         }
         
         NSLayoutConstraint.activate([
-            progressViews[1].centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            progressViews[1].widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.275),
+            progressViews[1].leadingAnchor.constraint(equalTo: self.centerXAnchor, constant: 5),
+            progressViews[1].widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.42),
             progressViews[1].heightAnchor.constraint(equalToConstant: 4),
             progressViews[1].topAnchor.constraint(equalTo: self.topAnchor, constant: 15),
             
-            progressViews[0].trailingAnchor.constraint(equalTo: progressViews[1].leadingAnchor, constant: -10),
+            progressViews[0].trailingAnchor.constraint(equalTo: self.centerXAnchor, constant: -5),
             progressViews[0].widthAnchor.constraint(equalTo: progressViews[1].widthAnchor),
             progressViews[0].heightAnchor.constraint(equalTo: progressViews[1].heightAnchor),
             progressViews[0].topAnchor.constraint(equalTo: progressViews[1].topAnchor),
-            
-            progressViews[2].leadingAnchor.constraint(equalTo: progressViews[1].trailingAnchor, constant: 10),
-            progressViews[2].widthAnchor.constraint(equalTo: progressViews[1].widthAnchor),
-            progressViews[2].heightAnchor.constraint(equalTo: progressViews[1].heightAnchor),
-            progressViews[2].topAnchor.constraint(equalTo: progressViews[1].topAnchor),
         ])
     }
 
