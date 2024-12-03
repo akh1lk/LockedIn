@@ -1,12 +1,13 @@
-#Team #3 MidPoint for AppDev Hackathon FA24
+# Team #3 MidPoint for AppDev Hackathon FA24
 
 from flask_sqlalchemy import SQLAlchemy
 from cryptography.fernet import Fernet
-#SQL Alchemy, Encrypt Messages implementation
+import cracked_weights
 
+# SQLAlchemy and message encryption implementation
 db = SQLAlchemy()
 
-# assocation table for connections (many to many)
+# Association table for connections (many-to-many)
 connection_table = db.Table(
     "connections",
     db.Model.metadata,
@@ -15,34 +16,30 @@ connection_table = db.Table(
     db.Column("user2_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
 )
 
+
 class User(db.Model):
     """
     User Model
-
-    Many-To-Many -> Connections
-    One-To-Many -> Chat
-    One-To
     """
+
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     linkedin_username = db.Column(db.String, unique=True, nullable=False)
     name = db.Column(db.String, nullable=False)
-    goals = db.Column(db.String, nullable=False)  # Store as comma-separated values
-    interests = db.Column(db.String, nullable=False)  # Store as comma-separated values
-    university = db.Column(db.String, nullable=True) # Users can choose to show University/Major AND/OR Company/JobTitle
+    goals = db.Column(db.String, nullable=False)  # Comma-separated values
+    interests = db.Column(db.String, nullable=False)  # Comma-separated values
+    university = db.Column(db.String, nullable=True)  # College/major input
     major = db.Column(db.String, nullable=True)
-    company = db.Column(db.String, nullable=True)
+    company = db.Column(db.String, nullable=True)  # Job title/company input
     job_title = db.Column(db.String, nullable=True)
     project = db.Column(db.String(150), nullable=True)
     location = db.Column(db.String, nullable=False)
-    cracked_rating = db.Column(db.Integer, default=0) # functionality will be implemented in app.py
+    cracked_rating = db.Column(db.Integer, default=0)  # Computed in app.py
     chat = db.relationship("Chat", cascade="delete")
 
     connections = db.relationship(
-        "User",
-        secondary=connection_table,
-        back_populates="connections"
+        "User", secondary=connection_table, back_populates="connections"
     )
 
     def __init__(self, **kwargs):
@@ -61,14 +58,51 @@ class User(db.Model):
         self.location = kwargs.get("location")
         self.cracked_rating = kwargs.get("cracked_rating", 0)
 
+    #Cracked Rating Implementation
+
     def calculate_cracked_rating(self):
         """
         Calculate the cracked rating based on weighted factors.
+        Weights adjust based on input case:
+        1. Both college/major and job_title/company
+        2. College/major only
+        3. Job_title/company only
         """
-        college_weight = 0.3
-        major_weight = 0.2
-        job_title_weight = 0.3
-        company_weight = 0.2
+        if self.university and self.major and self.company and self.job_title:
+            #college & major = 60%
+            if college_score > 85:  # Top college threshold
+                college_weight = 0.7 * .6
+                major_weight = 0.3 * .6
+            elif college_score > 70:  # Mid-tier college
+                college_weight = 0.5 * .6
+                major_weight = 0.5 * .6
+            else:  # Lower-tier college
+                college_weight = 0.3 * .6
+                major_weight = 0.7 * .6
+            job_title_weight = 0.3
+            company_weight = 0.1
+        elif self.university and self.major:
+            if college_score > 85:  # Top college threshold
+                college_weight = 0.7
+                major_weight = 0.3
+            elif college_score > 70:  # Mid-tier college
+                college_weight = 0.5
+                major_weight = 0.5
+            else:  # Lower-tier college
+                college_weight = 0.3
+                major_weight = 0.7
+            job_title_weight = 0.0
+            company_weight = 0.0
+        elif self.company and self.job_title:
+            college_weight = 0.0
+            major_weight = 0.0
+            job_title_weight = 0.6
+            company_weight = 0.4
+        else:
+            return 0  # No valid input for calculation
+        
+        # Dynamically adjust college and major weights
+        
 
         college_score = self.get_college_score(self.university)
         major_score = self.get_major_score(self.major)
@@ -81,27 +115,46 @@ class User(db.Model):
             + job_title_score * job_title_weight
             + company_score * company_weight
         )
-        return round(cracked_rating, 2)
+        #lowest cracked rating is 50 - most humans are average
+        return max(round(cracked_rating, 2), 50)
 
     @staticmethod
     def get_college_score(college):
-        ivy_league = ["Harvard", "Yale", "Princeton"]
-        return 90 if college in ivy_league else 60
+        return cracked_weights.college_weightings.get(college, 50)  # Default lower score
 
     @staticmethod
     def get_major_score(major):
-        stem_fields = ["Computer Science", "Engineering"]
-        return 85 if major in stem_fields else 60
+        return cracked_weights.major_weightings.get(major, 50)  # Default lower score
 
     @staticmethod
-    def get_job_title_score(title):
-        high_paying_roles = ["Software Engineer", "Data Scientist"]
-        return 80 if title in high_paying_roles else 50
+    def get_job_title_score(job_title):
+        """
+        Calculate the job title score based on high-paying roles and intern modifier.
+        """
+
+        # Define a base reduction for interns
+        intern_reduction = 10
+
+        # Normalize case to handle inputs like "Intern" or "intern"
+        normalized_title = job_title.lower()
+
+        # Check if the role includes "intern"
+        is_intern = "intern" in normalized_title
+
+        # Find base score for the role, default to a lower score for unlisted roles
+        base_score = cracked_weights.high_paying_roles_weightings.get(
+            job_title.replace("Intern", "").strip(), 50
+        )
+
+        # Apply the intern reduction if applicable
+        if is_intern:
+            return max(base_score - intern_reduction, 0)  # Ensure score doesn't go below 0
+
+        return base_score
 
     @staticmethod
     def get_company_score(company):
-        prestigious_companies = ["Google", "Amazon", "Meta"]
-        return 90 if company in prestigious_companies else 60
+        return cracked_weights.companies_weightings.get(company, 50)  # Default lower score
 
     def serialize(self):
         """
@@ -123,10 +176,12 @@ class User(db.Model):
             "cracked_rating": self.cracked_rating,
         }
 
+
 class Message(db.Model):
     """
     Message Model
     """
+
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -155,17 +210,19 @@ class Message(db.Model):
             "timestamp": self.timestamp,
         }
 
+
 class Chat(db.Model):
     """
     Chat Model
     """
+
     __tablename__ = "chats"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user1_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     messages = db.relationship("Message", cascade="all, delete")
-    
+
     def __init__(self, **kwargs):
         """
         Initialize Chat object
