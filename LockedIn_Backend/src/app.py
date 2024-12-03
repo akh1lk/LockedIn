@@ -6,7 +6,7 @@ import os
 from db import db, User, Connection, Chat, Message  # Import models from db.py
 
 app = Flask(__name__)
-app.secret_key = 'WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ=='  # Secret key for session management
+app.secret_key = 'b1f849a9870a6137b4d34f5d703ce70e'  # Secret key for session management
 db_filename = "lockedin.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_filename}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -17,8 +17,8 @@ oauth = OAuth(app)
 
 linkedin = oauth.register(
     name="linkedin",
-    client_id="YOUR_CLIENT_ID",
-    client_secret="YOUR_CLIENT_SECRET",
+    client_id="77w8k8tmep8y6p",
+    client_secret="WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ==",
     authorize_url="https://www.linkedin.com/oauth/v2/authorization",
     authorize_params=None,
     access_token_url="https://www.linkedin.com/oauth/v2/accessToken",
@@ -40,21 +40,44 @@ def login():
 
 @app.route("/auth")
 def auth():
-    token = linkedin.authorize_access_token()
-    user = linkedin.get("https://api.linkedin.com/v2/me", token=token)
-    user_data = user.json()
+    try:
+        token = linkedin.authorize_access_token()
+        user = linkedin.get("https://api.linkedin.com/v2/me", token=token)
+        user_data = user.json()
 
-    # Create or update the user in the database
-    linkedin_username = user_data["id"]
-    name = user_data["localizedFirstName"] + " " + user_data["localizedLastName"]
+        # Extract and validate fields
+        linkedin_username = user_data.get("id")
+        if not linkedin_username:
+            return failure_response("LinkedIn username not found", 400)
 
-    user = User.query.filter_by(linkedin_username=linkedin_username).first()
-    if not user:
-        user = User(linkedin_username=linkedin_username, name=name)
-        db.session.add(user)
+        name = user_data.get("localizedFirstName", "") + " " + user_data.get("localizedLastName", "")
+        if not name.strip():
+            return failure_response("Name not found", 400)
+
+        # Check if user already exists in the database
+        existing_user = User.query.filter_by(linkedin_username=linkedin_username).first()
+        if existing_user:
+            return success_response({"message": "Logging In", "user": existing_user.serialize()})
+
+        # Create a new user with default or empty values for missing optional fields
+        new_user = User(
+            linkedin_username=linkedin_username,
+            name=name.strip(),
+            goals="",  # Defaults
+            interests="",  # Defaults
+            university="",
+            major="",
+            company="",
+            job_title="",
+            experience="",
+            location=""
+        )
+        db.session.add(new_user)
         db.session.commit()
 
-    return success_response({"message": "User authenticated", "user": user.serialize()})
+        return success_response({"message": "User authenticated & creating", "user": new_user.serialize()})
+    except Exception as e:
+        return failure_response(f"Authentication failed: {str(e)}", 500)
 
 # Routes for users
 @app.route("/api/users/", methods=["POST"])
@@ -68,26 +91,33 @@ def create_user():
     major = body.get("major", "")
     company = body.get("company", "")
     job_title = body.get("job_title", "")
+    experience = body.get("experience", "")
     location = body.get("location", "")
 
     if any(x is None for x in [linkedin_username, name]):
         return failure_response("Improper Arguments", 400)
-
-    new_user = User(
-        linkedin_username=linkedin_username,
-        name=name,
-        goals=goals,
-        interests=interests,
-        university=university,
-        major=major,
-        company=company,
-        job_title=job_title,
-        location=location
-    )
-    db.session.add(new_user)
+    
+    if len(experience.split()) > 52:
+        return failure_response("Experience Too Long", 400)
+    
+    existing_user = User.query.filter_by(linkedin_username=linkedin_username).first()
+    
+    if not existing_user:
+        return failure_response("User Does Not Exist (Auth Didn't Happen)", 404)
+    #Update user with real info
+    existing_user.name = name
+    existing_user.goals = goals
+    existing_user.interests = interests
+    existing_user.university = university
+    existing_user.major = major
+    existing_user.company = company
+    existing_user.experience = experience
+    existing_user.job_title = job_title
+    existing_user.location = location
+    #save changes
     db.session.commit()
 
-    return success_response(new_user.serialize(), 201)
+    return success_response(existing_user.serialize(), 200)
 
 @app.route("/api/users/<int:id>/", methods=["GET"])
 def get_user(id):

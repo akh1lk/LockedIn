@@ -99,10 +99,7 @@ class User(db.Model):
             job_title_weight = 0.6
             company_weight = 0.4
         else:
-            return 0  # No valid input for calculation
-        
-        # Dynamically adjust college and major weights
-        
+            return 0  # No valid input for calculation        
 
         college_score = self.get_college_score(self.university)
         major_score = self.get_major_score(self.major)
