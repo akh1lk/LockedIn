@@ -1,6 +1,5 @@
 import json
 from flask import Flask, request, redirect, url_for
-from flask_sqlalchemy import SQLAlchemy
 from authlib.integrations.flask_client import OAuth
 import os
 from db import db, User, Connection, Chat, Message  # Import models from db.py
@@ -177,8 +176,17 @@ def create_connection():
     user1_id = body.get("user1_id")
     user2_id = body.get("user2_id")
 
+    #Checking For Improper Inputs
     if any(x is None for x in [user1_id, user2_id]):
         return failure_response("Improper Arguments", 400)
+    
+    if user1_id == user2_id:
+        return failure_response("A user cannot be connected with themselves.", 400)
+    
+    user1 = User.query.get(id=user1_id)
+    user2 = User.query.get(id=user2_id)
+    if not user1 or not user2:
+        return failure_response("One or both users do not exist", 404)
     
     # Check if the connection already exists
     existing_connection = Connection.query.filter(
@@ -198,8 +206,18 @@ def create_connection():
 
 @app.route("/api/connections/<int:user_id>/", methods=["GET"])
 def get_user_connections(user_id):
-    connections = Connection.query.filter((Connection.user1_id == user_id) | (Connection.user2_id == user_id)).all()
-    return success_response({"connections": [conn.serialize() for conn in connections]})
+    user = User.query.get(user_id)
+    if not user:
+        return failure_response("User not found", 404)
+    connections = Connection.query.filter(
+        (Connection.user1_id == user_id) | (Connection.user2_id == user_id)
+        ).all()
+    connected_users = [ {
+        "connection_id" : conn.id,
+        "connected_user": conn.user2.serialize() if conn.user1_id == user_id else conn.user1.serialize(),
+        "timestamp": conn.timestamp
+    } for conn in connections]
+    return success_response({"connections": connected_users})
 
 @app.route('/recommendations/<int:user_id>', methods=['GET'])
 def get_recommendations(user_id):
