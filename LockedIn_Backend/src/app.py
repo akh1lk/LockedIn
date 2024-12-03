@@ -69,6 +69,7 @@ def auth():
             major="",
             company="",
             job_title="",
+            experience="",
             location=""
         )
         db.session.add(new_user)
@@ -90,10 +91,14 @@ def create_user():
     major = body.get("major", "")
     company = body.get("company", "")
     job_title = body.get("job_title", "")
+    experience = body.get("experience", "")
     location = body.get("location", "")
 
     if any(x is None for x in [linkedin_username, name]):
         return failure_response("Improper Arguments", 400)
+    
+    if len(experience.split()) > 52:
+        return failure_response("Experience Too Long", 400)
     
     existing_user = User.query.filter_by(linkedin_username=linkedin_username).first()
     
@@ -106,6 +111,7 @@ def create_user():
     existing_user.university = university
     existing_user.major = major
     existing_user.company = company
+    existing_user.experience = experience
     existing_user.job_title = job_title
     existing_user.location = location
     #save changes
