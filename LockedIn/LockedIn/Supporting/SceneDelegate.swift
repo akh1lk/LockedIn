@@ -14,11 +14,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let signInVC = TabController() // TODO: change this to SignInVC
+        let signInVC = SignInVC() // TODO: change this to SignInVC
         let navigationController = UINavigationController(rootViewController: signInVC)
         
         let window = UIWindow(windowScene: windowScene)
-        window.rootViewController = navigationController
+        
+        
+        window.rootViewController = TabController()// navigationController //  // TODO: Change this to navigationController
         self.window = window
         self.window?.makeKeyAndVisible()
     }
@@ -34,8 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.layer.add(transition, forKey: kCATransition)
         }
         
-        let navigationController = UINavigationController(rootViewController: TabController())
-        window.rootViewController = navigationController
+        window.rootViewController = TabController()
     }
 }
 
