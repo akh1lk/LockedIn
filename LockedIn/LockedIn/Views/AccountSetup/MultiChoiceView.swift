@@ -117,7 +117,7 @@ extension MultiChoiceView: IconTextViewDelegate {
     
     func didTap(_ iconTextView: IconTextView) {
         if iconTextView.isSelected {
-            selectedOptions.removeAll { $0.text == iconTextView.data.text}
+            selectedOptions.removeAll { $0.title == iconTextView.data.title}
         } else {
             selectedOptions.append(iconTextView.data)
         }

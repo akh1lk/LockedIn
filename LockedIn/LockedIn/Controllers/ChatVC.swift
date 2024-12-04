@@ -9,6 +9,7 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
+// TODO: Improve how the chat VC looks please!
 class ChatVC: MessagesViewController {
     
     // MARK: - Data

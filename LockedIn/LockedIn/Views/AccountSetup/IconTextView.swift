@@ -58,7 +58,7 @@ class IconTextView: UIView {
     
     // MARK: - Life Cycle (Two Initializers)
     init(icon: UIImage, text: String, delegate: IconTextViewDelegate) {
-        data = IconTextOption(icon: icon, text: text)
+        data = IconTextOption(icon: icon, title: text)
         self.delegate = delegate
         
         super.init(frame: .zero)
@@ -76,7 +76,7 @@ class IconTextView: UIView {
         super.init(frame: .zero)
         
         iconImageView.image = option.icon
-        textLabel.text = option.text
+        textLabel.text = option.title
         
         setupUI()
     }
