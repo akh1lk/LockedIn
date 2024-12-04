@@ -52,7 +52,7 @@ class LocationAccessVC: UIViewController {
     // MARK: - Life Cycle
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        navigationController?.navigationBar.backgroundColor = .blue
         setupUI()
     }
     

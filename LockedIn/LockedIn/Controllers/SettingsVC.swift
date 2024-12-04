@@ -54,7 +54,7 @@ class SettingsVC: UIViewController {
         
         // Create attributed string with the paragraph style
         let attributedText = NSMutableAttributedString(
-            string: "Made with ❤️ by Gabriel Castillo, Paul Iabacucci and Akhil Kagithapu.\nⓒ 2024 Locked In",
+            string: "Made with ❤️ by Gabriel Castillo, Paul Iabacucci, Akhil Kagithapu, Katherine Hu and Ivan Cheng\nⓒ 2024 Locked In",
             attributes: [
                 .paragraphStyle: paragraphStyle,
                 .font: UIFont.systemFont(ofSize: 14, weight: .regular), // Ensure the font is applied
@@ -81,13 +81,13 @@ class SettingsVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupNavBar() {
-        navigationController?.navigationBar.isHidden = false
-        navigationController?.navigationBar.titleTextAttributes = [
-            NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)
-        ]
-        self.title = "Settings"
+        navigationController?.setNavigationBarHidden(false, animated: false)
+        self.navigationController?.navigationBar.titleTextAttributes =
+        [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.navigationItem.title = "Settings"
     }
     
+    // MARK: - UI Setup
     private func setupUI() {
         self.view.addSubview(settingsTable)
         settingsTable.translatesAutoresizingMaskIntoConstraints = false

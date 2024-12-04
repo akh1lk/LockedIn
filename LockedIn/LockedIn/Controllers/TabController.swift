@@ -13,6 +13,7 @@ class TabController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.tabBarController?.navigationController?.setNavigationBarHidden(true, animated: false)
         self.tabBar.backgroundColor = UIColor.white
         self.tabBar.tintColor = UIColor.palette.purple
         self.tabBar.unselectedItemTintColor = UIColor.palette.gray
@@ -21,20 +22,20 @@ class TabController: UITabBarController {
     }
     
     // MARK: - Setup Tabs
-    private func createNav(with image: UIImage?, vc: UIViewController) -> UINavigationController {
+    private func createNav(title: String, image: UIImage?, vc: UIViewController) -> UINavigationController {
         let nav = UINavigationController(rootViewController: vc)
         nav.tabBarItem.image = image
-//        nav.tabBarItem.title = title
+        nav.tabBarItem.title = title
         return nav
     }
     
     private func setupTabs() {
-        let swipeScreen = self.createNav(with: UIImage(systemName: "n.square"), vc: SwipeScreenVC())
-        let likeScreen = self.createNav(with: UIImage(systemName: "star.fill"), vc: LocationAccessVC())
-        let chatScreen = self.createNav(with: UIImage(systemName: "ellipsis.message.fill"), vc: LocationAccessVC())
-        let settings = self.createNav(with: UIImage(systemName: "person.fill"), vc: SettingsVC())
+        let swipeScreen = self.createNav(title: "Home", image: UIImage(systemName: "n.square"), vc: SwipeScreenVC())
+
+        let chatScreen = self.createNav(title: "Chat", image: UIImage(systemName: "ellipsis.message.fill"), vc: ChatVC(with: Sender(senderId: "ye", displayName: "ye")))
+        let settings = self.createNav(title: "Profile", image: UIImage(systemName: "person.fill"), vc: SettingsVC())
         
-        self.setViewControllers([swipeScreen, likeScreen, chatScreen, settings], animated: true)
+        self.setViewControllers([swipeScreen, chatScreen, settings], animated: true)
     }
 }
 

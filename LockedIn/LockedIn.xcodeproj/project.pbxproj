@@ -168,6 +168,7 @@
 		FFBF3B9E2CFACC73008FD882 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				FFD04E962CFEBCB800E199A1 /* Data */,
 				FFF8DE342CFA61F400E5D2A7 /* Extensions.swift */,
 				FFBF3BA02CFACC9C008FD882 /* Utils.swift */,
 				FF795CED2CFBF55A008E2C5B /* AlertManager.swift */,
@@ -175,7 +176,7 @@
 			path = Other;
 			sourceTree = "<group>";
 		};
-		FFBF3B9F2CFACC80008FD882 /* Suppporting */ = {
+		FFBF3B9F2CFACC80008FD882 /* Supporting */ = {
 			isa = PBXGroup;
 			children = (
 				FFF8DE122CFA5A5200E5D2A7 /* Assets.xcassets */,
@@ -183,7 +184,7 @@
 				FFF8DE092CFA5A5100E5D2A7 /* AppDelegate.swift */,
 				FFF8DE0B2CFA5A5100E5D2A7 /* SceneDelegate.swift */,
 			);
-			path = Suppporting;
+			path = Supporting;
 			sourceTree = "<group>";
 		};
 		FFD04E8C2CFEBC4200E199A1 /* Models */ = {
@@ -229,12 +230,11 @@
 		FFF8DE082CFA5A5100E5D2A7 /* LockedIn */ = {
 			isa = PBXGroup;
 			children = (
-				FFD04E962CFEBCB800E199A1 /* Data */,
+				FFBF3B9E2CFACC73008FD882 /* Other */,
 				FFD04E8C2CFEBC4200E199A1 /* Models */,
 				FFF8DE1E2CFA5A9800E5D2A7 /* Views */,
 				FFF8DE1D2CFA5A8D00E5D2A7 /* Controllers */,
-				FFBF3B9E2CFACC73008FD882 /* Other */,
-				FFBF3B9F2CFACC80008FD882 /* Suppporting */,
+				FFBF3B9F2CFACC80008FD882 /* Supporting */,
 				FFF8DE3A2CFA85E800E5D2A7 /* Fonts */,
 				FFF8DE172CFA5A5200E5D2A7 /* Info.plist */,
 			);
