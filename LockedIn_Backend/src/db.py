@@ -7,17 +7,6 @@ import cracked_weights
 # SQLAlchemy and message encryption implementation
 db = SQLAlchemy()
 
-# Association table for connections (many-to-many)
-connection_table = db.Table(
-    "connections",
-    db.Model.metadata,
-    db.Column("id", db.Integer, primary_key=True, autoincrement=True),
-    db.Column("user1_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
-    db.Column("user2_id", db.Integer, db.ForeignKey("users.id"), nullable=False),
-    db.Column("timestamp", db.Date)
-)
-
-
 class User(db.Model):
     """
     User Model
@@ -36,7 +25,7 @@ class User(db.Model):
     job_title = db.Column(db.String, nullable=True)
     project = db.Column(db.String(150), nullable=True)
     location = db.Column(db.String, nullable=False)
-    cracked_rating = db.Column(db.Integer, default=0)  # Computed in app.py
+    cracked_rating = db.Column(db.Integer, default=0) 
     chat = db.relationship("Chat", cascade="delete")
 
     connections = db.relationship(
@@ -276,7 +265,7 @@ class Message(db.Model):
             "chat_id": self.chat_id,
             "sender_id": self.sender_id,
             "content": Fernet.decrypt(self.content.encode()).decode(),
-            "timestamp": self.timestamp,
+            "timestamp": self.timestamp.isoformat(),
         }
 
 
@@ -291,6 +280,7 @@ class Chat(db.Model):
     user1_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
     messages = db.relationship("Message", cascade="all, delete")
+    timestamp = db.Column(db.DateTime, default=db.func.now())
 
     def __init__(self, **kwargs):
         """
@@ -307,5 +297,33 @@ class Chat(db.Model):
             "id": self.id,
             "user1_id": self.user1_id,
             "user2_id": self.user2_id,
-            "messages": [m.serialize() for m in self.messages],
+            "timestamp": self.timestamp.isoformat(),
+            "messages": [m.serialize() for m in self.messages]
+        }
+    
+    def short_serialize(self):
+        """
+        Serialize no message history
+        """
+        return {
+            "id": self.id,
+            "user1_id": self.user1_id,
+            "user2_id": self.user2_id
+        }
+    
+    def short_recentmsg_serialize(self):
+        """
+        Short Serialize with most recent message
+        """
+
+        recent = (Message.query.filter_by(chat_id=self.id).orderby(Message.timestamp.desc()).first())
+
+        return {
+            "id": self.id,
+            "user1_id": self.user1_id,
+            "user2_id": self.user2_id,
+            "recent_message": {
+                "message": recent.content if recent else None,
+                "timestamp": recent.timestamp.isoformat() if recent else None
+            }
         }
