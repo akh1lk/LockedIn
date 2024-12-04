@@ -10,5 +10,5 @@ import UIKit
 /// Used to represent an option or button that holds an icon and text. 
 struct IconTextOption {
     let icon: UIImage?
-    let text: String
+    let title: String
 }
