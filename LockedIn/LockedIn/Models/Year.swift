@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Year: String {
+enum Year: String, CaseIterable {
     case freshmen = "Freshmen"
     case sophomore = "Sophomore"
     case junior = "Junior"
