@@ -11,6 +11,9 @@ import InputBarAccessoryView
 
 class ChatVC: MessagesViewController {
     
+    // MARK: - UI Components
+    let chatHeaderView: ChatHeaderView
+    
     // MARK: - Data
     private var messages = TestingData.messages
     var selfSender: Sender
@@ -18,7 +21,10 @@ class ChatVC: MessagesViewController {
     // MARK: - Life Cycle
     init(with sender: Sender) {
         self.selfSender = sender
+        chatHeaderView = ChatHeaderView(sender: sender)
         super.init(nibName: nil, bundle: nil)
+        
+        chatHeaderView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -26,6 +32,8 @@ class ChatVC: MessagesViewController {
     }
     
     override func viewDidLoad() {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         super.viewDidLoad()
         
         // Set data sources and delegates
@@ -54,6 +62,18 @@ class ChatVC: MessagesViewController {
             layout.minimumInteritemSpacing = 0
             layout.minimumLineSpacing = 0
         }
+        
+        messagesCollectionView.contentInset.top = 80
+        
+        self.view.addSubview(chatHeaderView)
+        chatHeaderView.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            chatHeaderView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            chatHeaderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            chatHeaderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            chatHeaderView.heightAnchor.constraint(equalToConstant: 130),
+        ])
     }
 }
 
@@ -81,7 +101,7 @@ extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDel
     
     // MARK: - Time Display
     // it shows the date & time if it is the first message sent in the day.
-    // it shows time if the message was sent more than 30 minutes from the previous message. 
+    // it shows time if the message was sent more than 30 minutes from the previous message.
     func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
         let isFirstMessageOfDay = isFirstMessageOfDay(for: message as! Message, at: indexPath)
         let shouldDisplayTime = shouldDisplayTimestamp(for: message as! Message, at: indexPath)
@@ -153,5 +173,12 @@ extension ChatVC: InputBarAccessoryViewDelegate {
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
         inputBar.inputTextView.text = ""
+    }
+}
+
+// MARK: - Chat Header Delegate
+extension ChatVC: ChatHeaderDelegate {
+    func backBtnTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }
