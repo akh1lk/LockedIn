@@ -50,6 +50,8 @@ class SettingsTableCell: UITableViewCell {
     }
     
     private func setupUI() {
+        
+        self.selectionStyle = .none
     
         accessoryType = .disclosureIndicator
         
