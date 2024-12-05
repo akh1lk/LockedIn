@@ -40,8 +40,8 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - Data
     private let views: [UIView & SetupAccountSubview] = [
-        MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
-        MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3),
+        MultiChoiceView(title: "Select 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
+        MultiChoiceView(title: "Select 3 interests", options: OptionsData.interestsOptions, limit: 3),
         EducationView(),
         AboutInternshipView(),
         SelectPhotoView()

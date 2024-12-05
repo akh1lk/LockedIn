@@ -14,6 +14,7 @@ class SettingsVC: UIViewController {
     var settingsOption : [IconTextOption] = [
         IconTextOption(icon: UIImage(systemName: "person.circle"), title: "Personal Information"),
         IconTextOption(icon: UIImage(systemName: "brain"), title: "About me & Internships"),
+        IconTextOption(icon: UIImage(systemName: "briefcase"), title: "Career Goals"),
         IconTextOption(icon: UIImage(systemName: "heart"), title: "Interests"),
         IconTextOption(icon: UIImage(systemName: "questionmark.circle"), title: "Support"),
     ]
@@ -147,6 +148,8 @@ class SettingsVC: UIViewController {
             viewController = AboutMeInternshipVC()
         case "Interests":
             viewController = InterestsVC()
+        case "Career Goals":
+            viewController = CareerGoalsVC()
         case "Support":
             viewController = SupportVC()
         default:

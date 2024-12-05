@@ -48,7 +48,7 @@ class PersonalInfoController: UIViewController {
             title: "Done",
             style: .plain,
             target: self,
-            action: #selector(doneButtonTapped))
+            action: #selector(doneBtnTapped))
         
         button.setTitleTextAttributes([
                 .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
@@ -72,7 +72,7 @@ class PersonalInfoController: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        Utils.customDoneButton(for: self.navigationItem, target: self, action: #selector(doneButtonTapped))
+        Utils.customDoneButton(for: self.navigationItem, target: self, action: #selector(doneBtnTapped))
         Utils.customBackButton(for: self.navigationItem, target: self, action: #selector(backBtnTapped))
         setupNavBar()
         setupUI()
@@ -137,7 +137,7 @@ class PersonalInfoController: UIViewController {
         })
     }
     
-    @objc func doneButtonTapped() {
+    @objc func doneBtnTapped() {
         // TODO: Networking update user information.
         backBtnTapped()
     }

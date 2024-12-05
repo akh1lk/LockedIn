@@ -1,13 +1,14 @@
 //
-//  NotificationSettingsController.swift
-//  App1
+//  CareerGoalsVC.swift
+//  LockedIn
 //
-//  Created by Gabriel Castillo on 6/13/24.
+//  Created by Gabriel Castillo on 12/5/24.
 //
 
 import UIKit
 
-class InterestsVC: UIViewController {
+/// Update career goals view controller for settings. 
+class CareerGoalsVC: UIViewController {
     
     // MARK: - UI Components
     private let backgroundView: UIView = {
@@ -17,9 +18,8 @@ class InterestsVC: UIViewController {
     }()
     
     let multiChoiceView = MultiChoiceView(
-        title: "Select 3 Interests",
-        options: OptionsData.interestsOptions,
-        limit: 3,
+        title: "Select 4 Career Goals",
+        options: OptionsData.careerGoalOptions, limit: 4,
         prefersLargeTitles: false
     )
     

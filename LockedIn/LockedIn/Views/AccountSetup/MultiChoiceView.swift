@@ -14,9 +14,6 @@ class MultiChoiceView: UIView {
         let label = UILabel()
         label.textColor = .label
         label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Bold", size: 32)
-        label.text = "Lorem Ipsum"
-        label.numberOfLines = 2
         return label
     }()
     
@@ -24,6 +21,7 @@ class MultiChoiceView: UIView {
     private var allOptions: [IconTextOption] = []
     private var limit: Int
     public var selectedOptions: [IconTextOption] = []
+    private let prefersLargeTitles: Bool
     
     var parent: SetupAccountVC? // Protocol requires it!
     
@@ -31,16 +29,21 @@ class MultiChoiceView: UIView {
     /// Creates a MultiChoiceView for a given array of `IconTextOption` with a heading of `title`
     ///
     /// - Parameters:
-    ///     - options: the list of IconTextOption objects that you'd like to be shown
-    ///     - limit: the maximum number of options that can be selected.
-    ///     - screenWidth: the width of the screen.
+    ///     - title: the heading text.
+    ///     - options: the list of IconTextOption objects that you'd like to be shown.
+    ///     - limit: The maximum number of options that can be selected.
+    ///     - prefersLargeTitles: a boolean indicating whether the title should use a large font size (default: true).
     ///
-    init(title: String, options: [IconTextOption], limit: Int) {
+    init(title: String, options: [IconTextOption], limit: Int, prefersLargeTitles: Bool = true) {
         self.allOptions = options
         self.limit = limit
-        self.heading.text = title
-        
+        self.prefersLargeTitles = prefersLargeTitles
         super.init(frame: .zero)
+        
+        self.heading.text = title
+        self.heading.textColor = prefersLargeTitles ? .palette.offBlack : .palette.purple
+        self.heading.font = UIFont(name: "GaretW05-Bold", size: prefersLargeTitles ? 32 : 24)
+        self.heading.numberOfLines = prefersLargeTitles ? 2 : 1
         
         setupUI()
     }
@@ -57,7 +60,7 @@ class MultiChoiceView: UIView {
         heading.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            heading.heightAnchor.constraint(equalToConstant: 120),
+            heading.heightAnchor.constraint(equalToConstant: self.prefersLargeTitles ? 120 : 60),
             heading.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
             heading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             heading.topAnchor.constraint(equalTo: self.topAnchor)
@@ -92,7 +95,7 @@ class MultiChoiceView: UIView {
                     view.heightAnchor.constraint(equalToConstant: 40),
                     view.leadingAnchor.constraint(equalTo: trailingAnchor, constant: paddingColumn),
                 ])
-                  
+                
                 trailingAnchor = view.trailingAnchor
                 viewsWidth += view.totalWidth
                 index += 1
