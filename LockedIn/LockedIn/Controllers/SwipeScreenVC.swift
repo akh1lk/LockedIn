@@ -66,7 +66,7 @@ class SwipeScreenVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .palette.offPurple
+        view.backgroundColor = .palette.offWhite
         navigationController?.setNavigationBarHidden(true, animated: false)
         
         // TODO: Read from the database
