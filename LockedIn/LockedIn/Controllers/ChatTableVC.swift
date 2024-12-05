@@ -48,7 +48,7 @@ class ChatTableVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = "Settings"
+        self.navigationItem.title = "Chats"
     }
     
     // MARK: - UI Setup
@@ -58,7 +58,7 @@ class ChatTableVC: UIViewController {
         
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: self.view.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            tableView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -20),
             tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
@@ -78,5 +78,9 @@ extension ChatTableVC: UITableViewDelegate, UITableViewDataSource {
         let chat = chats[indexPath.row]
         cell.configureCell(sender: chat.sender, latestMessage: chat.latestMessage)
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 80
     }
 }

@@ -121,12 +121,12 @@ class SettingsVC: UIViewController {
             settingsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
             settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -350),
             
-            aboutLabel.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor, constant: 20),
+            aboutLabel.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor),
             aboutLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             aboutLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 70),
             aboutLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -70),
             
-            logoutButton.topAnchor.constraint(equalTo: self.aboutLabel.bottomAnchor, constant: 60),
+            logoutButton.topAnchor.constraint(equalTo: self.aboutLabel.bottomAnchor, constant: 85),
             logoutButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             logoutButton.widthAnchor.constraint(equalToConstant: 180),
             logoutButton.heightAnchor.constraint(equalToConstant: 50),
