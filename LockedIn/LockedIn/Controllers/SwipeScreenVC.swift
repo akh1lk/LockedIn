@@ -107,7 +107,7 @@ class SwipeScreenVC: UIViewController {
             cardDepthImage.leadingAnchor.constraint(equalTo:  cardViews[0].leadingAnchor, constant: 5),
             cardDepthImage.trailingAnchor.constraint(equalTo:  cardViews[0].trailingAnchor, constant: -5),
             
-            logoImageView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: -30),
+            logoImageView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: 10),
             logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             logoImageView.heightAnchor.constraint(equalToConstant: 50),
             logoImageView.widthAnchor.constraint(equalToConstant: 150),

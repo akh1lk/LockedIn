@@ -13,6 +13,8 @@
 		FF2F30162D01012C009CF246 /* PaymentSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30112D01012C009CF246 /* PaymentSettingsController.swift */; };
 		FF2F30172D01012C009CF246 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30122D01012C009CF246 /* PersonalInfoController.swift */; };
 		FF2F30182D01012C009CF246 /* SupportController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30132D01012C009CF246 /* SupportController.swift */; };
+		FF2F301A2D0124A0009CF246 /* ChatTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30192D0124A0009CF246 /* ChatTableVC.swift */; };
+		FF2F301D2D012518009CF246 /* ChatTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F301C2D012518009CF246 /* ChatTableCell.swift */; };
 		FF59F1752CFF9CAA00BA48CB /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = FF59F1742CFF9CAA00BA48CB /* MessageKit */; };
 		FF59F1772CFF9D4500BA48CB /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF59F1762CFF9D4500BA48CB /* ChatVC.swift */; };
 		FF654E702CFD18D9000E111E /* InfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E6F2CFD18D9000E111E /* InfoCardView.swift */; };
@@ -65,6 +67,8 @@
 		FF2F30112D01012C009CF246 /* PaymentSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSettingsController.swift; sourceTree = "<group>"; };
 		FF2F30122D01012C009CF246 /* PersonalInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
 		FF2F30132D01012C009CF246 /* SupportController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportController.swift; sourceTree = "<group>"; };
+		FF2F30192D0124A0009CF246 /* ChatTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableVC.swift; sourceTree = "<group>"; };
+		FF2F301C2D012518009CF246 /* ChatTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableCell.swift; sourceTree = "<group>"; };
 		FF59F1762CFF9D4500BA48CB /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		FF654E6F2CFD18D9000E111E /* InfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCardView.swift; sourceTree = "<group>"; };
 		FF654E732CFD2A16000E111E /* InteractiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveButton.swift; sourceTree = "<group>"; };
@@ -126,6 +130,7 @@
 		FF2F300D2D010033009CF246 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				FF2F300E2D01005C009CF246 /* SettingsTableCell.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -139,6 +144,14 @@
 				FF2F30132D01012C009CF246 /* SupportController.swift */,
 			);
 			path = SettingsVCs;
+			sourceTree = "<group>";
+		};
+		FF2F301B2D0124F9009CF246 /* Chat */ = {
+			isa = PBXGroup;
+			children = (
+				FF2F301C2D012518009CF246 /* ChatTableCell.swift */,
+			);
+			path = Chat;
 			sourceTree = "<group>";
 		};
 		FF795CF52CFC19DA008E2C5B /* SwipeScreen */ = {
@@ -251,7 +264,7 @@
 				FF59F1762CFF9D4500BA48CB /* ChatVC.swift */,
 				FF2F300B2D00FF77009CF246 /* SettingsVC.swift */,
 				FF2F30142D01012C009CF246 /* SettingsVCs */,
-				FF2F300E2D01005C009CF246 /* SettingsTableCell.swift */,
+				FF2F30192D0124A0009CF246 /* ChatTableVC.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -262,6 +275,7 @@
 				FF795CE92CFBCD28008E2C5B /* TextField.swift */,
 				FFF8DE252CFA5EA800E5D2A7 /* AccountSetup */,
 				FF795CF52CFC19DA008E2C5B /* SwipeScreen */,
+				FF2F301B2D0124F9009CF246 /* Chat */,
 				FF2F300D2D010033009CF246 /* Settings */,
 			);
 			path = Views;
@@ -381,6 +395,7 @@
 			files = (
 				FFD04E8D2CFEBC4200E199A1 /* Internship.swift in Sources */,
 				FF2F30152D01012C009CF246 /* NotificationSettingsController.swift in Sources */,
+				FF2F301D2D012518009CF246 /* ChatTableCell.swift in Sources */,
 				FFD04E992CFEBCB800E199A1 /* TestingData.swift in Sources */,
 				FFD04E8E2CFEBC4200E199A1 /* Degree.swift in Sources */,
 				FF795CF92CFC1FAA008E2C5B /* CompleteCardView.swift in Sources */,
@@ -389,6 +404,7 @@
 				FFD04E982CFEBCB800E199A1 /* OptionsData.swift in Sources */,
 				FFF8DE372CFA667700E5D2A7 /* IconTextView.swift in Sources */,
 				FFF8DE0E2CFA5A5100E5D2A7 /* SwipeScreenVC.swift in Sources */,
+				FF2F301A2D0124A0009CF246 /* ChatTableVC.swift in Sources */,
 				FF795CF72CFC1A6D008E2C5B /* ProfileInfoView.swift in Sources */,
 				FF795CFB2CFC2A61008E2C5B /* SimpleIconTextView.swift in Sources */,
 				FFA857722CFB903E00ED5C9D /* TextIconBtnView.swift in Sources */,
