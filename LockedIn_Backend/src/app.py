@@ -2,7 +2,7 @@ import json
 from flask import Flask, request, redirect, url_for
 from authlib.integrations.flask_client import OAuth
 import os
-from db import db, User, Connection, Chat, Message  # Import models from db.py
+from db import db, User, Connection, Chat, Message, Asset  # Import models from db.py
 from flask_socketio import SocketIO, join_room, leave_room, emit
 
 app = Flask(__name__)
@@ -122,6 +122,34 @@ def create_user():
 
     return success_response(existing_user.serialize(), 200)
 
+@app.route("/upload/<int:user_id>", methods=["POST"])
+def upload(user_id):
+    """
+    Endpoint for uploading a new user's profile pic to AWS given its base64 form,
+    then storing/returning the URL of that image.
+    Should be called in conjunction with create_user INITIALLY.
+    Can be called to update user's profile picture.
+    """
+    body = json.loads(request.data)
+    image_data = body.get("image_data")
+
+    if not image_data or not user_id:
+        return failure_response("No base64 img string provided &/or user id", 404)
+    
+    user = User.query.get(id=user_id)
+    if not user:
+        return failure_response("User not found", 404)
+    
+    if user.profile_pic:
+        user.profile_pic.replace(image_data)
+    else:
+        asset = Asset(user_id=user_id,image_data=image_data)
+        db.session.add(asset)
+        user.profile_pic = asset
+    db.session.commit()
+
+    return success_response(user.profile_pic.serialize(), 201)
+
 @app.route("/api/users/<int:id>/", methods=["GET"])
 def get_user(id):
     user = User.query.filter_by(id=id).first()
@@ -129,9 +157,12 @@ def get_user(id):
 
 @app.route("/api/users/<int:id>/", methods=["POST"])
 def update_user(id):
+    """
+    Updates user's profile info. Linkedin_username is immutable
+    """
     body = json.loads(request.data)
-    linkedin_username = body.get("linkedin_username")
-    name = body.get("name")
+    linkedin_username = body.get("linkedin_username", "")
+    name = body.get("name", "")
     goals = body.get("goals", "")
     interests = body.get("interests", "")
     university = body.get("university", "")
@@ -147,7 +178,7 @@ def update_user(id):
     
     # Update each field only if it is not an empty string
     if linkedin_username:
-        user.linkedin_username = linkedin_username
+        return failure_response("Cannot modify linkedin_username", 404)
     if name:
         user.name = name
     if goals:
@@ -172,9 +203,7 @@ def update_user(id):
     return success_response(user.serialize())
 
 
-
 # Routes for connections
-
 
 @app.route("/api/connections/", methods=["POST"])
 def create_connection():
@@ -217,7 +246,7 @@ def create_connection():
 
 @app.route("/api/connections/<int:user_id>/", methods=["GET"])
 def get_user_connections(user_id):
-    user = User.query.get(user_id)
+    user = User.query.get(id=user_id)
     if not user:
         return failure_response("User not found", 404)
     connections = Connection.query.filter(
@@ -230,12 +259,39 @@ def get_user_connections(user_id):
     } for conn in connections]
     return success_response({"connections": connected_users})
 
+@app.route("/api/connections/<int:connection_id>", methods=["DELETE"])
+def delete_user_connections(connection_id):
+    """
+    Delete user's connection, and subsuquent messages & chat.
+    """
+    connection = Connection.query.get(id=connection_id)
+    user1 = connection.user1_id
+    user2 = connection.user2_id
+
+    if not connection:
+        return failure_response("Connection doesn't exist", 404)
+    
+    chat = Chat.query.filter(
+        ((Chat.user1_id == connection.user1_id) & (Chat.user2_id == connection.user2_id)) |
+        ((Chat.user1_id == connection.user2_id) & (Chat.user2_id == connection.user1_id))
+    ).first()
+
+    if chat:
+        db.session.delete(chat)
+
+    db.session.delete(connection)
+    db.session.commit()
+
+    return success_response({"message": f"Connection {connection_id} with {user1} and {user2} and 
+                             related chat/messages deleted successfully"})
+
+
 @app.route('/recommendations/<int:user_id>', methods=['GET'])
 def get_recommendations(user_id):
     """
     Get up to 10 user recommendations.
     """
-    user = User.query.get(user_id)
+    user = User.query.get(id=user_id)
     if not user:
         return {"error": "User not found"}, 404
 
@@ -287,7 +343,7 @@ def get_user_chats(user_id):
     Get All of User's chat's, along with most recent message and timestamp
     ^ for frontend display on chat page
     """
-    user = User.query.get(user_id)
+    user = User.query.get(id=user_id)
     if not user:
         return failure_response("User not found", 404)
     
@@ -327,11 +383,11 @@ def handle_join(data):
         emit("error", {"message": "chat_id and user_id are required."})
         return
     
-    if Chat.query.get(chat_id) is None:
+    if Chat.query.get(id=chat_id) is None:
         emit("error", {"message": "chat_id invalid."})
         return
     
-    if User.query.get(user_id) is None:
+    if User.query.get(id=user_id) is None:
         emit("error", {"message": "user_id invalid."})
         return 
 
@@ -369,12 +425,12 @@ def handle_send_message(data):
         emit("error", {"message": "chat_id, sender_id, and content are required."})
         return
     
-    sender_user = User.query.get(sender_id)
+    sender_user = User.query.get(id=sender_id)
     if not sender_user:
-        emit("error", {"message": "Chat not found"})
+        emit("error", {"message": "User not found"})
         return
     
-    chat = Chat.query.get(chat_id)
+    chat = Chat.query.get(id=chat_id)
     if not chat:
         emit("error", {"message": "Chat not found"})
         return
