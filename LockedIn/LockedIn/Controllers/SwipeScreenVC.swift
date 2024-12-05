@@ -89,6 +89,7 @@ class SwipeScreenVC: UIViewController {
         
         for i in 0..<cardViews.count {
             let view = cardViews[i]
+            view.delegate = self
             
             self.view.addSubview(view)
             view.translatesAutoresizingMaskIntoConstraints = false
@@ -309,5 +310,11 @@ class SwipeScreenVC: UIViewController {
             // Directly animate card off screen
             animateCardOffScreen()
         }
+    }
+}
+
+extension SwipeScreenVC: CardViewDelegate {
+    func showLinkedinProfile(with url: String) {
+        Utils.showWebViewController(on: self, with: url)
     }
 }

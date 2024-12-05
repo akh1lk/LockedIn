@@ -7,8 +7,8 @@
 
 import UIKit
 
+/// Settings view controller. 
 class SettingsVC: UIViewController {
-    // Settings controller.
     
     // MARK: - Variables
     var settingsOption : [IconTextOption] = [
@@ -19,11 +19,18 @@ class SettingsVC: UIViewController {
     ]
     
     // MARK: - UI Components
+    private let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .palette.offWhite
+        return view
+    }()
+    
     private let settingsTable: UITableView = {
         let tableView = UITableView()
         tableView.backgroundColor = .white
         tableView.keyboardDismissMode = .onDrag
         tableView.allowsSelection = true
+        tableView.isScrollEnabled = false
         tableView.register(SettingsTableCell.self, forCellReuseIdentifier: SettingsTableCell.identifier)
         return tableView
     }()
@@ -31,12 +38,10 @@ class SettingsVC: UIViewController {
     private lazy var logoutButton: UIButton = {
         let button = UIButton()
         button.setTitleColor(.palette.offBlack, for: .normal)
-        button.layer.borderColor = UIColor.palette.offBlack.cgColor
-        button.layer.borderWidth = 1
-        button.setTitle("Log Out", for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .regular)
+        button.setTitle("Sign Out", for: .normal)
+        button.setTitleColor(.white, for: .normal)
+        button.titleLabel?.font = UIFont(name: "GaretW05-Bold", size: 18)
         button.layer.cornerRadius = 15
-        button.backgroundColor = .white
         button.addTarget(self, action: #selector(didTapLogout), for: .touchUpInside)
         return button
     }()
@@ -47,24 +52,20 @@ class SettingsVC: UIViewController {
         label.textAlignment = .center
         label.numberOfLines = 0
         
-        // Create paragraph style with custom line spacing
         let paragraphStyle = NSMutableParagraphStyle()
-        paragraphStyle.lineSpacing = 6 // Adjust line spacing here
+        paragraphStyle.lineSpacing = 6
         paragraphStyle.alignment = .center
         
-        // Create attributed string with the paragraph style
         let attributedText = NSMutableAttributedString(
-            string: "Made with ❤️ by Gabriel Castillo, Paul Iabacucci, Akhil Kagithapu, Katherine Hu and Ivan Cheng\nⓒ 2024 Locked In",
+            string: "Made with ❤️ by Gabriel, Paul, Akhil, Katherine and Ivan.\nⓒ 2024 LockedIn",
             attributes: [
                 .paragraphStyle: paragraphStyle,
-                .font: UIFont.systemFont(ofSize: 14, weight: .regular), // Ensure the font is applied
-                .foregroundColor: UIColor.palette.offBlack.withAlphaComponent(0.5) // Ensure the color is applied
+                .font: UIFont.systemFont(ofSize: 16, weight: .regular),
+                .foregroundColor: UIColor.palette.offBlack.withAlphaComponent(0.5)
             ]
         )
         
-        // Set the attributed text to the label
         label.attributedText = attributedText
-        
         return label
     }()
     
@@ -79,16 +80,24 @@ class SettingsVC: UIViewController {
         settingsTable.dataSource = self
     }
     
+    override func viewDidLayoutSubviews() {
+        Utils.addGradient(to: logoutButton)
+    }
+    
     // MARK: - UI Setup
     private func setupNavBar() {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
+        self.navigationController?.navigationBar.backgroundColor = .palette.offWhite
         self.navigationItem.title = "Settings"
     }
     
     // MARK: - UI Setup
     private func setupUI() {
+        self.view.addSubview(backgroundView)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(settingsTable)
         settingsTable.translatesAutoresizingMaskIntoConstraints = false
         
@@ -99,19 +108,25 @@ class SettingsVC: UIViewController {
         aboutLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundView.bottomAnchor.constraint(equalTo: settingsTable.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            
             settingsTable.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
             settingsTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
             settingsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
-            settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -300),
+            settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -350),
             
-            logoutButton.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor, constant: 20),
-            logoutButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            logoutButton.widthAnchor.constraint(equalToConstant: 100),
-            logoutButton.heightAnchor.constraint(equalToConstant: 50),
-            
-            aboutLabel.topAnchor.constraint(equalTo: self.logoutButton.bottomAnchor, constant: 40),
+            aboutLabel.topAnchor.constraint(equalTo: self.settingsTable.bottomAnchor, constant: 20),
             aboutLabel.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
-            aboutLabel.widthAnchor.constraint(equalToConstant: 250),
+            aboutLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 70),
+            aboutLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -70),
+            
+            logoutButton.topAnchor.constraint(equalTo: self.aboutLabel.bottomAnchor, constant: 60),
+            logoutButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            logoutButton.widthAnchor.constraint(equalToConstant: 180),
+            logoutButton.heightAnchor.constraint(equalToConstant: 50),
         ])
     }
     

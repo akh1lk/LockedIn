@@ -187,19 +187,13 @@ extension SignInVC : UITextViewDelegate {
         if case .link(let url) = textItem.content {
             
             if url.scheme == "terms" {
-                self.showWebViewController(with: "https://policies.google.com/terms?hl=en-US")
+                Utils.showWebViewController(on: self, with: "https://policies.google.com/terms?hl=en-US")
             } else if url.scheme == "privacy" {
-                self.showWebViewController(with: "https://policies.google.com/privacy?hl=en-US")
+                Utils.showWebViewController(on: self, with: "https://policies.google.com/privacy?hl=en-US")
             }
         }
 
         return nil
-    }
-    
-    private func showWebViewController(with urlString: String) {
-        let vc = WebViewerController(with: urlString)
-        let nav = UINavigationController(rootViewController: vc)
-        self.present(nav, animated: true, completion: nil)
     }
     
     func textViewDidChangeSelection(_ textView: UITextView) {

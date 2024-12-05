@@ -7,6 +7,10 @@
 
 import UIKit
 
+protocol CardViewDelegate {
+    func showLinkedinProfile(with url: String)
+}
+
 /// A complete swipe view that contains three different subviews that can be tapped through for a user card.
 class CompleteCardView: UIView {
     
@@ -43,10 +47,21 @@ class CompleteCardView: UIView {
         return iv
     }()
     
+    public lazy var linkedInButton: UIButton = {
+        let button = UIButton()
+        button.imageView?.contentMode = .scaleAspectFit
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.setImage(UIImage(named: "linkedin-logo-small"), for: .normal)
+        button.addTarget(self, action: #selector(linkedInButtonTapped), for: .touchUpInside)
+        return button
+    }()
+    
     // MARK: - Data
     let userData: UserData
     var currentIndex = 0
     let maxIndex = 1 // this is equal to views.count - 1
+    var delegate: CardViewDelegate?
     
     /// All the views that can be tapped through in this card
     let views: [UIView]
@@ -99,6 +114,11 @@ class CompleteCardView: UIView {
         
         self.addSubview(leftButton)
         leftButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.addSubview(linkedInButton)
+        linkedInButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        linkedInButton.isHidden = true
 
         NSLayoutConstraint.activate([
             checkImage.heightAnchor.constraint(equalToConstant: 180),
@@ -120,6 +140,11 @@ class CompleteCardView: UIView {
             leftButton.bottomAnchor.constraint(equalTo: self.bottomAnchor),
             leftButton.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             leftButton.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.5),
+            
+            linkedInButton.topAnchor.constraint(equalTo: rightButton.topAnchor, constant: 50),
+            linkedInButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
+            linkedInButton.heightAnchor.constraint(equalToConstant: 60),
+            linkedInButton.widthAnchor.constraint(equalToConstant: 60),
         ])
     }
     
@@ -161,8 +186,13 @@ class CompleteCardView: UIView {
     }
 
     // MARK: - Selectors
+    @objc func linkedInButtonTapped() {
+        delegate?.showLinkedinProfile(with: "https://thispersondoesnotexist.com/")
+    }
+    
     @objc func leftButtonTapped() {
         if currentIndex != 0 {
+            linkedInButton.isHidden = true
             views[currentIndex].isHidden = true
             progressViews[currentIndex].backgroundColor = .palette.gray
             currentIndex -= 1
@@ -173,6 +203,7 @@ class CompleteCardView: UIView {
     
     @objc func rightButtonTapped() {
         if currentIndex != maxIndex {
+            linkedInButton.isHidden = false
             views[currentIndex].isHidden = true
             progressViews[currentIndex].backgroundColor = .palette.gray
             currentIndex += 1

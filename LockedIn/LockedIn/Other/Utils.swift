@@ -9,6 +9,13 @@ import UIKit
 
 class Utils {
     
+    /// Shows a web view controller
+    static func showWebViewController(on vc: UIViewController, with urlString: String) {
+        let webView = WebViewerController(with: urlString)
+        let nav = UINavigationController(rootViewController: webView)
+        vc.present(nav, animated: true, completion: nil)
+    }
+    
     /// Adds a gradient to a given UIView.
     /// > Warning: Must be called within the ``override func viewDidLayoutSubviews()`` method to work.
     static func addGradient(to view: UIView){
