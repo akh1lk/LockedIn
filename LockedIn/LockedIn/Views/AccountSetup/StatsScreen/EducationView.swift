@@ -10,53 +10,25 @@ import UIKit
 class EducationView: UIView {
     
     // MARK: - UI Components
-    private let universityHeading: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Bold", size: 32)
-        label.text = "Univeristy"
-        label.numberOfLines = 2
-        return label
-    }()
-    
-    private let degreeHeading: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Bold", size: 32)
-        label.text = "Degree"
-        label.numberOfLines = 2
-        return label
-    }()
-    
-    private let yearHeading: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Bold", size: 32)
-        label.text = "Degree"
-        label.numberOfLines = 2
-        return label
-    }()
-    
-    private let universityPicker = PickerView(
-        placeholder: "Select your university...",
+    private let universityPickerView = HeadingPickerView(
+        heading: "University",
+        placeholder: "Select your university",
         options: University.allCases.map { $0.rawValue }.sorted()
     )
     
-    private let degreePicker = PickerView(
-        placeholder: "Select your degree...",
+    private let degreePickerView = HeadingPickerView(
+        heading: "Degree",
+        placeholder: "Select your degree",
         options: Degree.allCases.map { $0.rawValue }.sorted()
     )
     
-    private let yearPicker = PickerView(
-        placeholder: "Select your year...",
-        options: Year.allCases.map { $0.rawValue }.sorted()
+    private let yearPickerView = HeadingPickerView(
+        heading: "Year",
+        placeholder: "Select your year",
+        options: Year.allCases.map { $0.rawValue }
     )
     
     // MARK: - Data
-    /// Alerts will be displayed on parent
     var parent: SetupAccountVC?
     
     // MARK: - Initialization
@@ -71,41 +43,46 @@ class EducationView: UIView {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.addSubview(universityHeading)
-        universityHeading.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(universityPickerView)
+        addSubview(degreePickerView)
+        addSubview(yearPickerView)
         
-        self.addSubview(universityPicker)
-        universityPicker.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(degreeHeading)
-        degreeHeading.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(degreePicker)
-        degreePicker.translatesAutoresizingMaskIntoConstraints = false
+        universityPickerView.translatesAutoresizingMaskIntoConstraints = false
+        degreePickerView.translatesAutoresizingMaskIntoConstraints = false
+        yearPickerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            universityHeading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            universityHeading.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
+            universityPickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            universityPickerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
+            universityPickerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            universityPickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            universityPicker.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
-            universityPicker.heightAnchor.constraint(equalToConstant: 60),
-            universityPicker.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            universityPicker.topAnchor.constraint(equalTo: universityHeading.bottomAnchor, constant: 10),
+            degreePickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            degreePickerView.topAnchor.constraint(equalTo: universityPickerView.bottomAnchor, constant: 30),
+            degreePickerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            degreePickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            degreeHeading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            degreeHeading.topAnchor.constraint(equalTo: self.universityPicker.bottomAnchor, constant: 30),
+            yearPickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            yearPickerView.topAnchor.constraint(equalTo: degreePickerView.bottomAnchor, constant: 30),
+            yearPickerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            yearPickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
-            degreePicker.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
-            degreePicker.heightAnchor.constraint(equalToConstant: 60),
-            degreePicker.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            degreePicker.topAnchor.constraint(equalTo: degreeHeading.bottomAnchor, constant: 10),
         ])
     }
 }
 
 extension EducationView: SetupAccountSubview {
     func canContinue() -> Bool {
-        if universityPicker.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+        let fields = [
+            universityPickerView.getSelectedValue(),
+            degreePickerView.getSelectedValue(),
+            yearPickerView.getSelectedValue()
+        ]
+        
+        let emptyField = fields.first(where: { $0?.trimmingCharacters(in: .whitespaces).isEmpty ?? true })
+        
+        if let _ = emptyField, let papi = parent {
+            AlertManager.showEmptyFieldsAlert(on: papi) // TODO: change messages on alert manager.
             return false
         }
         return true
