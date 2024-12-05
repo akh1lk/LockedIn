@@ -9,7 +9,6 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
-// TODO: Improve how the chat VC looks please!
 class ChatVC: MessagesViewController {
     
     // MARK: - Data
@@ -29,42 +28,38 @@ class ChatVC: MessagesViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Set data sources and delegates
         messagesCollectionView.messagesDataSource = self
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
         
-        setupNavBar()
+        setupUI()
         messagesCollectionView.reloadData()
-        
-        if let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout {
-            layout.sectionInset = UIEdgeInsets(top: 2, left: 5, bottom: 0, right: 5)
-        }
-        
     }
     
     // MARK: - UI Setup
-    private func setupNavBar() {
+    private func setupUI() {
+        view.backgroundColor = .white
+        
+        navigationItem.title = "Chat"
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 24, weight: .semibold)
         ]
-        navigationItem.title = "Chat"
-    }
-    
-    
-    // MARK: - Networking
-    private func fetchMessagesFromAPI() {
-        // TODO: fetch messages
-    }
-    
-    private func sendMessageToAPI(message: Message) {
-        // TODO: send messages
+        
+        if let layout = messagesCollectionView.collectionViewLayout as? MessagesCollectionViewFlowLayout {
+            layout.textMessageSizeCalculator.outgoingAvatarSize = .zero
+            layout.textMessageSizeCalculator.incomingAvatarSize = .zero
+            layout.sectionInset = UIEdgeInsets(top: 1.5, left: 3, bottom: 1.5, right: 3)
+            layout.minimumInteritemSpacing = 0
+            layout.minimumLineSpacing = 0
+        }
     }
 }
 
 extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     
-    var currentSender: any SenderType {
+    var currentSender: SenderType {
         return selfSender
     }
     
@@ -77,123 +72,86 @@ extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDel
     }
     
     func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
-        return message.sender.senderId == selfSender.senderId ? .palette.blue : .palette.offWhite
+        return message.sender.senderId == selfSender.senderId ? .palette.purple : .palette.offWhite
     }
     
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
-        guard let sender = message.sender as? Sender else {
-            print("Error casting sender as type Sender")
-            return
+        avatarView.isHidden = true // Always hide avatar
+    }
+    
+    // MARK: - Time Display
+    // it shows the date & time if it is the first message sent in the day.
+    // it shows time if the message was sent more than 30 minutes from the previous message. 
+    func cellTopLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
+        let isFirstMessageOfDay = isFirstMessageOfDay(for: message as! Message, at: indexPath)
+        let shouldDisplayTime = shouldDisplayTimestamp(for: message as! Message, at: indexPath)
+        
+        guard isFirstMessageOfDay || shouldDisplayTime else { return nil }
+        
+        let dateFormatter = DateFormatter()
+        var timestampText = ""
+        
+        if isFirstMessageOfDay {
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .short
+            timestampText = dateFormatter.string(from: message.sentDate)
+        } else if shouldDisplayTime {
+            dateFormatter.dateStyle = .none
+            dateFormatter.timeStyle = .short
+            timestampText = dateFormatter.string(from: message.sentDate)
         }
-
-        let shouldHideAvatar: Bool = {
-            if indexPath.section < messages.count - 1 {
-                let nextMessage = messages[indexPath.section + 1]
-                return nextMessage.sender.senderId == sender.senderId
-            }
-            return false
-        }()
-
-        avatarView.isHidden = shouldHideAvatar
-        if !shouldHideAvatar {
-            avatarView.image = sender.avatar
-        }
+        
+        return NSAttributedString(string: timestampText, attributes: [
+            .font: UIFont.systemFont(ofSize: 12),
+            .foregroundColor: UIColor.lightGray
+        ])
     }
 
-    
-    // MARK: - Time
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        return 20
+        return isFirstMessageOfDay(for: message as! Message, at: indexPath) || shouldDisplayTimestamp(for: message as! Message, at: indexPath) ? 20 : 0
     }
-    
-    func cellBottomLabelHeight(for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        let currentMessage = messages[indexPath.section]
-        let isLastMessageFromSender = indexPath.section == messages.count - 1 || currentMessage.sender.senderId != messages[indexPath.section + 1].sender.senderId
-        
-        return isLastMessageFromSender ? 16 : 0
-    }
-    
-    // MARK: - Top Label Text
-    func cellTopLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        guard let message = message as? Message else { return nil }
-        
-        if indexPath.section == 0 || shouldDisplayTimestamp(for: message, at: indexPath) {
-            return createTimestampAttributedString(from: message.sentDate)
-        }
-        return nil
-    }
-    
-    // MARK: - Bottom Label Text
-    func cellBottomLabelAttributedText(for message: any MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-        let currentMessage = messages[indexPath.section]
-        let isLastMessageFromSender = indexPath.section == messages.count - 1 || currentMessage.sender.senderId != messages[indexPath.section + 1].sender.senderId
-        
-        return isLastMessageFromSender ? NSAttributedString(
-            string: currentMessage.sender.displayName,
-            attributes: [
-                .font: UIFont.preferredFont(forTextStyle: .caption1),
-                .foregroundColor: UIColor(white: 0.5, alpha: 1)
-            ]
-        ) : nil
-    }
-    
-    // MARK: - Helper: Display Timestamp Decision
+
     private func shouldDisplayTimestamp(for message: Message, at indexPath: IndexPath) -> Bool {
         guard indexPath.section > 0 else { return true }
-        
         let previousMessage = messages[indexPath.section - 1]
-        let calendar = Calendar.current
-        
-        let timeDifference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: message.sentDate).minute ?? 0
-        let hourDifference = calendar.dateComponents([.hour], from: previousMessage.sentDate, to: message.sentDate).hour ?? 0
-        
-        let isOnTheHour = calendar.component(.minute, from: message.sentDate) == 0
-        let isDifferentSender = message.sender.senderId != previousMessage.sender.senderId
-        
-        if timeDifference >= 30 ||
-            (isDifferentSender && timeDifference >= 5) ||
-            (hourDifference >= 0 && isOnTheHour) {
-            return true
-        }
-        
-        return false
+        let timeDifference = Calendar.current.dateComponents([.minute], from: previousMessage.sentDate, to: message.sentDate).minute ?? 0
+        return timeDifference >= 30
     }
-    
-    // MARK: - Helper: Create Timestamp String
-    private func createTimestampAttributedString(from date: Date) -> NSAttributedString {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .none
-        dateFormatter.timeStyle = .short
-        let dateString = dateFormatter.string(from: date)
+
+    private func isFirstMessageOfDay(for message: Message, at indexPath: IndexPath) -> Bool {
+        guard indexPath.section > 0 else { return true }
+        let previousMessage = messages[indexPath.section - 1]
         
-        return NSAttributedString(
-            string: dateString,
-            attributes: [
-                .font: UIFont.systemFont(ofSize: 11, weight: .regular),
-                .foregroundColor: UIColor.gray
-            ]
-        )
+        let currentMessageDate = Calendar.current.startOfDay(for: message.sentDate)
+        let previousMessageDate = Calendar.current.startOfDay(for: previousMessage.sentDate)
+        
+        return currentMessageDate > previousMessageDate
+    }
+
+
+    func messageStyle(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageStyle {
+        if message.sender.senderId == selfSender.senderId {
+            return .bubbleTail(.bottomRight, .curved)
+        } else {
+            return .bubbleTail(.bottomLeft, .curved)
+        }
     }
 }
 
-    // MARK: - Message Sending Handling
-    extension ChatVC: InputBarAccessoryViewDelegate {
+extension ChatVC: InputBarAccessoryViewDelegate {
+    func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
+        guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         
-        func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
-            guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
-                return
-            }
-            
-            let newMessage = Message(
-                sender: selfSender,
-                messageId: UUID().uuidString,
-                sentDate: Date(),
-                kind: .text(text)
-            )
-            
-            messages.append(newMessage)
-            messagesCollectionView.reloadData()
-            messagesCollectionView.scrollToLastItem(animated: true)
-            inputBar.inputTextView.text = ""
-        }
+        let newMessage = Message(
+            sender: selfSender,
+            messageId: UUID().uuidString,
+            sentDate: Date(),
+            kind: .text(text)
+        )
+        
+        messages.append(newMessage)
+        messagesCollectionView.reloadData()
+        messagesCollectionView.scrollToLastItem(animated: true)
+        inputBar.inputTextView.text = ""
     }
+}
