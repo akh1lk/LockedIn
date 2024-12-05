@@ -1,0 +1,4 @@
+src/.env
+.venv
+instance
+src/__pycache__
