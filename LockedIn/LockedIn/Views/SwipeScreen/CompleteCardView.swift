@@ -58,7 +58,7 @@ class CompleteCardView: UIView {
     }()
     
     // MARK: - Data
-    let userData: UserData
+    let userData: UserObject
     var currentIndex = 0
     let maxIndex = 1 // this is equal to views.count - 1
     var delegate: CardViewDelegate?
@@ -76,7 +76,7 @@ class CompleteCardView: UIView {
     }
     
     // MARK: - Life Cycle
-    init(with data: UserData) {
+    init(with data: UserObject) {
         
         self.userData = data
         

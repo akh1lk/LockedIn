@@ -8,7 +8,7 @@
 import UIKit
 import MessageKit
 
-struct UserData {
+struct UserObject {
     let id: String
     let image: UIImage?
     let name: String

@@ -72,7 +72,7 @@ class InfoCardView: UIView {
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init(with data: UserData) {
+    init(with data: UserObject) {
         super.init(frame: .zero)
         
         backgroundImage.image = data.image

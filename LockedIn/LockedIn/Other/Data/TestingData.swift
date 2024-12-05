@@ -19,7 +19,7 @@ struct TestingData {
     ]
     
     static let users = [
-        CompleteCardView(with: UserData(
+        CompleteCardView(with: UserObject(
             id: "hello",
             image: UIImage(named: "john-pork"),
             name: "John Pork",
@@ -31,7 +31,7 @@ struct TestingData {
             internship: nil
         )),
         
-        CompleteCardView(with: UserData(
+        CompleteCardView(with: UserObject(
             id: "hello1",
             image: UIImage(named: "andy"),
             name: "Andrew Myers",
@@ -43,7 +43,7 @@ struct TestingData {
             internship: nil
         )),
         
-        CompleteCardView(with: UserData(
+        CompleteCardView(with: UserObject(
             id: "hello2",
             image: UIImage(named: "daddy-noel"),
             name: "Daddy Noel",
@@ -55,7 +55,7 @@ struct TestingData {
             internship: nil
         )),
         
-        CompleteCardView(with: UserData(
+        CompleteCardView(with: UserObject(
             id: "hello3",
             image: UIImage(named: "ye"),
             name: "Ye",
@@ -67,7 +67,7 @@ struct TestingData {
             internship: nil
         )),
         
-        CompleteCardView(with: UserData(
+        CompleteCardView(with: UserObject(
             id: "hello4",
             image: UIImage(named: "diddy"),
             name: "Sean J. Combs",

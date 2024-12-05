@@ -32,6 +32,20 @@ class Utils {
         vc.present(nav, animated: true, completion: nil)
     }
     
+    /// WebView Controller with completion:
+    static func showWebViewController(on vc: UIViewController, with urlString: String, redirectURI: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        let webView = WebViewerController(with: urlString)
+        webView.didCompleteWithRedirect = { url in
+            if url.absoluteString.starts(with: redirectURI) {
+                completion(.success(url))
+            } else {
+                completion(.failure(NSError(domain: "InvalidRedirect", code: 0, userInfo: nil)))
+            }
+        }
+        let nav = UINavigationController(rootViewController: webView)
+        vc.present(nav, animated: true, completion: nil)
+    }
+    
     /// Creates a custom back button
     static func customBackButton(for navigationItem: UINavigationItem, target: Any, action: Selector) {
         let backButton = UIBarButtonItem(
