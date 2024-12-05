@@ -20,14 +20,14 @@ class ChatTableVC: UIViewController {
     
     // MARK: - Data
     private var chats: [(sender: Sender, latestMessage: Message)] = [
-        (Sender(avatar: UIImage(systemName: "person.circle"), senderId: "1", displayName: "Alice"),
-         Message(sender: Sender(avatar: nil, senderId: "1", displayName: "Alice"),
+        (Sender(avatar: UIImage(named: "ye"), senderId: "1", displayName: "Alice", crackedRating: 69),
+         Message(sender: Sender(avatar: nil, senderId: "1", displayName: "Alice", crackedRating: 69),
                  messageId: "1",
                  sentDate: Date(),
                  kind: .text("Hey, how are you?"))),
         
-        (Sender(avatar: UIImage(systemName: "person.circle"), senderId: "3", displayName: "Charlie"),
-         Message(sender: Sender(avatar: nil, senderId: "3", displayName: "Charlie"),
+        (Sender(avatar: UIImage(systemName: "person.circle"), senderId: "3", displayName: "Charlie", crackedRating: 69),
+         Message(sender: Sender(avatar: nil, senderId: "3", displayName: "Charlie", crackedRating: 69),
                  messageId: "3",
                  sentDate: Date(),
                  kind: .emoji("👋")))
@@ -41,6 +41,10 @@ class ChatTableVC: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
     
     // MARK: - UI Setup

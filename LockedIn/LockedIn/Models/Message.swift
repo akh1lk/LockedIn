@@ -47,4 +47,5 @@ struct Sender: SenderType {
     var avatar: UIImage?
     var senderId: String
     var displayName: String
+    var crackedRating: Int
 }
