@@ -9,6 +9,22 @@ import UIKit
 
 class Utils {
     
+    /// Creates a done button
+    static func customDoneButton(for navigationItem: UINavigationItem, target: Any, action: Selector) {
+        let doneButton = UIBarButtonItem(
+            title: "Done",
+            style: .plain,
+            target: target,
+            action: action
+        )
+        doneButton.setTitleTextAttributes([
+                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
+                .foregroundColor: UIColor.palette.purple
+            ], for: .normal)
+        
+        navigationItem.rightBarButtonItem = doneButton
+    }
+    
     /// Shows a web view controller
     static func showWebViewController(on vc: UIViewController, with urlString: String) {
         let webView = WebViewerController(with: urlString)
