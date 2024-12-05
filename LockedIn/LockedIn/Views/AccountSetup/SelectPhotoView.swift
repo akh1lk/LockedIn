@@ -119,7 +119,10 @@ class SelectPhotoView: UIView {
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         
-        parent?.present(imagePicker, animated: true, completion: nil)
+        parent?.present(imagePicker, animated: true, completion: {
+            // TODO: upload image to database. 
+            print("Selected Image!")
+        })
     }
 }
 

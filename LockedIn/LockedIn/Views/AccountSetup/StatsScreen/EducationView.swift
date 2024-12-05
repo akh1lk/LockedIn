@@ -7,7 +7,7 @@
 
 import UIKit
 
-class StatsView: UIView {
+class EducationView: UIView {
     
     // MARK: - UI Components
     private let educationHeading: UILabel = {
@@ -174,7 +174,7 @@ class StatsView: UIView {
 }
 
 // MARK: - Setup Account Subview
-extension StatsView: SetupAccountSubview {
+extension EducationView: SetupAccountSubview {
     func canContinue() -> Bool {
         // enter at least internship or project or both, but at least 1
         if internshipFieldView.isHidden && aboutMeFieldView.isHidden {
@@ -201,7 +201,7 @@ extension StatsView: SetupAccountSubview {
 }
 
 // MARK: - TextIconBtnView Delegate
-extension StatsView: TextIconView {
+extension EducationView: TextIconView {
     func didTapButton(_ id: String) {
         if id == "internship" {
             internshipCancelTapped()

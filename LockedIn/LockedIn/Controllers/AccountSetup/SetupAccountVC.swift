@@ -42,7 +42,7 @@ class SetupAccountVC: UIViewController {
     private let views: [UIView & SetupAccountSubview] = [
         MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
         MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3),
-        StatsView(),
+        EducationView(),
         SelectPhotoView()
     ]
     
@@ -123,7 +123,7 @@ class SetupAccountVC: UIViewController {
             views[currentStep - 1].isHidden = false
             
         } else {
-            if let statsView = views[currentStep - 1] as? StatsView {
+            if let statsView = views[currentStep - 1] as? EducationView {
                 print(statsView.fetchData())
             }
             

@@ -142,7 +142,7 @@ class SettingsVC: UIViewController {
         
         switch settingOption {
         case "Personal Information":
-            viewController = PersonalInfoController()
+            viewController = PersonalInfoController(with: UIImage(named: "ye"))
         case "About me & Internships":
             viewController = AboutMeInternshipVC()
         case "Interests":
