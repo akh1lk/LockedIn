@@ -16,6 +16,7 @@
 		FF2F301A2D0124A0009CF246 /* ChatTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30192D0124A0009CF246 /* ChatTableVC.swift */; };
 		FF2F301D2D012518009CF246 /* ChatTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F301C2D012518009CF246 /* ChatTableCell.swift */; };
 		FF2F301F2D015F51009CF246 /* AboutInternshipView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F301E2D015F51009CF246 /* AboutInternshipView.swift */; };
+		FF2F30212D0162FE009CF246 /* HeadingPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30202D0162FE009CF246 /* HeadingPickerView.swift */; };
 		FF59F1752CFF9CAA00BA48CB /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = FF59F1742CFF9CAA00BA48CB /* MessageKit */; };
 		FF59F1772CFF9D4500BA48CB /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF59F1762CFF9D4500BA48CB /* ChatVC.swift */; };
 		FF654E702CFD18D9000E111E /* InfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E6F2CFD18D9000E111E /* InfoCardView.swift */; };
@@ -71,6 +72,7 @@
 		FF2F30192D0124A0009CF246 /* ChatTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableVC.swift; sourceTree = "<group>"; };
 		FF2F301C2D012518009CF246 /* ChatTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableCell.swift; sourceTree = "<group>"; };
 		FF2F301E2D015F51009CF246 /* AboutInternshipView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutInternshipView.swift; sourceTree = "<group>"; };
+		FF2F30202D0162FE009CF246 /* HeadingPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingPickerView.swift; sourceTree = "<group>"; };
 		FF59F1762CFF9D4500BA48CB /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		FF654E6F2CFD18D9000E111E /* InfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCardView.swift; sourceTree = "<group>"; };
 		FF654E732CFD2A16000E111E /* InteractiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveButton.swift; sourceTree = "<group>"; };
@@ -301,6 +303,7 @@
 				FFF8DE362CFA667700E5D2A7 /* IconTextView.swift */,
 				FF795CEF2CFBF92F008E2C5B /* SelectPhotoView.swift */,
 				FF2F301E2D015F51009CF246 /* AboutInternshipView.swift */,
+				FF2F30202D0162FE009CF246 /* HeadingPickerView.swift */,
 			);
 			path = AccountSetup;
 			sourceTree = "<group>";
@@ -397,6 +400,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FFD04E8D2CFEBC4200E199A1 /* Internship.swift in Sources */,
+				FF2F30212D0162FE009CF246 /* HeadingPickerView.swift in Sources */,
 				FF2F30152D01012C009CF246 /* InterestsVC.swift in Sources */,
 				FF2F301D2D012518009CF246 /* ChatTableCell.swift in Sources */,
 				FFD04E992CFEBCB800E199A1 /* TestingData.swift in Sources */,
