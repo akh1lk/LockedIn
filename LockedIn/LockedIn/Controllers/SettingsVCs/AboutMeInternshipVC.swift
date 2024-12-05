@@ -1,5 +1,5 @@
 //
-//  PersonalInfoController.swift
+//  PaymentSettingsController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/13/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PersonalInfoController: UIViewController {
+class AboutMeInternshipVC: UIViewController {
     
     // MARK: - Variables
     private let backgroundView: UIView = {
@@ -34,9 +34,8 @@ class PersonalInfoController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = "Personal Information"
+        self.navigationItem.title = "About Me & Internship"
     }
-    
     
     private func setupUI() {
         self.view.addSubview(backgroundView)
@@ -50,7 +49,7 @@ class PersonalInfoController: UIViewController {
         ])
     }
     
-    // MARK: - Selectors
+    // MARK: - Selectors & Functions
     @objc func backBtnTapped() {
         navigationController?.popViewController(animated: true)
     }

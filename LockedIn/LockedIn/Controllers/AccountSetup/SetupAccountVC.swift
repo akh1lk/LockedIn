@@ -15,13 +15,6 @@ protocol SetupAccountSubview {
 class SetupAccountVC: UIViewController {
 
     // MARK: - UI Components
-    private lazy var backButton = UIBarButtonItem(
-        image: UIImage(systemName: "chevron.left"),
-        style: .plain,
-        target: self,
-        action: #selector(backBtnTapped)
-    )
-    
     private lazy var continueButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = .brown
@@ -72,8 +65,7 @@ class SetupAccountVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        backButton.tintColor = .palette.offBlack
-        navigationItem.leftBarButtonItem = backButton
+        Utils.customBackButton(for: self.navigationItem, target: self, action: #selector(backBtnTapped))
         
         self.view.backgroundColor = .white
         

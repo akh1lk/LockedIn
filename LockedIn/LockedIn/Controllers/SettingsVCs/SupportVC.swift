@@ -125,6 +125,7 @@ class SupportVC: UIViewController {
         self.phoneLabelTitle.text = self.phoneNumberString
         self.emailLabelTitle.text = self.email
         
+        Utils.customBackButton(for: self.navigationItem, target: self, action: #selector(backBtnTapped))
         setupNavBar()
         setupUI()
     }
@@ -242,5 +243,9 @@ class SupportVC: UIViewController {
         if let url = URL(string: "mailto:\(self.email)") {
             UIApplication.shared.open(url)
         }
+    }
+    
+    @objc func backBtnTapped() {
+        navigationController?.popViewController(animated: true)
     }
 }

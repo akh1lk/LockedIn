@@ -15,6 +15,12 @@ private enum SwipeDirection {
 class SwipeScreenVC: UIViewController {
     
     // MARK: - UI Components
+    private let antiOCDPadding: UIView = {
+        let view = UIView()
+        view.backgroundColor = .white
+        return view
+    }()
+    
     private let cardDepthImage: UIImageView = {
         let iv = UIImageView()
         iv.backgroundColor = .clear
@@ -117,6 +123,9 @@ class SwipeScreenVC: UIViewController {
     }
     
     private func setupUI() {
+        self.view.addSubview(antiOCDPadding)
+        antiOCDPadding.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(checkButton)
         checkButton.translatesAutoresizingMaskIntoConstraints = false
         
@@ -130,6 +139,11 @@ class SwipeScreenVC: UIViewController {
         moreInfoButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            antiOCDPadding.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+            antiOCDPadding.heightAnchor.constraint(equalToConstant: 90),
+            antiOCDPadding.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            antiOCDPadding.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            
             checkButton.leadingAnchor.constraint(equalTo: self.view.centerXAnchor, constant: 10),
             checkButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -120),
             checkButton.heightAnchor.constraint(equalToConstant: 90),
@@ -162,7 +176,7 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Gesture Selector
     @objc func beingDragged(_ gestureRecognizer: UIPanGestureRecognizer) {
-        guard !isAnimating else { return } // Prevent drag interactions during animation
+        guard !isAnimating else { return } // no spam clicking please!
         
         if let cardView = activeCardView {
             
@@ -182,7 +196,6 @@ class SwipeScreenVC: UIViewController {
                 let transform = CGAffineTransform(rotationAngle: rotationAngle).scaledBy(x: scale, y: scale)
                 cardView.transform = transform
                 
-                // Adjust opacity of images based on swipe distance
                 updateUIOnSwipe(distance: xFromCenter)
             case .ended:
                 afterSwipeAction()
@@ -214,7 +227,7 @@ class SwipeScreenVC: UIViewController {
             let normalizedDistance = min(abs(distance) / SWIPE_THRESHOLD, 1.0)
             
             if distance > 0 {
-                // Swiping right - increase opacity of checkImage and update button color
+                // increase opacity of checkImage and update button color when swiping right
                 cardView.checkImage.layer.opacity = Float(normalizedDistance * 1.2)
                 cardView.xImage.layer.opacity = 0
                 
@@ -223,7 +236,7 @@ class SwipeScreenVC: UIViewController {
                     self.checkButton.tintColor = .white
                 }
             } else {
-                // Swiping left - increase opacity of xImage and update button color
+                // increase opacity of xImage and update button color when swiping left
                 cardView.xImage.layer.opacity = Float(normalizedDistance * 1.2)
                 cardView.checkImage.layer.opacity = 0
                 
@@ -288,26 +301,23 @@ class SwipeScreenVC: UIViewController {
                 cardView.center = CGPoint(x: offScreenX, y: cardView.center.y)
                 cardView.transform = CGAffineTransform(rotationAngle: rotationAngle)
             }) { _ in
-                // Animation completed
                 cardView.removeFromSuperview()
                 let directionText = direction == .right ? "right" : "left"
                 print("Swiped \(directionText) on \(cardView.userData.name) baby!")
 
-                self.isAnimating = false // Unlock animation
+                self.isAnimating = false
 
-                // TODO: Add networking logic here.
+                // TODO: Add networking logic
             }
         }
 
         if longDuration {
-            // First animate opacity
             UIView.animate(withDuration: 0.3, animations: {
                 targetImageView.layer.opacity = checkImageOpacity
             }, completion: { _ in
                 animateCardOffScreen()
             })
         } else {
-            // Directly animate card off screen
             animateCardOffScreen()
         }
     }

@@ -9,8 +9,8 @@
 /* Begin PBXBuildFile section */
 		FF2F300C2D00FF77009CF246 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F300B2D00FF77009CF246 /* SettingsVC.swift */; };
 		FF2F300F2D01005C009CF246 /* SettingsTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F300E2D01005C009CF246 /* SettingsTableCell.swift */; };
-		FF2F30152D01012C009CF246 /* NotificationSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30102D01012C009CF246 /* NotificationSettingsController.swift */; };
-		FF2F30162D01012C009CF246 /* PaymentSettingsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30112D01012C009CF246 /* PaymentSettingsController.swift */; };
+		FF2F30152D01012C009CF246 /* InterestsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30102D01012C009CF246 /* InterestsVC.swift */; };
+		FF2F30162D01012C009CF246 /* AboutMeInternshipVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30112D01012C009CF246 /* AboutMeInternshipVC.swift */; };
 		FF2F30172D01012C009CF246 /* PersonalInfoController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30122D01012C009CF246 /* PersonalInfoController.swift */; };
 		FF2F30182D01012C009CF246 /* SupportVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30132D01012C009CF246 /* SupportVC.swift */; };
 		FF2F301A2D0124A0009CF246 /* ChatTableVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30192D0124A0009CF246 /* ChatTableVC.swift */; };
@@ -63,8 +63,8 @@
 /* Begin PBXFileReference section */
 		FF2F300B2D00FF77009CF246 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		FF2F300E2D01005C009CF246 /* SettingsTableCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTableCell.swift; sourceTree = "<group>"; };
-		FF2F30102D01012C009CF246 /* NotificationSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationSettingsController.swift; sourceTree = "<group>"; };
-		FF2F30112D01012C009CF246 /* PaymentSettingsController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSettingsController.swift; sourceTree = "<group>"; };
+		FF2F30102D01012C009CF246 /* InterestsVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InterestsVC.swift; sourceTree = "<group>"; };
+		FF2F30112D01012C009CF246 /* AboutMeInternshipVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AboutMeInternshipVC.swift; sourceTree = "<group>"; };
 		FF2F30122D01012C009CF246 /* PersonalInfoController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersonalInfoController.swift; sourceTree = "<group>"; };
 		FF2F30132D01012C009CF246 /* SupportVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SupportVC.swift; sourceTree = "<group>"; };
 		FF2F30192D0124A0009CF246 /* ChatTableVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTableVC.swift; sourceTree = "<group>"; };
@@ -138,8 +138,8 @@
 		FF2F30142D01012C009CF246 /* SettingsVCs */ = {
 			isa = PBXGroup;
 			children = (
-				FF2F30102D01012C009CF246 /* NotificationSettingsController.swift */,
-				FF2F30112D01012C009CF246 /* PaymentSettingsController.swift */,
+				FF2F30102D01012C009CF246 /* InterestsVC.swift */,
+				FF2F30112D01012C009CF246 /* AboutMeInternshipVC.swift */,
 				FF2F30122D01012C009CF246 /* PersonalInfoController.swift */,
 				FF2F30132D01012C009CF246 /* SupportVC.swift */,
 			);
@@ -394,7 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FFD04E8D2CFEBC4200E199A1 /* Internship.swift in Sources */,
-				FF2F30152D01012C009CF246 /* NotificationSettingsController.swift in Sources */,
+				FF2F30152D01012C009CF246 /* InterestsVC.swift in Sources */,
 				FF2F301D2D012518009CF246 /* ChatTableCell.swift in Sources */,
 				FFD04E992CFEBCB800E199A1 /* TestingData.swift in Sources */,
 				FFD04E8E2CFEBC4200E199A1 /* Degree.swift in Sources */,
@@ -417,7 +417,7 @@
 				FF795CE82CFBC47F008E2C5B /* AboutMeFieldView.swift in Sources */,
 				FF795CF02CFBF92F008E2C5B /* SelectPhotoView.swift in Sources */,
 				FFA857772CFBA71B00ED5C9D /* InternshipFieldView.swift in Sources */,
-				FF2F30162D01012C009CF246 /* PaymentSettingsController.swift in Sources */,
+				FF2F30162D01012C009CF246 /* AboutMeInternshipVC.swift in Sources */,
 				FF2F300C2D00FF77009CF246 /* SettingsVC.swift in Sources */,
 				FF795CEA2CFBCD28008E2C5B /* TextField.swift in Sources */,
 				FFBA1F542CFF9E93007D17FE /* Message.swift in Sources */,

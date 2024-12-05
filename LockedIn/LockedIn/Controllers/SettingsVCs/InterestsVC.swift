@@ -1,5 +1,5 @@
 //
-//  PersonalInfoController.swift
+//  NotificationSettingsController.swift
 //  App1
 //
 //  Created by Gabriel Castillo on 6/13/24.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PersonalInfoController: UIViewController {
+class InterestsVC: UIViewController {
     
     // MARK: - Variables
     private let backgroundView: UIView = {
@@ -34,7 +34,7 @@ class PersonalInfoController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = "Personal Information"
+        self.navigationItem.title = "Interests"
     }
     
     

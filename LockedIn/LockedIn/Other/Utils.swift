@@ -16,6 +16,18 @@ class Utils {
         vc.present(nav, animated: true, completion: nil)
     }
     
+    /// Creates a custom back button
+    static func customBackButton(for navigationItem: UINavigationItem, target: Any, action: Selector) {
+        let backButton = UIBarButtonItem(
+            image: UIImage(systemName: "chevron.left"),
+            style: .plain,
+            target: target,
+            action: action
+        )
+        backButton.tintColor = .palette.offBlack
+        navigationItem.leftBarButtonItem = backButton
+    }
+    
     /// Adds a gradient to a given UIView.
     /// > Warning: Must be called within the ``override func viewDidLayoutSubviews()`` method to work.
     static func addGradient(to view: UIView){
@@ -36,22 +48,16 @@ class Utils {
         gradientLayer.colors = [UIColor.palette.blue.cgColor, UIColor.palette.pink.cgColor]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
         gradientLayer.endPoint = CGPoint(x: 1, y: 0.5)
-        
-        // Ensure layout is calculated before applying the gradient
         label.layoutIfNeeded()
         
-        // Apply the gradient border to the label
         gradientLayer.frame = label.bounds
         let shapeLayer = CAShapeLayer()
-        shapeLayer.lineWidth = 8  // Adjust border width
+        shapeLayer.lineWidth = 8
         shapeLayer.path = UIBezierPath(roundedRect: label.bounds, cornerRadius: 50).cgPath
-        shapeLayer.strokeColor = UIColor.black.cgColor  // Border color
+        shapeLayer.strokeColor = UIColor.black.cgColor
         shapeLayer.fillColor = UIColor.clear.cgColor
         gradientLayer.mask = shapeLayer
-        
-        // Set gradient layer's opacity to 1 to ensure it is fully opaque
         gradientLayer.opacity = 1.0
-        
         label.layer.addSublayer(gradientLayer)
     }
     
@@ -90,11 +96,9 @@ class Utils {
         let fullText = "\(percentage)%\n\(crackedText)"
         let attributedString = NSMutableAttributedString(string: fullText)
         
-        // Bold the percentage part
         let percentageRange = (fullText as NSString).range(of: "\(percentage)%")
         attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 26, weight: .heavy), range: percentageRange)
         
-        // Style for the "Cracked" text
         let crackedRange = (fullText as NSString).range(of: crackedText)
         attributedString.addAttribute(.font, value: UIFont.systemFont(ofSize: 18), range: crackedRange)
         
