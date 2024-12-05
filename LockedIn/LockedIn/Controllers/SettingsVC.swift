@@ -148,7 +148,7 @@ class SettingsVC: UIViewController {
         case "Payment":
             viewController = PaymentSettingsController()
         case "Support":
-            viewController = SupportController()
+            viewController = SupportVC()
         default:
             viewController = SettingsVC() // Default option
         }

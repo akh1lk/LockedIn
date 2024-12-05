@@ -7,20 +7,26 @@
 
 import UIKit
 
-class SupportController: UIViewController {
+class SupportVC: UIViewController {
     
     // MARK: - Variables
     let phoneNumberString = "+1 (717) 550-1675"
     let phoneNumberInt = 07175501675
-    let email = "support@app1.com"
+    let email = "gac232@cornell.edu"
     
     // MARK: - UI Components
+    private let backgroundView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .palette.offWhite
+        return view
+    }()
+    
     private let supportLabel: UILabel = {
         let label = UILabel()
         label.textColor = .palette.offBlack
         label.textAlignment = .justified
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.text = "Customer satisfaction is our number 1 priority. If any helper has done a job you are not satisfied with please let us know through one of the options below, so we can fix the issue and prevent it from happening again. Thank you for using our app."
+        label.font = UIFont(name: "GaretW05-Regular", size: 16)
+        label.text = "Customer satisfaction is our number one priority. If you encounter any issues or bugs while using the app, or if you have any suggestions for improvements, please don’t hesitate to reach out to us."
         label.numberOfLines = 0
         return label
     }()
@@ -35,17 +41,15 @@ class SupportController: UIViewController {
     
     private let phoneBorderView: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = .palette.lightPurple.withAlphaComponent(0.8)
         view.layer.cornerRadius = 20
-        view.layer.borderColor = UIColor.palette.offBlack.withAlphaComponent(0.7).cgColor
-        view.layer.borderWidth = 1
         return view
     }()
     
     private let phoneIconView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "phone")
-        imageView.tintColor = .palette.offBlack
+        imageView.tintColor = .white
         imageView.layer.cornerRadius = 5
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
@@ -55,18 +59,18 @@ class SupportController: UIViewController {
     
     private let phoneLabelTitle: UILabel = {
         let label = UILabel()
-        label.textColor = .palette.offBlack
+        label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.font = UIFont(name: "GaretW05-Bold", size: 20)
         return label
     }()
     
     private let phoneDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .palette.offBlack
+        label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.text = "We answer phone calls within 5 minutes."
+        label.font = UIFont(name: "GaretW05-Regular", size: 16)
+        label.text = "We answer phone calls in 5 min."
         return label
     }()
     
@@ -80,17 +84,15 @@ class SupportController: UIViewController {
     
     private let emailBorderView: UIView = {
         let view = UIView()
-        view.backgroundColor = .clear
+        view.backgroundColor = .palette.lightPurple.withAlphaComponent(0.8)
         view.layer.cornerRadius = 20
-        view.layer.borderColor = UIColor.palette.offBlack.withAlphaComponent(0.7).cgColor
-        view.layer.borderWidth = 1
         return view
     }()
     
     private let emailIconView: UIImageView = {
         let imageView = UIImageView()
         imageView.image = UIImage(systemName: "envelope")
-        imageView.tintColor = .palette.offBlack
+        imageView.tintColor = .white
         imageView.layer.cornerRadius = 5
         imageView.clipsToBounds = true
         imageView.contentMode = .scaleAspectFit
@@ -100,18 +102,18 @@ class SupportController: UIViewController {
     
     private let emailLabelTitle: UILabel = {
         let label = UILabel()
-        label.textColor = .palette.offBlack
+        label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 20, weight: .semibold)
+        label.font = UIFont(name: "GaretW05-Bold", size: 20)
         return label
     }()
     
     private let emailDescriptionLabel: UILabel = {
         let label = UILabel()
-        label.textColor = .palette.offBlack
+        label.textColor = .white
         label.textAlignment = .center
-        label.font = .systemFont(ofSize: 16, weight: .regular)
-        label.text = "We answer emails within 1 business day."
+        label.font = UIFont(name: "GaretW05-Regular", size: 16)
+        label.text = "We answer emails in 1 business day."
         return label
     }()
     
@@ -136,6 +138,9 @@ class SupportController: UIViewController {
     }
     
     private func setupUI() {
+        self.view.addSubview(backgroundView)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(supportLabel)
         supportLabel.translatesAutoresizingMaskIntoConstraints = false
         
@@ -170,11 +175,16 @@ class SupportController: UIViewController {
         emailDescriptionLabel.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            supportLabel.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
+            backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            backgroundView.heightAnchor.constraint(equalToConstant: 110),
+            
+            supportLabel.topAnchor.constraint(equalTo: self.backgroundView.bottomAnchor, constant: 30),
             supportLabel.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
             supportLabel.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
             
-            phoneBorderView.topAnchor.constraint(equalTo: self.supportLabel.bottomAnchor, constant: 20),
+            phoneBorderView.topAnchor.constraint(equalTo: self.supportLabel.bottomAnchor, constant: 30),
             phoneBorderView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 20),
             phoneBorderView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -20),
             phoneBorderView.heightAnchor.constraint(equalToConstant: 100),
