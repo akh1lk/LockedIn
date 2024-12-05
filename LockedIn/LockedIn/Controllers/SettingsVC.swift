@@ -143,14 +143,14 @@ class SettingsVC: UIViewController {
         switch settingOption {
         case "Personal Information":
             viewController = PersonalInfoController()
-        case "Notifications":
-            viewController = NotificationSettingsController()
-        case "Payment":
-            viewController = PaymentSettingsController()
+        case "About me & Internships":
+            viewController = AboutMeInternshipVC()
+        case "Interests":
+            viewController = InterestsVC()
         case "Support":
             viewController = SupportVC()
         default:
-            viewController = SettingsVC() // Default option
+            viewController = SettingsVC() // default
         }
         
         viewController.modalPresentationStyle = .fullScreen

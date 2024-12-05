@@ -176,7 +176,7 @@ class StatsView: UIView {
 // MARK: - Setup Account Subview
 extension StatsView: SetupAccountSubview {
     func canContinue() -> Bool {
-        // Must enter at least internship or project or both, but at least 1
+        // enter at least internship or project or both, but at least 1
         if internshipFieldView.isHidden && aboutMeFieldView.isHidden {
             if let p = parent { AlertManager.showMissingProjectInternshipAlert(on: p) }
             return false

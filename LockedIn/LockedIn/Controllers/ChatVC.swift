@@ -52,13 +52,13 @@ class ChatVC: MessagesViewController {
     }
     
     
-    // MARK: - Networking Placeholder
+    // MARK: - Networking
     private func fetchMessagesFromAPI() {
-        // TODO: Implement REST API call to fetch messages
+        // TODO: fetch messages
     }
     
     private func sendMessageToAPI(message: Message) {
-        // TODO: Implement REST API call to send a message
+        // TODO: send messages
     }
 }
 
@@ -86,14 +86,12 @@ extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDel
             return
         }
 
-        // Show avatar only for incoming messages, hide for consecutive messages from the same sender
         let shouldHideAvatar: Bool = {
-            // Only hide avatar if the next message is from the same sender (for consecutive messages)
             if indexPath.section < messages.count - 1 {
                 let nextMessage = messages[indexPath.section + 1]
                 return nextMessage.sender.senderId == sender.senderId
             }
-            return false // Don't hide the avatar for the last message in the sequence
+            return false
         }()
 
         avatarView.isHidden = shouldHideAvatar
@@ -103,19 +101,9 @@ extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDel
     }
 
     
-    // MARK: - Time Gap Logic (5 minutes & every hour)
+    // MARK: - Time
     func cellTopLabelHeight(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
-        guard indexPath.section > 0, let currentMessage = message as? Message else {
-            return 0 // No need for space if there's no timestamp
-        }
-        
-        let previousMessage = messages[indexPath.section - 1]
-        let calendar = Calendar.current
-        let timeDifference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: currentMessage.sentDate).minute ?? 0
-        let minutesPastHour = calendar.component(.minute, from: currentMessage.sentDate)
-        
-        let shouldShowTimestamp = shouldDisplayTimestamp(for: currentMessage, at: indexPath)
-        return shouldShowTimestamp ? 20 : 0
+        return 20
     }
     
     func cellBottomLabelHeight(for message: any MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> CGFloat {
@@ -156,20 +144,12 @@ extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDel
         let previousMessage = messages[indexPath.section - 1]
         let calendar = Calendar.current
         
-        // Calculate time differences
         let timeDifference = calendar.dateComponents([.minute], from: previousMessage.sentDate, to: message.sentDate).minute ?? 0
         let hourDifference = calendar.dateComponents([.hour], from: previousMessage.sentDate, to: message.sentDate).hour ?? 0
         
-        // Check for a perfect hour mark
         let isOnTheHour = calendar.component(.minute, from: message.sentDate) == 0
-        
-        // Check if message is from a different sender
         let isDifferentSender = message.sender.senderId != previousMessage.sender.senderId
         
-        // Show timestamp if:
-        // 1. Time difference is 30+ minutes
-        // 2. Other person responded after 5 minutes
-        // 3. Continuous conversation over 30 minutes and it's exactly on the hour
         if timeDifference >= 30 ||
             (isDifferentSender && timeDifference >= 5) ||
             (hourDifference >= 0 && isOnTheHour) {

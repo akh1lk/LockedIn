@@ -33,7 +33,7 @@ class TabController: UITabBarController {
         let swipeScreen = self.createNav(title: "Home", image: UIImage(systemName: "n.square"), vc: SwipeScreenVC())
 
         let chatScreen = self.createNav(title: "Chat", image: UIImage(systemName: "ellipsis.message.fill"), vc: ChatTableVC())
-        let settings = self.createNav(title: "Profile", image: UIImage(systemName: "person.fill"), vc: SettingsVC())
+        let settings = self.createNav(title: "Settings", image: UIImage(systemName: "gearshape.fill"), vc: SettingsVC())
         
         self.setViewControllers([swipeScreen, chatScreen, settings], animated: true)
     }
