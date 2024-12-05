@@ -10,29 +10,44 @@ import UIKit
 class EducationView: UIView {
     
     // MARK: - UI Components
-    private let universityPickerView = HeadingPickerView(
-        heading: "University",
-        placeholder: "Select your university",
-        options: University.allCases.map { $0.rawValue }.sorted()
-    )
-    
-    private let degreePickerView = HeadingPickerView(
-        heading: "Degree",
-        placeholder: "Select your degree",
-        options: Degree.allCases.map { $0.rawValue }.sorted()
-    )
-    
-    private let yearPickerView = HeadingPickerView(
-        heading: "Year",
-        placeholder: "Select your year",
-        options: Year.allCases.map { $0.rawValue }
-    )
+    private let universityPickerView: HeadingPickerView
+    private let degreePickerView: HeadingPickerView
+    private let yearPickerView: HeadingPickerView
     
     // MARK: - Data
     var parent: SetupAccountVC?
+    var prefersLargeTitles: Bool
+    var alignLeft: Bool
     
     // MARK: - Initialization
-    init() {
+    init(prefersLargeTitles: Bool = true, alignLeft: Bool = false) {
+        self.prefersLargeTitles = prefersLargeTitles
+        self.alignLeft = alignLeft
+        
+        self.universityPickerView = HeadingPickerView(
+            heading: "University",
+            placeholder: "Select your university",
+            options: University.allCases.map { $0.rawValue }.sorted(),
+            prefersLargeTitles: prefersLargeTitles,
+            alignLeft: alignLeft
+        )
+        
+        self.degreePickerView = HeadingPickerView(
+            heading: "Degree",
+            placeholder: "Select your degree",
+            options: Degree.allCases.map { $0.rawValue }.sorted(),
+            prefersLargeTitles: prefersLargeTitles,
+            alignLeft: alignLeft
+        )
+        
+        self.yearPickerView = HeadingPickerView(
+            heading: "Year",
+            placeholder: "Select your year",
+            options: Year.allCases.map { $0.rawValue },
+            prefersLargeTitles: prefersLargeTitles,
+            alignLeft: alignLeft
+        )
+        
         super.init(frame: .zero)
         setupUI()
     }
@@ -44,29 +59,29 @@ class EducationView: UIView {
     // MARK: - UI Setup
     private func setupUI() {
         addSubview(universityPickerView)
-        addSubview(degreePickerView)
-        addSubview(yearPickerView)
-        
         universityPickerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(degreePickerView)
         degreePickerView.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(yearPickerView)
         yearPickerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             universityPickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            universityPickerView.topAnchor.constraint(equalTo: self.topAnchor, constant: 25),
+            universityPickerView.topAnchor.constraint(equalTo: self.topAnchor, constant: prefersLargeTitles ? 25 : 20),
             universityPickerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             universityPickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
             degreePickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            degreePickerView.topAnchor.constraint(equalTo: universityPickerView.bottomAnchor, constant: 30),
+            degreePickerView.topAnchor.constraint(equalTo: universityPickerView.bottomAnchor, constant: prefersLargeTitles ? 25 : 20),
             degreePickerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             degreePickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             
             yearPickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            yearPickerView.topAnchor.constraint(equalTo: degreePickerView.bottomAnchor, constant: 30),
+            yearPickerView.topAnchor.constraint(equalTo: degreePickerView.bottomAnchor, constant: prefersLargeTitles ? 25 : 20),
             yearPickerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
             yearPickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-            
         ])
     }
 }

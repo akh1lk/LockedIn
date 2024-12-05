@@ -6,29 +6,23 @@
 //
 
 import UIKit
+import UIKit
 
 class HeadingPickerView: UIView {
     
     // MARK: - UI Components
-    private let headingLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .label
-        label.textAlignment = .center
-        label.font = UIFont(name: "GaretW05-Bold", size: 32)
-        label.numberOfLines = 2
-        return label
-    }()
-    
+    private let headingLabel: UILabel = UILabel()
     private let pickerView: PickerView
-    
-    // MARK: - Callbacks
-    var onValueSelected: ((String?) -> Void)?
+    private let prefersLargeTitles: Bool
+    private let alignLeft: Bool
     
     // MARK: - Initialization
-    init(heading: String, placeholder: String, options: [String]) {
+    init(heading: String, placeholder: String, options: [String], prefersLargeTitles: Bool = true, alignLeft: Bool = false) {
+        self.prefersLargeTitles = prefersLargeTitles
+        self.alignLeft = alignLeft
         self.pickerView = PickerView(placeholder: placeholder, options: options)
         super.init(frame: .zero)
-        headingLabel.text = heading
+        setupHeadingLabel(heading: heading, prefersLargeTitles: prefersLargeTitles)
         setupUI()
     }
     
@@ -37,21 +31,31 @@ class HeadingPickerView: UIView {
     }
     
     // MARK: - UI Setup
+    private func setupHeadingLabel(heading: String, prefersLargeTitles: Bool) {
+        headingLabel.textColor = .label
+        headingLabel.textAlignment = alignLeft ? .left : .center
+        headingLabel.font = UIFont(name: "GaretW05-Bold", size: prefersLargeTitles ? 32 : 20)
+        headingLabel.numberOfLines = 2
+        headingLabel.text = heading
+    }
+    
     private func setupUI() {
         addSubview(headingLabel)
-        addSubview(pickerView)
-        
         headingLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        addSubview(pickerView)
         pickerView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            headingLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
+            alignLeft
+                ? headingLabel.leadingAnchor.constraint(equalTo: pickerView.leadingAnchor, constant: 5)
+                : headingLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             headingLabel.topAnchor.constraint(equalTo: self.topAnchor),
             
             pickerView.widthAnchor.constraint(equalTo: self.widthAnchor, multiplier: 0.75),
             pickerView.heightAnchor.constraint(equalToConstant: 60),
             pickerView.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            pickerView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: 10),
+            pickerView.topAnchor.constraint(equalTo: headingLabel.bottomAnchor, constant: prefersLargeTitles ? 10 : 6),
             pickerView.bottomAnchor.constraint(equalTo: self.bottomAnchor)
         ])
     }
