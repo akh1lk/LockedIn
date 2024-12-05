@@ -11,10 +11,9 @@ class PersonalInfoController: UIViewController {
     
     
     // MARK: - Variables
-    private let tempView: UIView = {
+    private let backgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .palette.offWhite
-        view.layer.cornerRadius = 5
         return view
     }()
     
@@ -39,14 +38,14 @@ class PersonalInfoController: UIViewController {
     
     
     private func setupUI() {
-        self.view.addSubview(tempView)
-        tempView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(backgroundView)
+        backgroundView.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
-            tempView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
-            tempView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
-            tempView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
-            tempView.heightAnchor.constraint(equalToConstant: 70),
+            backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            backgroundView.heightAnchor.constraint(equalToConstant: 110)
         ])
     }
     

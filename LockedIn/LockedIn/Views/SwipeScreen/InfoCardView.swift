@@ -69,16 +69,6 @@ class InfoCardView: UIView {
         return label
     }()
     
-    public lazy var linkedInButton: UIButton = {
-        let button = UIButton()
-        button.imageView?.contentMode = .scaleAspectFit
-        button.contentVerticalAlignment = .fill
-        button.contentHorizontalAlignment = .fill
-        button.setImage(UIImage(named: "linkedin-logo-small"), for: .normal)
-        button.addTarget(self, action: #selector(linkedInButtonTapped), for: .touchUpInside)
-        return button
-    }()
-    
     // MARK: - Data
     
     // MARK: - Life Cycle
@@ -130,9 +120,6 @@ class InfoCardView: UIView {
         
         self.addSubview(aboutMeText)
         aboutMeText.translatesAutoresizingMaskIntoConstraints = false
-        
-        self.addSubview(linkedInButton)
-        linkedInButton.translatesAutoresizingMaskIntoConstraints = false
 
         NSLayoutConstraint.activate([
             backgroundImage.topAnchor.constraint(equalTo: self.topAnchor),
@@ -160,11 +147,6 @@ class InfoCardView: UIView {
             aboutMeText.topAnchor.constraint(equalTo: aboutMeHeading.bottomAnchor, constant: 5),
             aboutMeText.leadingAnchor.constraint(equalTo: smallHeadingLabel.leadingAnchor),
             aboutMeText.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
-            
-            linkedInButton.topAnchor.constraint(equalTo: smallHeadingLabel.topAnchor),
-            linkedInButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -30),
-            linkedInButton.heightAnchor.constraint(equalToConstant: 60),
-            linkedInButton.widthAnchor.constraint(equalToConstant: 60),
         ])
     }
     
@@ -182,8 +164,4 @@ class InfoCardView: UIView {
     }
     
     // MARK: - Selectors
-    @objc func linkedInButtonTapped() {
-        print("noob")
-    }
-
 }
