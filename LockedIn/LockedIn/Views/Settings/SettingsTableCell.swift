@@ -8,8 +8,6 @@
 import UIKit
 
 class SettingsTableCell: UITableViewCell {
-    
-    static let identifier = "SettingsCell"
 
     // MARK: - UI Components
     private let myImageView: UIImageView = {
@@ -31,6 +29,9 @@ class SettingsTableCell: UITableViewCell {
         label.text = "Loading..."
         return label
     }()
+    
+    // MARK: - Data
+    static let identifier = "SettingsCell"
     
     // MARK: - Life Cycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
