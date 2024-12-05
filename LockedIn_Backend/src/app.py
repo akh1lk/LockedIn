@@ -282,8 +282,7 @@ def delete_user_connections(connection_id):
     db.session.delete(connection)
     db.session.commit()
 
-    return success_response({"message": f"Connection {connection_id} with {user1} and {user2} and 
-                             related chat/messages deleted successfully"})
+    return success_response({"message": f"Connection {connection_id} with {user1} and {user2} and related chat/messages deleted successfully"})
 
 
 @app.route('/recommendations/<int:user_id>', methods=['GET'])

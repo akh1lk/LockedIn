@@ -173,24 +173,18 @@ class SignInVC: UIViewController {
     }
     
     // MARK: - Selectors
-//    @objc func signInButtonTapped() {
-//        // TODO: Handle log in with LinkedIn
-//        
-//        // If they do not have an account yet  (with us, in the database)::
-//        let viewController = SetupAccountVC()
-//        viewController.modalPresentationStyle = .fullScreen
-//        self.navigationController?.pushViewController(viewController, animated: true)
-//        
-//        // If they do have an account (with us, in the database):
-//        if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-//            sceneDelegate.resetRootViewController()
-//        }
-//    }
-    
     @objc func signInButtonTapped() {
-        let linkedInAuthURL = "https://yourserver.com/login" // Replace with your actual backend login route
-
-        Utils.showWebViewController(on: self, with: linkedInAuthURL)
+        // TODO: Handle log in with LinkedIn
+        
+        // If they do not have an account yet  (with us, in the database)::
+        let viewController = SetupAccountVC()
+        viewController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(viewController, animated: true)
+        
+        // If they do have an account (with us, in the database):
+        if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+            sceneDelegate.resetRootViewController()
+        }
     }
 }
 
