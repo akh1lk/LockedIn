@@ -25,18 +25,20 @@ class ChatTableVC: UIViewController {
     }()
     
     // MARK: - Data
-    private var chats: [(sender: Sender, latestMessage: Message)] = [
-        (Sender(avatar: UIImage(named: "ye"), senderId: "1", displayName: "Alice", crackedRating: 69),
-         Message(sender: Sender(avatar: nil, senderId: "1", displayName: "Alice", crackedRating: 69),
-                 messageId: "1",
-                 sentDate: Date(),
-                 kind: .text("Hey, how are you?"))),
+    private var chats: [Message] = [
+        Message(
+            sender: Sender(avatar: UIImage(named: "ye"), senderId: "1", displayName: "Kanye West", crackedRating: 99),
+            messageId: "1",
+            sentDate: Date(),
+            kind: .text("hey mona lisa, come home you know you can't roam without caesar")
+        ),
         
-        (Sender(avatar: UIImage(systemName: "person.circle"), senderId: "3", displayName: "Charlie", crackedRating: 69),
-         Message(sender: Sender(avatar: nil, senderId: "3", displayName: "Charlie", crackedRating: 69),
-                 messageId: "3",
-                 sentDate: Date(),
-                 kind: .emoji("👋")))
+        Message(
+            sender: Sender(avatar: UIImage(named: "diddy"), senderId: "2", displayName: "Diddy", crackedRating: 69),
+            messageId: "1",
+            sentDate: Date(),
+            kind: .text("Where you at, tell me now.")
+        ),
     ]
     
     override func viewDidLoad() {
@@ -94,7 +96,7 @@ extension ChatTableVC: UITableViewDelegate, UITableViewDataSource {
             return UITableViewCell()
         }
         let chat = chats[indexPath.row]
-        cell.configureCell(sender: chat.sender, latestMessage: chat.latestMessage)
+        cell.configureCell(with: chat)
         return cell
     }
     
@@ -103,8 +105,12 @@ extension ChatTableVC: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let viewController = ChatVC(with: chats[indexPath.row].sender)
-        viewController.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(viewController, animated: true)
+        if let sender = chats[indexPath.row].sender as? Sender {
+            let viewController = ChatVC(with: sender)
+            viewController.modalPresentationStyle = .fullScreen
+            self.navigationController?.pushViewController(viewController, animated: true)
+        } else {
+            print("Error: Wrong sender type.")
+        }
     }
 }
