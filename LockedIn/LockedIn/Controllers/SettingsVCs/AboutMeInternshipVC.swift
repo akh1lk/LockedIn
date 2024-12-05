@@ -9,14 +9,13 @@ import UIKit
 
 class AboutMeInternshipVC: UIViewController {
     
-    // MARK: - Variables
+    // MARK: - UI Components
     private let backgroundView: UIView = {
         let view = UIView()
         view.backgroundColor = .palette.offWhite
         return view
     }()
     
-    // MARK: - UI Components
     private let internshipHeading: UILabel = {
         let label = UILabel()
         label.textColor = .label
@@ -56,7 +55,7 @@ class AboutMeInternshipVC: UIViewController {
         super.viewDidLoad()
         self.view.backgroundColor = .white
         
-        Utils.customDoneButton(for: self.navigationItem, target: self, action: #selector(doneButtonTapped))
+        Utils.customDoneButton(for: self.navigationItem, target: self, action: #selector(doneBtnTapped))
         Utils.customBackButton(for: self.navigationItem, target: self, action: #selector(backBtnTapped))
         setupNavBar()
         setupUI()
@@ -124,7 +123,7 @@ class AboutMeInternshipVC: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     
-    @objc func doneButtonTapped() {
+    @objc func doneBtnTapped() {
         // TODO: Networking update user
        backBtnTapped()
     }
