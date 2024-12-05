@@ -42,7 +42,7 @@ class CareerGoalsVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = "Interests"
+        self.navigationItem.title = "Career Goals"
     }
     
     private func setupUI() {

@@ -50,7 +50,7 @@ class ChatVC: MessagesViewController {
     private func setupUI() {
         view.backgroundColor = .white
         
-        navigationItem.title = "Chat"
+        navigationItem.title = "Chats"
         navigationController?.navigationBar.titleTextAttributes = [
             .font: UIFont.systemFont(ofSize: 24, weight: .semibold)
         ]

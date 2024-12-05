@@ -24,7 +24,7 @@ class ChatTableCell: UITableViewCell {
     private let nameLabel: UILabel = {
         let label = UILabel()
         label.textColor = .palette.offBlack
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = UIFont(name: "GaretW05-Bold", size: 16)
         label.text = "Kanye West"
         return label
@@ -33,7 +33,7 @@ class ChatTableCell: UITableViewCell {
     private let recentTextLabel: UILabel = {
         let label = UILabel()
         label.textColor = .palette.offBlack.withAlphaComponent(0.8)
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.font = UIFont(name: "GaretW05-Regular", size: 14)
         label.text = "listen dude I'm tweaking hard. third of december, and you didn't give me a sweater."
         return label
@@ -70,7 +70,21 @@ class ChatTableCell: UITableViewCell {
     }
     
      // MARK: - UI Setup
-    public func configureCell(sender: Sender, latestMessage: Message) {
+    public func configureCell(with latestMessage: Message) {
+        if let sender = latestMessage.sender as? Sender {
+            
+            self.profileImageView.image = sender.avatar
+            self.nameLabel.text = sender.displayName
+            self.timeLabel.text = formattedDate(latestMessage.sentDate)
+            
+            if case .text(let messageText) = latestMessage.kind {
+                self.recentTextLabel.text = messageText
+            } else {
+                self.recentTextLabel.text = "[Non-text message]"
+            }
+        } else {
+            print("Error: Wrong sender type.")
+        }
     }
     
     private func setupUI() {
@@ -110,5 +124,28 @@ class ChatTableCell: UITableViewCell {
             rightArrow.leadingAnchor.constraint(equalTo: timeLabel.trailingAnchor, constant: 5),
             rightArrow.heightAnchor.constraint(equalToConstant: 15),
         ])
+    }
+    
+    // MARK: - Helper Functions
+    func formattedDate(_ date: Date) -> String {
+        let now = Date()
+        let calendar = Calendar.current
+        let components = calendar.dateComponents([.year, .month, .day, .hour, .minute], from: date, to: now)
+        
+        let formatter = DateFormatter()
+        if calendar.isDateInToday(date) {
+            formatter.timeStyle = .short
+            return formatter.string(from: date)
+        } else if calendar.isDateInYesterday(date) {
+            formatter.timeStyle = .short
+            return "Yesterday \(formatter.string(from: date))"
+        } else if let days = components.day, days < 7 {
+            return "\(days) days ago"
+        } else if let days = components.day, days < 14 {
+            return "1 week ago"
+        } else if let days = components.day {
+            return "\(days / 7) weeks ago"
+        }
+        return "A long time ago"
     }
 }

@@ -66,7 +66,7 @@ class AboutMeInternshipVC: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
-        self.navigationItem.title = "About Me & Internship"
+        self.navigationItem.title = "About & Internships"
     }
     
     private func setupUI() {

@@ -13,7 +13,7 @@ class SettingsVC: UIViewController {
     // MARK: - Variables
     var settingsOption : [IconTextOption] = [
         IconTextOption(icon: UIImage(systemName: "person.circle"), title: "Personal Information"),
-        IconTextOption(icon: UIImage(systemName: "brain"), title: "About me & Internships"),
+        IconTextOption(icon: UIImage(systemName: "touchid"), title: "About & Internships"),
         IconTextOption(icon: UIImage(systemName: "briefcase"), title: "Career Goals"),
         IconTextOption(icon: UIImage(systemName: "heart"), title: "Interests"),
         IconTextOption(icon: UIImage(systemName: "questionmark.circle"), title: "Support"),
@@ -144,7 +144,7 @@ class SettingsVC: UIViewController {
         switch settingOption {
         case "Personal Information":
             viewController = PersonalInfoController(with: UIImage(named: "ye"))
-        case "About me & Internships":
+        case "About & Internships":
             viewController = AboutMeInternshipVC()
         case "Interests":
             viewController = InterestsVC()
