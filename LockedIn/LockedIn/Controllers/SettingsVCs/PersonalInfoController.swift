@@ -41,10 +41,22 @@ class PersonalInfoController: UIViewController {
         return button
     }()
     
-//    let infoFieldView = 
+    let educationView = EducationView(prefersLargeTitles: false, alignLeft: true)
     
-    // MARK: - Data
-    
+    lazy var doneButton: UIBarButtonItem = {
+        let button = UIBarButtonItem(
+            title: "Done",
+            style: .plain,
+            target: self,
+            action: #selector(doneButtonTapped))
+        
+        button.setTitleTextAttributes([
+                .font: UIFont.systemFont(ofSize: 16, weight: .semibold),
+                .foregroundColor: UIColor.palette.purple
+            ], for: .normal)
+        
+        return button
+    }()
     
     // MARK: - Life Cycle
     init(with image: UIImage?) {
@@ -71,6 +83,7 @@ class PersonalInfoController: UIViewController {
         self.navigationController?.navigationBar.titleTextAttributes =
         [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 24, weight: .semibold)]
         self.navigationItem.title = "Personal Information"
+        self.navigationItem.rightBarButtonItem = doneButton
     }
     
     
@@ -84,19 +97,27 @@ class PersonalInfoController: UIViewController {
         self.view.addSubview(updateImageText)
         updateImageText.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(educationView)
+        educationView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
             backgroundView.topAnchor.constraint(equalTo: self.view.topAnchor),
             backgroundView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             backgroundView.heightAnchor.constraint(equalToConstant: 110),
             
-            updateImageButton.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 20),
+            updateImageText.centerXAnchor.constraint(equalTo: updateImageButton.centerXAnchor),
+            updateImageText.topAnchor.constraint(equalTo: backgroundView.bottomAnchor, constant: 20),
+            
+            updateImageButton.topAnchor.constraint(equalTo: updateImageText.bottomAnchor),
             updateImageButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
             updateImageButton.heightAnchor.constraint(equalToConstant: 150),
             updateImageButton.widthAnchor.constraint(equalToConstant: 150),
             
-            updateImageText.centerXAnchor.constraint(equalTo: updateImageButton.centerXAnchor),
-            updateImageText.topAnchor.constraint(equalTo: updateImageButton.bottomAnchor, constant: 7),
+            educationView.topAnchor.constraint(equalTo: updateImageButton.bottomAnchor, constant: 5),
+            educationView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+            educationView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -0),
+            educationView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -100),
         ])
     }
     
@@ -112,9 +133,13 @@ class PersonalInfoController: UIViewController {
         imagePicker.allowsEditing = true
         
         parent?.present(imagePicker, animated: true, completion: {
-            // TODO: update image in database
-            print("Selected Image!")
+            // TODO: Networking update image in database
         })
+    }
+    
+    @objc func doneButtonTapped() {
+        // TODO: Networking update user information.
+        self.navigationController?.popViewController(animated: true)
     }
 }
 
