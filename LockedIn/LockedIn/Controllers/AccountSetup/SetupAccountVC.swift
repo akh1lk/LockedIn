@@ -43,12 +43,13 @@ class SetupAccountVC: UIViewController {
         MultiChoiceView(title: "Select up to 4 career goals", options: OptionsData.careerGoalOptions, limit: 4),
         MultiChoiceView(title: "Select up to 3 interests", options: OptionsData.interestsOptions, limit: 3),
         EducationView(),
+        AboutInternshipView(),
         SelectPhotoView()
     ]
     
     /// NOTE: Step is index 1, not index 0. Must be converted when accessing views.
     private var currentStep = 1
-    private let totalSteps = 4
+    private let totalSteps = 5
     
     // MARK: - Life Cycle
     override func viewDidLoad() {
@@ -123,10 +124,6 @@ class SetupAccountVC: UIViewController {
             views[currentStep - 1].isHidden = false
             
         } else {
-            if let statsView = views[currentStep - 1] as? EducationView {
-                print(statsView.fetchData())
-            }
-            
             // TODO: Finish setting up account
             
             if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
