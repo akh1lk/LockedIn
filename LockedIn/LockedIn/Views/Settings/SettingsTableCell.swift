@@ -49,8 +49,8 @@ class SettingsTableCell: UITableViewCell {
         self.label.text = profileOption.title
     }
     
-    
     private func setupUI() {
+    
         accessoryType = .disclosureIndicator
         
         self.contentView.addSubview(myImageView)

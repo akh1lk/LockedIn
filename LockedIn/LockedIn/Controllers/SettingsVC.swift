@@ -12,9 +12,9 @@ class SettingsVC: UIViewController {
     
     // MARK: - Variables
     var settingsOption : [IconTextOption] = [
-        IconTextOption(icon: UIImage(systemName: "person"), title: "Personal Information"),
-        IconTextOption(icon: UIImage(systemName: "bell"), title: "Notifications"),
-        IconTextOption(icon: UIImage(systemName: "person.text.rectangle"), title: "Payment"),
+        IconTextOption(icon: UIImage(systemName: "person.circle"), title: "Personal Information"),
+        IconTextOption(icon: UIImage(systemName: "brain"), title: "About me & Internships"),
+        IconTextOption(icon: UIImage(systemName: "heart"), title: "Interests"),
         IconTextOption(icon: UIImage(systemName: "questionmark.circle"), title: "Support"),
     ]
     
@@ -95,6 +95,8 @@ class SettingsVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
+        settingsTable.separatorColor = .palette.gray
+        
         self.view.addSubview(backgroundView)
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -114,7 +116,7 @@ class SettingsVC: UIViewController {
             backgroundView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             
             settingsTable.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 110),
-            settingsTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0),
+            settingsTable.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: -20),
             settingsTable.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: 0),
             settingsTable.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -350),
             
