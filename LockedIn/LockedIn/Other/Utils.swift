@@ -9,6 +9,8 @@ import UIKit
 
 class Utils {
     
+    static let questionMark = "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
+    
     /// Creates a done button
     static func customDoneButton(for navigationItem: UINavigationItem, target: Any, action: Selector) {
         let doneButton = UIBarButtonItem(
@@ -110,7 +112,7 @@ class Utils {
     }
     
     /// Create a bold attributed text for the cracked label
-    static func createBoldPercentageAttributedString(percentage: Int, crackedText: String = "Cracked") -> NSAttributedString {
+    static func createBoldPercentageAttributedString(percentage: String, crackedText: String = "Cracked") -> NSAttributedString {
         let fullText = "\(percentage)%\n\(crackedText)"
         let attributedString = NSMutableAttributedString(string: fullText)
         

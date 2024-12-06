@@ -129,20 +129,20 @@ class AboutInternshipView: UIView {
     }
     
     // MARK: - Methods
-    public func fetchData() -> (Internship?, String) {
-        
-        var internshipData: Internship? = nil
-        
-        if !internshipFieldView.isHidden {
-            internshipData = Internship(
-                company: internshipFieldView.companyPickerView.getText() ?? "",
-                position: internshipFieldView.positionPickerView.getText() ?? "",
-                date: internshipFieldView.datePickerView.getText() ?? ""
-            )
-        }
-        
-        return (internshipData, aboutMeFieldView.aboutMeTextView.text ?? "")
-    }
+//    public func fetchData() -> (Internship?, String) {
+//        
+//        var internshipData: Internship? = nil
+//        
+//        if !internshipFieldView.isHidden {
+//            internshipData = Internship(
+//                company: internshipFieldView.companyPickerView.getText() ?? "",
+//                position: internshipFieldView.positionPickerView.getText() ?? "",
+//                date: internshipFieldView.datePickerView.getText() ?? ""
+//            )
+//        }
+//        
+//        return (internshipData, aboutMeFieldView.aboutMeTextView.text ?? "")
+//    }
 }
 
 // MARK: - Setup Account Subview

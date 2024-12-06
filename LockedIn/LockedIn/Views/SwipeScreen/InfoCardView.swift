@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class InfoCardView: UIView {
 
@@ -72,18 +73,19 @@ class InfoCardView: UIView {
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init(with data: UserObject) {
+    init(with data: User) {
         super.init(frame: .zero)
         
-        backgroundImage.image = data.image
+        let url = URL(string: data.profilePic ?? Utils.questionMark)
+        backgroundImage.sd_setImage(with: url)
         
-        if let internship = data.internship {
-            setupInternship(for: internship)
+        if data.company == "" {
+            setupInternship(company: data.company, jobTitle: data.jobTitle)
         } else {
-            setupUniversity(for: data.university, studying: data.degree)
+            setupUniversity(for: data.university, studying: data.major)
         }
         
-        self.aboutMeText.text = data.aboutMe
+        self.aboutMeText.text = data.experience
         
         setupUI()
     }
@@ -151,16 +153,16 @@ class InfoCardView: UIView {
     }
     
     // MARK: - Methods
-    private func setupUniversity(for university: University, studying degree: Degree) {
+    private func setupUniversity(for university: String, studying degree: String) {
         smallHeadingLabel.text = "Currently at"
-        headingLabel.text = university.rawValue
-        subheadingLabel.text = degree.rawValue
+        headingLabel.text = university
+        subheadingLabel.text = degree
     }
     
-    private func setupInternship(for internship: Internship) {
+    private func setupInternship(company: String, jobTitle: String) {
         smallHeadingLabel.text = "Internship"
-        headingLabel.text = internship.company
-        subheadingLabel.text = internship.position
+        headingLabel.text = company
+        subheadingLabel.text = jobTitle
     }
     
     // MARK: - Selectors

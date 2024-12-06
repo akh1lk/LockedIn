@@ -8,8 +8,8 @@
 import UIKit
 
 /// The company, position and date of an internship.
-struct Internship {
-    var company: String
-    var position: String
-    var date: String
-}
+//struct Internship {
+//    var company: String
+//    var position: String
+//    var date: String
+//}

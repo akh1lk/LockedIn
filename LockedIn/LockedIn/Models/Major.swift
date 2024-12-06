@@ -1,5 +1,5 @@
 //
-//  Degree.swift
+//  Major.swift
 //  LockedIn
 //
 //  Created by Gabriel Castillo on 12/1/24.
@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Degree: String, CaseIterable {
+enum Major: String, CaseIterable {
     case computerScience = "Computer Science"
     case business = "Business Administration"
     case economics = "Economics"

@@ -10,7 +10,7 @@ import Foundation
 // MARK: - Codable Models
 struct User: Codable {
     let id: Int
-    let linkedinUsername: String
+    let linkedinUrl: String
     var name: String
     var goals: String
     var interests: String
@@ -21,6 +21,23 @@ struct User: Codable {
     var experience: String
     var location: String
     var profilePic: String?
+    var crackedRating: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case linkedinUrl = "linkedin_url"
+        case name
+        case goals
+        case interests
+        case university
+        case major
+        case company
+        case jobTitle = "job_title"
+        case experience
+        case location
+        case profilePic = "profile_pic"
+        case crackedRating = "cracked_rating"
+    }
 }
 
 struct Connection: Codable {

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SDWebImage
 
 class ProfileInfoView: UIView {
     
@@ -59,13 +60,16 @@ class ProfileInfoView: UIView {
     // MARK: - Data
     
     // MARK: - Life Cycle
-    init(with data: UserObject) {
-        profileImageView.image = data.image
+    init(with data: User) {
+        let url = URL(string: data.profilePic ?? Utils.questionMark)
+        profileImageView.sd_setImage(with: url)
+        
         nameLabel.text = data.name
         
-        universityIconText = SimpleIconTextView(icon: UIImage(systemName: "location.circle.fill"), text: data.university.rawValue)
-        yearIconText = SimpleIconTextView(icon: UIImage(systemName: "clock.fill"), text: data.year.rawValue)
-        degreeIconText = SimpleIconTextView(icon: UIImage(systemName: "graduationcap.fill"), text: data.degree.rawValue)
+        universityIconText = SimpleIconTextView(icon: UIImage(systemName: "location.circle.fill"), text: data.university)
+        // TODO: Add year to database.
+        yearIconText = SimpleIconTextView(icon: UIImage(systemName: "clock.fill"), text: "Freshmen")
+        degreeIconText = SimpleIconTextView(icon: UIImage(systemName: "graduationcap.fill"), text: data.major)
         
         crackedLabel.attributedText = Utils.createBoldPercentageAttributedString(percentage: data.crackedRating)
         super.init(frame: .zero)

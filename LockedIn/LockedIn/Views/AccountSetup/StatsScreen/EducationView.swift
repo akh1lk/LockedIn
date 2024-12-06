@@ -35,7 +35,7 @@ class EducationView: UIView {
         self.degreePickerView = HeadingPickerView(
             heading: "Degree",
             placeholder: "Select your degree",
-            options: Degree.allCases.map { $0.rawValue }.sorted(),
+            options: Major.allCases.map { $0.rawValue }.sorted(),
             prefersLargeTitles: prefersLargeTitles,
             alignLeft: alignLeft
         )
