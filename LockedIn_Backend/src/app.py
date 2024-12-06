@@ -2,7 +2,11 @@ import json
 from flask import Flask, request, redirect, url_for
 from authlib.integrations.flask_client import OAuth
 import os
+from dotenv import load_dotenv
 from db import db, User, Connection, Message, Swipe, Asset  # Import models from db.py
+
+
+load_dotenv(dotenv_path='.env')
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")  # Secret key for session management
@@ -46,7 +50,7 @@ def test():
 def login():
     return linkedin.authorize_redirect(redirect_uri=f"http://{SERVER_IP}/auth")
 
-@app.route("/auth", methods=["POST"])
+@app.route("/auth", methods=["GET"])
 def auth():
     try:
         token = linkedin.authorize_access_token()               

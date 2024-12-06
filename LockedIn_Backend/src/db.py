@@ -477,4 +477,3 @@ class Asset(db.Model):
             "url": f"{self.base_url}/{self.salt}.{self.extension}",
             "created_at": str(self.created_at)
         }
-    
