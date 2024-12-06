@@ -72,7 +72,7 @@ class User(db.Model):
         self.job_title = kwargs.get("job_title")
         self.experience = kwargs.get("experience")
         self.location = kwargs.get("location")
-        self.cracked_rating = kwargs.get("cracked_rating", 0)
+        self.cracked_rating = self.calculate_cracked_rating()
 
     #Cracked Rating Implementation
 
