@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import Firebase
+import MessageKit
 
 class Utils {
     
@@ -160,6 +162,20 @@ class Utils {
         
         return attributedString
     }
-    
-    
+}
+
+// MARK: - Networking
+extension Utils {
+    static func createMessage(from data: [String: Any]) -> Message? {
+            guard let content = data["content"] as? String,
+                  let senderId = data["senderId"] as? String,
+                  let timeStamp = (data["timestamp"] as? Timestamp)?.dateValue() else {
+                      print("Failed to get required fields from Firebase database.")
+                      return nil
+                  }
+
+            let finalKind: MessageKind = .text(content)
+            let sender = Sender(senderId: senderId, displayName: "")
+            return Message(sender: sender, messageId: UUID().uuidString, sentDate: timeStamp, kind: finalKind)
+        }
 }

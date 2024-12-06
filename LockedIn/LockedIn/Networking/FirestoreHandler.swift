@@ -35,21 +35,7 @@ class FirestoreHandler {
             }
             
             let messages: [Message] = querySnapshot?.documents.compactMap { document in
-                let data = document.data()
-                print("document1")
-                guard let content = data["content"] as? String,
-                      let senderId = data["senderId"] as? String,
-                      let timeStamp = (data["timestamp"] as? Timestamp)?.dateValue() 
-                else {
-                    print("Failed to get required fields from Firebase database.")
-                    return nil
-                }
-                
-                let finalKind: MessageKind = .text(content)
-                
-                let sender = Sender(senderId: senderId, displayName: "") // display name not required for chat view!
-                
-                return Message(sender: sender, messageId: document.documentID, sentDate: timeStamp, kind: finalKind)
+                return Utils.createMessage(from: document.data())
             } ?? []
             
             completion(.success(messages))

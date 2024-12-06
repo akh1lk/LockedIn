@@ -7,6 +7,7 @@
 
 import UIKit
 import MessageKit
+import FirebaseFirestore
 import InputBarAccessoryView
 
 class ChatVC: MessagesViewController {
@@ -15,9 +16,10 @@ class ChatVC: MessagesViewController {
     let chatHeaderView: ChatHeaderView
     
     // MARK: - Data
-    private var messages = TestingData.messages
+    private var messages: [Message] = []
     var selfSender: Sender
     let connectionId: String
+    private var messagesListener: ListenerRegistration?
     
     // MARK: - Life Cycle
     init(with sender: Sender, connectionId: String) {
@@ -54,25 +56,6 @@ class ChatVC: MessagesViewController {
         fetchAllMessages()
 //        setupMessagesListener()
     }
-        
-    private func fetchAllMessages() {
-        FirestoreHandler.shared.returnAllMessages(for: connectionId) { [weak self] result in
-            switch result {
-            case .success(let messages):
-                // Sort messages by sentDate in ascending order
-                self?.messages = messages.sorted { $0.sentDate < $1.sentDate }
-                print(self?.messages)
-                DispatchQueue.main.async {
-                    self?.messagesCollectionView.reloadData()
-                    // Scroll to bottom:
-                    // self?.messagesCollectionView.scrollToBottom(animated: true)
-                    self?.messagesCollectionView.scrollToLastItem()
-                }
-            case .failure(let error):
-                print("Error fetching messages: \(error)")
-            }
-        }
-    }
     
     // MARK: - UI Setup
     private func setupUI() {
@@ -103,8 +86,66 @@ class ChatVC: MessagesViewController {
             chatHeaderView.heightAnchor.constraint(equalToConstant: 130),
         ])
     }
+    
+    // MARK: - Networking
+    private func fetchAllMessages() {
+        FirestoreHandler.shared.returnAllMessages(for: connectionId) { [weak self] result in
+            switch result {
+            case .success(let messages):
+                // Sort messages by sentDate in ascending order
+                self?.messages = messages.sorted { $0.sentDate < $1.sentDate }
+                DispatchQueue.main.async {
+                    self?.messagesCollectionView.reloadData()
+                    
+                    // Scroll to bottom:
+                    self?.messagesCollectionView.scrollToLastItem()
+                }
+            case .failure(let error):
+                print("Error fetching messages: \(error)")
+            }
+        }
+    }
+    
+    private func setupMessagesListener() {
+        let db = Firestore.firestore()
+        
+        let storageRef = db
+            .collection("chats")
+            .document(connectionId)
+            .collection("messages")
+        
+        messagesListener = storageRef.addSnapshotListener { [weak self] querySnapshot, error in
+            if let error = error {
+                print("Error listening for messages: \(error)")
+                return
+            }
+            
+            guard let documents = querySnapshot?.documents else {
+                print("No messages found.")
+                return
+            }
+            
+            let newMessages = documents.compactMap { document -> Message? in
+                return Utils.createMessage(from: document.data())
+            }
+            
+            // Update messages with new messages and reload collection view
+            self?.messages = newMessages.sorted { $0.sentDate < $1.sentDate }
+            DispatchQueue.main.async {
+                self?.messagesCollectionView.reloadData()
+                // Scroll to the bottom
+                // self?.messagesCollectionView.scrollToBottom(animated: true)
+                self?.messagesCollectionView.scrollToLastItem()
+            }
+        }
+    }
+    
+    deinit {
+        messagesListener?.remove()
+    }
 }
 
+// MARK: - MessageKit Delegates
 extension ChatVC: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {
     
     var currentSender: SenderType {
