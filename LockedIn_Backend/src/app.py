@@ -6,7 +6,7 @@ from db import db, User, Connection, Chat, Message, Asset  # Import models from 
 from flask_socketio import SocketIO, join_room, leave_room, emit
 
 app = Flask(__name__)
-app.secret_key = 'b1f849a9870a6137b4d34f5d703ce70e'  # Secret key for session management
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")  # Secret key for session management
 db_filename = "lockedin.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_filename}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -17,13 +17,14 @@ oauth = OAuth(app)
 
 linkedin = oauth.register(
     name="linkedin",
-    client_id="77w8k8tmep8y6p",
-    client_secret="WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ==",
+    client_id=os.environ.get("LINKEDIN_CLIENT_ID"),
+    client_secret=os.environ.get("LINKEDIN_CLIENT_SECRET"),
     authorize_url="https://www.linkedin.com/oauth/v2/authorization",
     authorize_params=None,
     access_token_url="https://www.linkedin.com/oauth/v2/accessToken",
     refresh_token_url=None,
-    client_kwargs={"scope": "r_liteprofile r_emailaddress"},
+    api_base_url='https://api.linkedin.com/v2/',
+    client_kwargs={"scope": "openid profile email"},
 )
 
 # Initialize Flask-SocketIO
@@ -36,38 +37,39 @@ def success_response(data, code=200):
 def failure_response(message, code=404):
     return json.dumps({"error": message}), code
 
-# Routes for LinkedIn authentication
+# Routes for LinkedIn authentication - We can have a button that does this"
 @app.route("/login")
 def login():
-    return linkedin.authorize_redirect(redirect_uri="YOUR_REDIRECT_URI")
+    return linkedin.authorize_redirect(redirect_uri="http://34.85.161.67/auth")
 
 @app.route("/auth")
 def auth():
     try:
-        token = linkedin.authorize_access_token()
-        user = linkedin.get("https://api.linkedin.com/v2/me", token=token)
+        token = linkedin.authorize_access_token()               
+        #base of token
+        user = linkedin.get("https://api.linkedin.com/v2/userinfo", token=token)
         user_data = user.json()
 
-        # Extract and validate fields
-        linkedin_username = user_data.get("id")
-        if not linkedin_username:
-            return failure_response("LinkedIn username not found", 400)
-
-        name = user_data.get("localizedFirstName", "") + " " + user_data.get("localizedLastName", "")
-        if not name.strip():
+        # Extract and validate fields - from Linkedin API's user_data
+        name = user_data.get("name").strip()
+        if not name:
             return failure_response("Name not found", 400)
-
+        
+        linkedin_sub = user_data.get("linkedin_sub")
+        if not linkedin_sub:
+            return failure_response("LinkedIn Sub not found", 404)
+        
         # Check if user already exists in the database
-        existing_user = User.query.filter_by(linkedin_username=linkedin_username).first()
+        existing_user = User.query.filter_by(linkedin_sub=linkedin_sub).first()
         if existing_user:
             return success_response({"message": "Logging In", "user": existing_user.serialize()})
 
         # Create a new user with default or empty values for missing optional fields
         new_user = User(
-            linkedin_username=linkedin_username,
-            name=name.strip(),
-            goals="",  # Defaults
-            interests="",  # Defaults
+            linkedin_sub=linkedin_sub,
+            name=name,
+            goals="",
+            interests="",
             university="",
             major="",
             company="",
@@ -122,7 +124,7 @@ def create_user():
 
     return success_response(existing_user.serialize(), 200)
 
-@app.route("/upload/<int:user_id>", methods=["POST"])
+@app.route("/upload/<int:user_id>/", methods=["POST"])
 def upload(user_id):
     """
     Endpoint for uploading a new user's profile pic to AWS given its base64 form,
@@ -282,8 +284,8 @@ def delete_user_connections(connection_id):
     db.session.delete(connection)
     db.session.commit()
 
-    return success_response({"message": f"Connection {connection_id} with {user1} and {user2} and 
-                             related chat/messages deleted successfully"})
+    return success_response({"message": f"Connection {connection_id} with {user1} and \
+                             {user2} and related chat/messages deleted successfully"})
 
 
 @app.route('/recommendations/<int:user_id>', methods=['GET'])
@@ -445,166 +447,3 @@ def handle_send_message(data):
 
 if __name__ == "__main__":
     socketio.run(app, host="0.0.0.0", port=8000, debug=True)
-
-
-"""
-WorkFlow Explained
-
-Workflow: New Chat
-
-	1.	Create a Connection
-	•	API Endpoint: POST /api/connections/
-	•	Frontend Action: The frontend calls this when a user selects another user to connect with.
-	•	Functionality:
-	•	Checks if a connection exists between the two users (user1_id and user2_id).
-	•	If no connection exists, creates a new connection.
-	•	Returns the connection details.
-	2.	Create a Chat
-	•	API Endpoint: POST /api/chats/
-	•	Frontend Action: The frontend calls this to create a chat for the newly established connection.
-	•	Functionality:
-	•	Validates that the two users are connected.
-	•	Checks if a chat already exists for the connection.
-	•	If no chat exists, creates a new one and returns the chat details.
-	3.	Join the Chat Room
-	•	Socket.IO Event: join
-	•	Frontend Action: The frontend calls this to join the WebSocket room for the new chat.
-	•	Functionality:
-	•	Validates the chat_id and user_id.
-	•	Adds the user to the room identified by chat_id.
-	•	Notifies all participants in the room.
-	4.	Send Messages
-	•	Socket.IO Event: send_message
-	•	Frontend Action: The frontend calls this to send real-time messages in the chat.
-	•	Functionality:
-	•	Validates the chat_id, sender_id, and content.
-	•	Saves the message in the database.
-	•	Broadcasts the message to all users in the room.
-
-    Workflow: Existing Chat
-
-	1.	Fetch Recent Chats
-	•	API Endpoint: GET /api/chats/<int:user_id>/
-	•	Frontend Action: The frontend calls this to display a list of recent chats on the user’s chat page.
-	•	Functionality:
-	•	Retrieves all chats for the user (user_id) in descending order of timestamp.
-	•	Includes the most recent message and its timestamp for display.
-	2.	Fetch Chat History
-	•	API Endpoint: GET /api/chats/messages/<int:user1_id>/<int:user2_id>/
-	•	Frontend Action: The frontend calls this when the user opens an existing chat.
-	•	Functionality:
-	•	Fetches up to 15 recent messages between the two users (user1_id and user2_id) in descending order of timestamp.
-	3.	Join the Chat Room
-	•	Socket.IO Event: join
-	•	Frontend Action: The frontend calls this to join the WebSocket room for the existing chat.
-	•	Functionality:
-	•	Validates the chat_id and user_id.
-	•	Adds the user to the room identified by chat_id.
-	•	Notifies all participants in the room.
-	4.	Send Messages
-	•	Socket.IO Event: send_message
-	•	Frontend Action: The frontend calls this to send real-time messages in the chat.
-	•	Functionality:
-	•	Validates the chat_id, sender_id, and content.
-	•	Saves the message in the database.
-	•	Broadcasts the message to all users in the room.
-
-    Socket.IO Events
-
-	1.	join
-	•	Adds the user to a WebSocket room for the chat.
-	2.	leave
-	•	Removes the user from a WebSocket room for the chat.
-	3.	send_message
-	•	Handles real-time messaging:
-	•	Saves the message in the database.
-	•	Broadcasts the message to all participants in the chat room.
-	4.	connect/disconnect
-	•	Handles global WebSocket connection and disconnection events for logging or debugging.
-
-    OAuth-Related Endpoints
-
-	1.	GET /login
-	•	Description: Initiates LinkedIn OAuth login.
-	•	Flow:
-	•	Redirects the user to LinkedIn’s authorization page (https://www.linkedin.com/oauth/v2/authorization).
-	•	After the user grants permissions, LinkedIn redirects back to your application with an authorization code.
-	•	Frontend Usage: Called when the user clicks “Login with LinkedIn.”
-	2.	GET /auth
-	•	Description: Handles LinkedIn OAuth callback after the user logs in.
-	•	Flow:
-	•	Exchanges the authorization code for an access token (https://www.linkedin.com/oauth/v2/accessToken).
-	•	Fetches the user’s profile from LinkedIn using the token.
-	•	Creates a new user in the database if the user doesn’t already exist.
-	•	Returns a success response with user details.
-	•	Frontend Usage: This endpoint is hit automatically by LinkedIn after login.
-
-    User-Related Endpoints
-
-	1.	POST /api/users/
-	•	Description: Updates user details after OAuth login with additional information (e.g., goals, interests, university).
-	•	Flow:
-	•	Checks if the user exists (must already have been created during OAuth).
-	•	Updates user details such as name, goals, interests, etc.
-	•	Frontend Usage: Called after login to complete the user’s profile.
-	2.	GET /api/users/<int:id>/
-	•	Description: Fetches details of a specific user by id.
-	•	Flow:
-	•	Queries the database for the user.
-	•	Returns the serialized user object if found.
-	•	Frontend Usage: Used to retrieve a user’s profile details for display.
-	3.	POST /api/users/<int:id>/
-	•	Description: Updates the details of an existing user.
-	•	Flow:
-	•	Validates the provided data (e.g., name, goals).
-	•	Updates only the fields that are provided in the request body.
-	•	Frontend Usage: Allows the user to update their profile information.
-
-    Connection-Related Endpoints
-
-	1.	POST /api/connections/
-	•	Description: Creates a connection between two users.
-	•	Flow:
-	•	Validates the user IDs (user1_id and user2_id).
-	•	Checks if a connection already exists.
-	•	Creates a new connection and stores it in the database.
-	•	Frontend Usage: Called when a user initiates a connection with another user.
-	2.	GET /api/connections/<int:user_id>/
-	•	Description: Fetches all connections for a specific user.
-	•	Flow:
-	•	Queries the database for all connections where the user is either user1 or user2.
-	•	Returns details of connected users.
-	•	Frontend Usage: Used to display a list of all connections on the user’s dashboard.
-
-    Chat-Related Endpoints
-
-	1.	POST /api/chats/
-	•	Description: Creates a new chat for an existing connection.
-	•	Flow:
-	•	Checks if a valid connection exists between the two users.
-	•	If a chat already exists, returns the existing chat details.
-	•	Otherwise, creates a new chat and stores it in the database.
-	•	Frontend Usage: Called when a user starts a new chat.
-	2.	GET /api/chats/<int:user_id>/
-	•	Description: Fetches all chats for a specific user with the most recent message.
-	•	Flow:
-	•	Queries the database for all chats where the user is user1 or user2.
-	•	Sorts chats by the most recent timestamp.
-	•	Includes the latest message in each chat for display.
-	•	Frontend Usage: Displays the user’s recent chats on their chat page.
-	3.	GET /api/chats/messages/<int:user1_id>/<int:user2_id>/
-	•	Description: Fetches the message history between two users.
-	•	Flow:
-	•	Queries the database for messages in the chat between the two users.
-	•	Returns up to 15 messages, sorted by timestamp (newest first).
-	•	Frontend Usage: Displays the message history when a chat is opened.
-
-    Recommendation-Related Endpoint
-
-	1.	GET /recommendations/<int:user_id>
-	•	Description: Returns recommended users for a specific user.
-	•	Flow:
-	•	Queries the database for users who are not already connected to the specified user.
-	•	Uses factors such as shared interests, goals, and location to rank recommendations.
-	•	Frontend Usage: Used to suggest new connections to the user.
-"""
