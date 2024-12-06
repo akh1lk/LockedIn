@@ -70,7 +70,7 @@ class User(db.Model):
         self.major = kwargs.get("major")
         self.company = kwargs.get("company")
         self.job_title = kwargs.get("job_title")
-        self.project = kwargs.get("project")
+        self.experience = kwargs.get("experience")
         self.location = kwargs.get("location")
         self.cracked_rating = kwargs.get("cracked_rating", 0)
 
@@ -176,7 +176,7 @@ class User(db.Model):
         return {
             "id": self.id,
             "linkedin_username": self.linkedin_username,
-            "linkedin_url": f"https://www.linkedin.com/in/{self.linkedin_username}",
+            "linkedin_url": self.linkedin_url,
             "name": self.name,
             "goals": self.goals.split(","),
             "interests": self.interests.split(","),

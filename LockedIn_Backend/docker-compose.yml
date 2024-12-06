@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  pa5:
+  lockedin:
     image: akh1lk/lockedin:v1.0.1
     env_file: .env
     volumes: 
