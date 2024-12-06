@@ -12,6 +12,8 @@ app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_filename}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
+SERVER_IP=os.environ.get("SERVER_IP")
+
 # OAuth setup
 oauth = OAuth(app)
 
@@ -40,7 +42,7 @@ def failure_response(message, code=404):
 # Routes for LinkedIn authentication - We can have a button that does this"
 @app.route("/login")
 def login():
-    return linkedin.authorize_redirect(redirect_uri="http://34.85.161.67/auth")
+    return linkedin.authorize_redirect(redirect_uri=f"http://{SERVER_IP}/auth")
 
 @app.route("/auth")
 def auth():
