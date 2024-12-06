@@ -2,7 +2,7 @@ version: '3'
 
 services:
   lockedin:
-    image: akh1lk/lockedin:v1.0.4
+    image: akh1lk/lockedin:v1.0.6
     env_file: .env
     volumes: 
       - ak2682/home/lockedin.db:/usr/app/lockedin.db
