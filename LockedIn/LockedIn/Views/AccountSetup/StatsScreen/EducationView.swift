@@ -102,7 +102,7 @@ extension EducationView: SetupAccountSubview {
         let emptyField = fields.first(where: { $0.trimmingCharacters(in: .whitespaces).isEmpty })
         
         if let _ = emptyField, let papi = parent {
-            AlertManager.showEmptyFieldsAlert(on: papi) // TODO: change messages on alert manager.
+            AlertManager.showFillInFieldsAlert(on: papi)
             return false
         }
         return true

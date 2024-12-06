@@ -147,13 +147,13 @@ extension AboutInternshipView: SetupAccountSubview {
             if internshipFieldView.companyPickerView.getText().trimmingCharacters(in: .whitespaces).isEmpty ||
                 internshipFieldView.positionPickerView.getText().trimmingCharacters(in: .whitespaces).isEmpty ||
                 internshipFieldView.datePickerView.getText().trimmingCharacters(in: .whitespaces).isEmpty {
-                if let p = parent { AlertManager.showEmptyFieldsAlert(on: p) }
+                if let p = parent { AlertManager.showEmptyAboutMeInternshipFieldAlert(on: p) }
                 return false
             }
         }
         
         if aboutMeFieldView.aboutMeTextView.text ?? aboutMeFieldView.placeholder == aboutMeFieldView.placeholder {
-            if let p = parent { AlertManager.showEmptyFieldsAlert(on: p) }
+            if let p = parent { AlertManager.showEmptyAboutMeInternshipFieldAlert(on: p) }
             return false
         }
         

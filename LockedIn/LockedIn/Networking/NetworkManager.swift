@@ -17,21 +17,26 @@ class NetworkManager {
     private let baseUrl = "http://35.245.37.189"
     
     // MARK: - User Endpoints
-    func createUser(_ user: User, completion: @escaping (Result<User, AFError>) -> Void) {
-        let url = "\(baseUrl)/api/users/"
+    func loginLinkedIn(completion: @escaping (Result<String, AFError>) -> Void) {
+        let url = "\(baseUrl)/login"
+        AF.request(url, method: .get).responseString { response in
+            completion(response.result)
+        }
+    }
+    
+    func authenticateLinkedIn(redirectURI: String, completion: @escaping (Result<User, AFError>) -> Void) {
+        let url = "\(baseUrl)/auth"
+        let parameters: [String: Any] = ["redirect_uri": redirectURI]
+        AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default)
+            .responseDecodable(of: User.self) { response in
+                completion(response.result)
+            }
+    }
+    
+    func createOrUpdateUser(id: Int, user: User, completion: @escaping (Result<User, AFError>) -> Void) {
+        let url = "\(baseUrl)/api/users/\(id)/"
         AF.request(url, method: .post, parameters: user, encoder: JSONParameterEncoder.default)
             .responseDecodable(of: User.self) { response in
-                // Print the raw response for debugging
-                if let data = response.data {
-                    print("Response Data: \(String(data: data, encoding: .utf8) ?? "Invalid Data")")
-                }
-                
-                // Print any errors if present
-                if let error = response.error {
-                    print("Response Error: \(error.localizedDescription)")
-                }
-                
-                // Pass the response result to the completion handler
                 completion(response.result)
             }
     }
@@ -43,63 +48,63 @@ class NetworkManager {
         }
     }
     
-    func updateUser(id: Int, user: User, completion: @escaping (Result<User, AFError>) -> Void) {
-        let url = "\(baseUrl)/api/users/\(id)/"
-        AF.request(url, method: .post, parameters: user, encoder: JSONParameterEncoder.default)
-            .responseDecodable(of: User.self) { response in
+    func getAllUsers(completion: @escaping (Result<[User], AFError>) -> Void) {
+        let url = "\(baseUrl)/api/users/"
+        AF.request(url, method: .get).responseDecodable(of: [User].self) { response in
+            completion(response.result)
+        }
+    }
+    
+    // MARK: - Swipe Endpoints
+    func createSwipe(swiperId: Int, swipedId: Int, completion: @escaping (Result<Swipe, AFError>) -> Void) {
+        let url = "\(baseUrl)/api/swipes/"
+        let parameters: [String: Any] = ["swiper_id": swiperId, "swiped_id": swipedId]
+        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default)
+            .responseDecodable(of: Swipe.self) { response in
                 completion(response.result)
             }
+    }
+    
+    func getUserSwipes(userId: Int, completion: @escaping (Result<([Swipe], [Swipe]), AFError>) -> Void) {
+        let url = "\(baseUrl)/api/users/\(userId)/swipes/"
+        AF.request(url, method: .get).responseDecodable(of: UserSwipes.self) { response in
+            switch response.result {
+            case .success(let swipes):
+                completion(.success((swipes.swipesInitiated, swipes.swipesReceived)))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     // MARK: - Connection Endpoints
-    func createConnection(user1Id: Int, user2Id: Int, completion: @escaping (Result<Connection, AFError>) -> Void) {
-        let url = "\(baseUrl)/api/connections/"
-        let parameters: [String: Any] = ["user1_id": user1Id, "user2_id": user2Id]
-        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-            .responseDecodable(of: Connection.self) { response in
-                completion(response.result)
-            }
-    }
-    
     func getUserConnections(userId: Int, completion: @escaping (Result<[Connection], AFError>) -> Void) {
-        let url = "\(baseUrl)/api/connections/\(userId)/"
+        let url = "\(baseUrl)/api/users/\(userId)/connections/"
         AF.request(url, method: .get).responseDecodable(of: [Connection].self) { response in
             completion(response.result)
         }
     }
     
-    func deleteConnection(connectionId: Int, completion: @escaping (Result<Void, Error>) -> Void) {
-        let url = "\(baseUrl)/api/connections/\(connectionId)"
-        AF.request(url, method: .delete).response { response in
-            if let error = response.error {
-                completion(.failure(error))
-            } else {
-                completion(.success(()))
+    func checkConnection(user1Id: Int, user2Id: Int, completion: @escaping (Result<Bool, AFError>) -> Void) {
+        let url = "\(baseUrl)/api/connections/check/"
+        let parameters: [String: Any] = ["user1_id": user1Id, "user2_id": user2Id]
+        AF.request(url, method: .get, parameters: parameters, encoding: URLEncoding.default)
+            .responseDecodable(of: ConnectionCheck.self) { response in
+                completion(response.result.map { $0.connected })
             }
-        }
     }
     
-    // MARK: - Chat Endpoints
-    
-    func createChat(user1Id: Int, user2Id: Int, completion: @escaping (Result<Chat, AFError>) -> Void) {
-        let url = "\(baseUrl)/api/chats/"
-        let parameters: [String: Any] = ["user1_id": user1Id, "user2_id": user2Id]
-        AF.request(url, method: .post, parameters: parameters, encoding: JSONEncoding.default)
-            .responseDecodable(of: Chat.self) { response in
+    // MARK: - Messaging Endpoints
+    func sendMessage(connectionId: Int, message: MessageCodable, completion: @escaping (Result<MessageCodable, AFError>) -> Void) {
+        let url = "\(baseUrl)/api/connections/\(connectionId)/messages/"
+        AF.request(url, method: .post, parameters: message, encoder: JSONParameterEncoder.default)
+            .responseDecodable(of: MessageCodable.self) { response in
                 completion(response.result)
             }
     }
     
-    func getUserChats(userId: Int, completion: @escaping (Result<[Chat], AFError>) -> Void) {
-        let url = "\(baseUrl)/api/chats/\(userId)/"
-        AF.request(url, method: .get).responseDecodable(of: [Chat].self) { response in
-            completion(response.result)
-        }
-    }
-    
-    // MARK: - Message Endpoints
-    func getChatMessages(user1Id: Int, user2Id: Int, completion: @escaping (Result<[MessageCodable], AFError>) -> Void) {
-        let url = "\(baseUrl)/api/chats/messages/\(user1Id)/\(user2Id)/"
+    func getConnectionMessages(connectionId: Int, completion: @escaping (Result<[MessageCodable], AFError>) -> Void) {
+        let url = "\(baseUrl)/api/connections/\(connectionId)/messages/"
         AF.request(url, method: .get).responseDecodable(of: [MessageCodable].self) { response in
             completion(response.result)
         }

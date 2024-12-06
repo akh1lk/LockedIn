@@ -57,7 +57,7 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
-    let cardViews: [CompleteCardView] = []
+    let cardViews: [CompleteCardView] = TestingData.users
     var activeCardView: CompleteCardView?
     private var isAnimating: Bool = false
     

@@ -40,24 +40,30 @@ struct User: Codable {
     }
 }
 
-struct Connection: Codable {
+struct Swipe: Codable {
     let id: Int
-    let user1: User
-    let user2: User
-    let timestamp: String
+    let swiperId: Int
+    let swipedId: Int
 }
 
-struct Chat: Codable {
+struct Connection: Codable {
     let id: Int
-    let user1: User
-    let user2: User
-    let messages: [MessageCodable]
-    let timestamp: String
+    let user1Id: Int
+    let user2Id: Int
 }
 
 struct MessageCodable: Codable {
-    let id: Int
+    let id: Int?
+    let connectionId: Int
     let senderId: Int
     let content: String
-    let timestamp: String
+}
+
+struct UserSwipes: Codable {
+    let swipesInitiated: [Swipe]
+    let swipesReceived: [Swipe]
+}
+
+struct ConnectionCheck: Codable {
+    let connected: Bool
 }

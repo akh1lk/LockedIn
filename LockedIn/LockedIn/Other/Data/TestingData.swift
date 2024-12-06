@@ -30,6 +30,7 @@ struct TestingData {
             jobTitle: "Software Engineer",
             experience: "3 years in iOS Development",
             location: "New York, NY",
+            profilePic: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQwDQHT5oov3SMUPTN0rbWUc4t1BG5jyEpM3Q&s",
             crackedRating: "4.5"
         )),
         
