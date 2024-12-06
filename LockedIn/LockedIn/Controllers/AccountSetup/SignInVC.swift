@@ -174,20 +174,44 @@ class SignInVC: UIViewController {
     
     // MARK: - Selectors
     @objc func signInButtonTapped() {
-        // TODO: Handle Auth in with LinkedIn
-        
-        // Update datamanger to let SetupAccountVC access id data from response.
-        DataManager.shared.userId = 1
+        print("hello!!!")
 
-        // If they do not have an account yet  (with us, in the database):
-        let viewController = SetupAccountVC()
-        viewController.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(viewController, animated: true)
-        
-        // If they do have an account (with us, in the database):
-//        if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-//            sceneDelegate.resetRootViewController()
-//        }
+        let loginURL = "\(NetworkManager.shared.baseUrl)/login"
+
+        let webViewerController = WebViewerController(with: loginURL)
+        webViewerController.modalPresentationStyle = .pageSheet
+        webViewerController.onAuthCompletion = { [weak self] result in
+            switch result {
+            case .success(let data):
+                do {
+                    if let message = data["message"] as? String {
+                        if let userData = data["user"] as? [String: Any] {
+                            let jsonData = try JSONSerialization.data(withJSONObject: userData, options: [])
+                            let user = try JSONDecoder().decode(User.self, from: jsonData)
+                            print("Fetched User: \(user)")
+
+                            if message == "User authenticated & creating" {
+                                let viewController = SetupAccountVC()
+                                viewController.modalPresentationStyle = .fullScreen
+                                self?.navigationController?.pushViewController(viewController, animated: true)
+                                
+                            } else if message == "Logging In" {
+                                if let sceneDelegate = self?.view.window?.windowScene?.delegate as? SceneDelegate {
+                                    sceneDelegate.resetRootViewController()
+                                }
+                            } else {
+                                print("Invalid front end message.")
+                            }
+                        }
+                    }
+                } catch {
+                    print("Error decoding user: \(error.localizedDescription)")
+                }
+            case .failure(let error):
+                print("Auth failed: \(error.localizedDescription)")
+            }
+        }
+        self.present(webViewerController, animated: true, completion: nil)
     }
 }
 

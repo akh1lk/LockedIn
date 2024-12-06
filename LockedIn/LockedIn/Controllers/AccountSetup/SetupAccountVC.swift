@@ -174,19 +174,19 @@ class SetupAccountVC: UIViewController {
                 sceneDelegate.resetRootViewController()
             }
             
-            NetworkManager.shared.createUser(newUser) { result in
-                switch result {
-                case .success(let createdUser):
-                    print("User successfully created: \(createdUser)!")
-                    if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                        sceneDelegate.resetRootViewController()
-                    }
-                    
-                case .failure(let error):
-                    print("Failed to create user: \(error)")
-                    self.exitWithError(.creation)
-                }
-            }
+//            NetworkManager.shared.createUser(newUser) { result in
+//                switch result {
+//                case .success(let createdUser):
+//                    print("User successfully created: \(createdUser)!")
+//                    if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+//                        sceneDelegate.resetRootViewController()
+//                    }
+//                    
+//                case .failure(let error):
+//                    print("Failed to create user: \(error)")
+//                    self.exitWithError(.creation)
+//                }
+//            }
         }
         refreshProgressBar()
     }

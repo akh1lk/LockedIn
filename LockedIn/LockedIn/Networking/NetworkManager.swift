@@ -14,7 +14,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     private init() {}
     
-    private let baseUrl = "http://35.245.37.189"
+    public let baseUrl = "http://35.245.37.189"
     
     // MARK: - User Endpoints
     func loginLinkedIn(completion: @escaping (Result<String, AFError>) -> Void) {

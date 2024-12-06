@@ -12,6 +12,8 @@ class WebViewerController: UIViewController {
     
     private let webView = WKWebView()
     private let urlString: String
+    
+    var onAuthCompletion: ((Result<[String: Any], Error>) -> Void)?
 
     init(with urlString: String) {
         self.urlString = urlString
@@ -52,5 +54,37 @@ class WebViewerController: UIViewController {
     
     @objc private func didTapDone() {
         self.dismiss(animated: true, completion: nil)
+    }
+    
+    // MARK: - Network: Auth Link
+    // Capture redirects and check for the "/auth" endpoint
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        if let url = navigationAction.request.url, url.path == "/auth" {
+            handleAuthRedirect(url: url)
+            decisionHandler(.cancel)
+            return
+        }
+        decisionHandler(.allow)
+    }
+    
+    private func handleAuthRedirect(url: URL) {
+        // Parse the auth token or handle backend response
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            if let error = error {
+                self?.onAuthCompletion?(.failure(error))
+                return
+            }
+            
+            guard let data = data,
+                  let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                self?.onAuthCompletion?(.failure(NSError(domain: "AuthError", code: -1, userInfo: nil)))
+                return
+            }
+            
+            DispatchQueue.main.async {
+                self?.onAuthCompletion?(.success(json))
+                self?.dismiss(animated: true, completion: nil)
+            }
+        }.resume()
     }
 }
