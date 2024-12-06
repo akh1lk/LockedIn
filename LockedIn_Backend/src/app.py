@@ -46,7 +46,7 @@ def test():
 def login():
     return linkedin.authorize_redirect(redirect_uri=f"http://{SERVER_IP}/auth")
 
-@app.route("/auth", methods=["GET"])
+@app.route("/auth", methods=["POST"])
 def auth():
     try:
         token = linkedin.authorize_access_token()               
@@ -95,6 +95,7 @@ def create_update_user(user_id):
     Finishes Creating Or Updates User - Name Unchangable From LinkedIn
     """
     body = json.loads(request.data)
+    name = body.get("name") # idk if i should have for testing
     goals = body.get("goals") #CSV
     interests = body.get("interests") #CSV
     university = body.get("university")
@@ -390,4 +391,6 @@ def get_message(message_id):
 
 
 if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
     app.run(host="0.0.0.0", port=8000, debug=True)
