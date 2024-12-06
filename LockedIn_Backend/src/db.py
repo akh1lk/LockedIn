@@ -51,11 +51,11 @@ class User(db.Model):
     #Relationship (User to Asset - 1 to 1)
     profile_pic = db.relationship("Asset", uselist=False, back_populates="user")
     #Relationship to Swipes (1 to Many)
-    swipes_initiated = db.relationship("Swipe", foreign_keys=["swiper_id"], back_populates="swiper", cascade="all, delete",passive_deletes=True)
-    swipes_received = db.relationship("Swipe", foreign_keys=["swiped_id"], back_populates="swiper", cascade="all, delete",passive_deletes=True)
+    swipes_initiated = db.relationship("Swipe", foreign_keys="[Swipe.swiper_id]", back_populates="swiper", cascade="all, delete",passive_deletes=True)
+    swipes_received = db.relationship("Swipe", foreign_keys="[Swipe.swiped_id]", back_populates="swiper", cascade="all, delete",passive_deletes=True)
     #Relationships to Connections (Many to Many)
-    connections_user1 = db.relationship("Connection", foreign_keys=["user1_id"],back_populates="user1", cascade="all, delete", passive_deletes=True)
-    connections_user2 = db.relationship("Connection", foreign_keys=["user2_id"],back_populates="user2", cascade="all, delete", passive_deletes=True)
+    connections_user1 = db.relationship("Connection", foreign_keys="[Connection.user1_id]",back_populates="user1", cascade="all, delete", passive_deletes=True)
+    connections_user2 = db.relationship("Connection", foreign_keys="[Connection.user2_id]",back_populates="user2", cascade="all, delete", passive_deletes=True)
     #Relationship to Messages (One to Many)
     sent_messages = db.relationship("Message", back_populates="sender", cascade="all, delete-orphan")
     timestamp = db.Column(db.DateTime, nullable=False)
@@ -275,6 +275,8 @@ class Connection(db.Model):
     Many-To-Many w/ User
     """
 
+    __tablename__ = "connections"
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     user1_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     user2_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
@@ -287,8 +289,7 @@ class Connection(db.Model):
     user1 = db.relationship("User", foreign_keys=[user1_id], back_populates="connections_user1")
     user2 = db.relationship("User", foreign_keys=[user2_id], back_populates="connections_user2")
 
-    messages = db.relationship("Message", back_populates="connection", cascade="all, delete-orphan")
-
+    messages = db.relationship("Message", back_populates="connection", cascade="all, delete-orphan", primaryjoin="Message.connection_id == Connection.id")
     def __init__(self, **kwargs):
         self.user1_id = kwargs.get("user1_id")
         self.user2_id = kwargs.get("user2_id")
@@ -314,6 +315,7 @@ class Message(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     #Many to One
     connection_id = db.Column(db.Integer, db.ForeignKey('connections.id', ondelete="CASCADE"), nullable=False)
+ 
     #Many to One - dont delete messages of a user
     sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
@@ -475,3 +477,4 @@ class Asset(db.Model):
             "url": f"{self.base_url}/{self.salt}.{self.extension}",
             "created_at": str(self.created_at)
         }
+    
