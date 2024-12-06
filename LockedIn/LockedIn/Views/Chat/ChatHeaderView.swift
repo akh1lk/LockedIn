@@ -72,7 +72,7 @@ class ChatHeaderView: UIView {
         self.backgroundColor = .palette.offWhite
         self.profileImageView.image = sender.avatar
         self.nameLabel.text = sender.displayName
-        self.crackedTextLabel.text = "\(sender.crackedRating)% Cracked"
+        self.crackedTextLabel.text = "TODO% Cracked"
         
         self.setupUI()
     }

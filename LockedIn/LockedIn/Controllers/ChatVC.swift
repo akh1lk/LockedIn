@@ -17,10 +17,13 @@ class ChatVC: MessagesViewController {
     // MARK: - Data
     private var messages = TestingData.messages
     var selfSender: Sender
+    let connectionId: String
     
     // MARK: - Life Cycle
-    init(with sender: Sender) {
+    init(with sender: Sender, connectionId: String) {
         self.selfSender = sender
+        self.connectionId = connectionId
+        
         chatHeaderView = ChatHeaderView(sender: sender)
         super.init(nibName: nil, bundle: nil)
         
@@ -44,6 +47,31 @@ class ChatVC: MessagesViewController {
         
         setupUI()
         messagesCollectionView.reloadData()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        fetchAllMessages()
+//        setupMessagesListener()
+    }
+        
+    private func fetchAllMessages() {
+        FirestoreHandler.shared.returnAllMessages(for: connectionId) { [weak self] result in
+            switch result {
+            case .success(let messages):
+                // Sort messages by sentDate in ascending order
+                self?.messages = messages.sorted { $0.sentDate < $1.sentDate }
+                print(self?.messages)
+                DispatchQueue.main.async {
+                    self?.messagesCollectionView.reloadData()
+                    // Scroll to bottom:
+                    // self?.messagesCollectionView.scrollToBottom(animated: true)
+                    self?.messagesCollectionView.scrollToLastItem()
+                }
+            case .failure(let error):
+                print("Error fetching messages: \(error)")
+            }
+        }
     }
     
     // MARK: - UI Setup

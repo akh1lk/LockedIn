@@ -27,14 +27,14 @@ class ChatTableVC: UIViewController {
     // MARK: - Data
     private var chats: [Message] = [
         Message(
-            sender: Sender(avatar: UIImage(named: "ye"), senderId: "1", displayName: "Kanye West", crackedRating: 99),
+            sender: Sender(avatar: UIImage(named: "ye"), senderId: "1", displayName: "Kanye West"),
             messageId: "1",
             sentDate: Date(),
             kind: .text("hey mona lisa, come home you know you can't roam without caesar")
         ),
         
         Message(
-            sender: Sender(avatar: UIImage(named: "diddy"), senderId: "2", displayName: "Diddy", crackedRating: 69),
+            sender: Sender(avatar: UIImage(named: "diddy"), senderId: "2", displayName: "Diddy"),
             messageId: "1",
             sentDate: Date(),
             kind: .text("Where you at, tell me now.")
@@ -106,7 +106,7 @@ extension ChatTableVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let sender = chats[indexPath.row].sender as? Sender {
-            let viewController = ChatVC(with: sender)
+            let viewController = ChatVC(with: sender, connectionId: "connectionID")
             viewController.modalPresentationStyle = .fullScreen
             self.navigationController?.pushViewController(viewController, animated: true)
         } else {
