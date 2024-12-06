@@ -45,4 +45,14 @@ struct OptionsData {
         IconTextOption(icon: UIImage(systemName: "frying.pan.fill"), title: "Cooking"),
         IconTextOption(icon: UIImage(systemName: "figure.yoga"), title: "Yoga"),
     ]
+    
+    // Function to get career goal icon based on title string
+    static func getCareerGoalIcon(for title: String) -> UIImage? {
+        return careerGoalOptions.first(where: { $0.title == title })?.icon
+    }
+    
+    // Function to get interest icon based on title string
+    static func getInterestIcon(for title: String) -> UIImage? {
+        return interestsOptions.first(where: { $0.title == title })?.icon
+    }
 }

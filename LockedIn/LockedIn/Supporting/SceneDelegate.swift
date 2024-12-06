@@ -14,15 +14,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         
-        let user = User(id: 24, linkedinUrl: "noob", name: "Diddy", goals: "Sports,Child,Network,Like", interests: "Tennis,Volley,Coding", university: "Cornell", major: "Computer Science", company: "Amazon", jobTitle: "Worker", experience: "I like smell.", location: "Noob", crackedRating: "35")
-        
-        let signInVC = UserInfoVC(for: user) // TODO: change this to SignInVC
+        let signInVC = SignInVC() // TODO: change this to SignInVC
         let navigationController = UINavigationController(rootViewController: signInVC)
         
         let window = UIWindow(windowScene: windowScene)
         
         
-        window.rootViewController = navigationController //  // TODO: Change this to navigationController
+        window.rootViewController = TabController() //navigationController //  // TODO: Change this to navigationController
         self.window = window
         self.window?.makeKeyAndVisible()
     }

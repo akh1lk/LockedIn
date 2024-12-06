@@ -52,12 +52,12 @@ class IconTextView: UIView {
     }()
     
     // MARK: - Data
-    public var delegate: IconTextViewDelegate
+    public var delegate: IconTextViewDelegate?
     public let data: IconTextOption
     public var isSelected = false
     
     // MARK: - Life Cycle (Two Initializers)
-    init(icon: UIImage?, text: String, delegate: IconTextViewDelegate) {
+    init(icon: UIImage?, text: String, delegate: IconTextViewDelegate? = nil) {
         data = IconTextOption(icon: icon, title: text)
         self.delegate = delegate
         
@@ -133,7 +133,7 @@ class IconTextView: UIView {
     // MARK: - Selectors
     @objc private func buttonTapped() {
         // do not let anything happen if you cannot tap, except if the item is selected!
-        if !(delegate.canTap() || isSelected) { return }
+        if !(delegate?.canTap() ?? false || isSelected) { return }
         
         if !isSelected {
             self.backgroundView.backgroundColor = .palette.purple
@@ -145,7 +145,7 @@ class IconTextView: UIView {
             self.textLabel.textColor = .palette.offBlack
         }
         
-        delegate.didTap(self)
+        delegate?.didTap(self)
         self.isSelected.toggle()
     }
 }

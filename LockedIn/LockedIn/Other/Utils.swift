@@ -9,6 +9,23 @@ import UIKit
 
 class Utils {
     
+    static func defaultUser() -> User {
+        return User(
+            id: 0, // Default id value, assuming it's an Int.
+            linkedinUrl: "https://www.linkedin.com/in/default", // Default LinkedIn URL
+            name: "Default User", // Default name
+            goals: "", // Default value for goals (empty string if not available)
+            interests: "", // Default value for interests (empty string if not available)
+            university: "Default University", // Default university
+            major: "Undecided", // Default major
+            company: "Unknown", // Default company
+            jobTitle: "Unknown", // Default job title
+            experience: "", // Default experience (empty string if not available)
+            location: "Unknown", // Default location
+            crackedRating: "0" // Default Cracked Rating
+        )
+    }
+    
     static func createPurpleHeading(with text: String) -> UILabel {
         let label = UILabel()
         label.textColor = .palette.purple
@@ -22,6 +39,10 @@ class Utils {
         let view = UIView()
         view.backgroundColor = .palette.purple
         return view
+    }
+    
+    static func questionUrl(_ url: String?) -> URL? {
+        return URL(string: url ?? Utils.questionMark)
     }
     
     static let questionMark = "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"

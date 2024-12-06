@@ -42,7 +42,7 @@ class SwipeScreenVC: UIViewController {
     
     private let undoButton = InteractiveButton(imageName: "undo-icon", color: .palette.lightBlue, action: #selector(undoButtonTapped), cornerRadius: 25, borderWidth: 3)
     
-    private let moreInfoButton = InteractiveButton(imageName: "arrow-icon", color: .palette.lightPurple, action: #selector(undoButtonTapped), cornerRadius: 25, borderWidth: 3)
+    private let moreInfoButton = InteractiveButton(imageName: "arrow-icon", color: .palette.lightPurple, action: #selector(moreInfoButtonTapped), cornerRadius: 25, borderWidth: 3)
     
     // MARK: - Properties
     private let SWIPE_THRESHOLD: CGFloat = 180
@@ -218,6 +218,16 @@ class SwipeScreenVC: UIViewController {
 
     @objc func undoButtonTapped() {
         print("undo baby!")
+    }
+    
+    @objc func moreInfoButtonTapped() {
+        if let activeUser = activeCardView?.userData {
+            let popupController = UserInfoVC(for: activeUser)
+            popupController.modalPresentationStyle = .overFullScreen
+            self.present(popupController, animated: true, completion: nil)
+        } else {
+            print("error loading user")
+        }
     }
     
     // MARK: - Helper Methods

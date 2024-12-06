@@ -13,7 +13,8 @@ class UserInfoVC: UIViewController {
     // MARK: - UI Components
     private let scrollView: UIScrollView = {
         let sv = UIScrollView()
-        sv.backgroundColor = .palette.offWhite
+        sv.backgroundColor = .white
+        sv.showsVerticalScrollIndicator = false
         return sv
     }()
     
@@ -97,10 +98,13 @@ class UserInfoVC: UIViewController {
     let aboutMeHeading = Utils.createPurpleHeading(with: "About Me")
     let interestsHeading = Utils.createPurpleHeading(with: "Interests")
     let careerGoalsHeading = Utils.createPurpleHeading(with: "Career Goals")
-    let internshipHeading = Utils.createPurpleHeading(with: "Interned as")
+    let internshipHeading = Utils.createPurpleHeading(with: "Interned at")
     
-    private var interests: [IconTextView] = []
-    private var careerGoals: [IconTextView] = []
+    let interestsScrollView: IconTextScrollView
+    let careerGoalsScrollView: IconTextScrollView
+    
+    private var interests: [IconTextView]
+    private var careerGoals: [IconTextView]
     
     // MARK: - Data
     let data: User
@@ -109,49 +113,30 @@ class UserInfoVC: UIViewController {
     init(for data: User) {
         self.data = data
         
-        universityIconText = SimpleIconTextView(
-            icon: UIImage(systemName: "location.circle.fill"),
-            text: data.university, 
-            color: .palette.offBlack, fontSize: 17
-        )
+        self.interests = data.interests.split(separator: ",").map {
+            IconTextView(icon: OptionsData.getInterestIcon(for: String($0)), text: String($0))
+        }
+
+        self.careerGoals = data.goals.split(separator: ",").map {
+            IconTextView(icon: OptionsData.getCareerGoalIcon(for: String($0)), text: String($0))
+        }
         
-        yearIconText = SimpleIconTextView(
-            icon: UIImage(systemName: "clock.fill"), 
-            text: "Freshmen", 
-            color: .palette.offBlack, 
-            fontSize: 17
-        )
+        interestsScrollView = IconTextScrollView(with: interests)
+        careerGoalsScrollView = IconTextScrollView(with: careerGoals)
         
-        degreeIconText = SimpleIconTextView(
-            icon: UIImage(systemName: "graduationcap.fill"),
-            text: data.major,
-            color: .palette.offBlack,
-            fontSize: 17
-        )
+        universityIconText = SimpleIconTextView(icon: UIImage(systemName: "location.circle.fill"), text: data.university, color: .palette.offBlack, fontSize: 17 )
         
-        companyNameLabel.text = data.company
-        jobTitleLabel.text = "as a " + data.jobTitle
+        yearIconText = SimpleIconTextView(icon: UIImage(systemName: "clock.fill"), text: "Freshmen", color: .palette.offBlack, fontSize: 17)
+        
+        degreeIconText = SimpleIconTextView(icon: UIImage(systemName: "graduationcap.fill"), text: data.major, color: .palette.offBlack, fontSize: 17)
+        
         super.init(nibName: nil, bundle: nil)
         
-        for interest in data.interests.split(separator: ",") {
-            self.interests.append(
-                IconTextView(
-                    icon: UIImage(systemName: "person"),
-                    text: String(interest),
-                    delegate: self
-                )
-            )
-        }
-        
-        for goal in data.goals.split(separator: ",") {
-            self.interests.append(
-                IconTextView(
-                    icon: UIImage(systemName: "person"),
-                    text: String(goal),
-                    delegate: self
-                )
-            )
-        }
+        profileImage.sd_setImage(with: Utils.questionUrl(data.profilePic))
+        nameLabel.text = data.name
+        companyNameLabel.text = data.company
+        aboutMeTextView.text = data.experience
+        jobTitleLabel.text = "as a " + data.jobTitle
     }
     
     required init?(coder: NSCoder) {
@@ -160,8 +145,8 @@ class UserInfoVC: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = "About"
         self.navigationController?.navigationBar.backgroundColor = .palette.offWhite
+        self.navigationController?.title = "About"
         setupUI()
         
         if data.company == "" {
@@ -173,8 +158,6 @@ class UserInfoVC: UIViewController {
     
     // MARK: - UI Setup
     private func setupUI() {
-        self.view.backgroundColor = .white
-        
         self.view.addSubview(scrollView)
         scrollView.translatesAutoresizingMaskIntoConstraints = false
         
@@ -218,11 +201,17 @@ class UserInfoVC: UIViewController {
         self.view.addSubview(interestsHeading)
         interestsHeading.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(interestsScrollView)
+        interestsScrollView.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(careerGoalsHeading)
         careerGoalsHeading.translatesAutoresizingMaskIntoConstraints = false
         
+        self.view.addSubview(careerGoalsScrollView)
+        careerGoalsScrollView.translatesAutoresizingMaskIntoConstraints = false
+        
         NSLayoutConstraint.activate([
-            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor),
+            scrollView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 0),
             scrollView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
             scrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
@@ -234,7 +223,7 @@ class UserInfoVC: UIViewController {
             contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
             
             contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
-            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: 2),
+            contentView.heightAnchor.constraint(equalTo: scrollView.heightAnchor, multiplier: data.company == "" ? 1.3 : 1.5),
             
             profileImage.topAnchor.constraint(equalTo: contentView.topAnchor),
             profileImage.widthAnchor.constraint(equalTo: contentView.widthAnchor),
@@ -285,6 +274,19 @@ class UserInfoVC: UIViewController {
             thinBorder2.heightAnchor.constraint(equalToConstant: 1),
             
             interestsHeading.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            
+            interestsScrollView.topAnchor.constraint(equalTo: interestsHeading.bottomAnchor),
+            interestsScrollView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 10),
+            interestsScrollView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -10),
+            interestsScrollView.heightAnchor.constraint(equalToConstant: 45),
+            
+            careerGoalsHeading.topAnchor.constraint(equalTo: interestsScrollView.bottomAnchor, constant: 30),
+            careerGoalsHeading.leadingAnchor.constraint(equalTo: nameLabel.leadingAnchor),
+            
+            careerGoalsScrollView.topAnchor.constraint(equalTo: careerGoalsHeading.bottomAnchor, constant: 5),
+            careerGoalsScrollView.leadingAnchor.constraint(equalTo: interestsScrollView.leadingAnchor),
+            careerGoalsScrollView.trailingAnchor.constraint(equalTo: interestsScrollView.trailingAnchor),
+            careerGoalsScrollView.heightAnchor.constraint(equalTo: interestsScrollView.heightAnchor),
         ])
     }
     
@@ -330,7 +332,7 @@ class UserInfoVC: UIViewController {
     
     // MARK: - Selectors
     @objc func exitBtnClicked() {
-        print("sup")
+        self.dismiss(animated: true, completion: nil)
     }
 }
 
