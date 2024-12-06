@@ -54,7 +54,7 @@ class ChatVC: MessagesViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         fetchAllMessages()
-//        setupMessagesListener()
+        setupMessagesListener()
     }
     
     // MARK: - UI Setup
@@ -242,6 +242,14 @@ extension ChatVC: InputBarAccessoryViewDelegate {
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
         inputBar.inputTextView.text = ""
+        
+        FirestoreHandler.shared.sendMessage(for: connectionId, with: newMessage) { success in
+            if success {
+                self.fetchAllMessages()
+            } else {
+                print("Failed to send message.")
+            }
+        }
     }
 }
 

@@ -13,6 +13,14 @@ struct Message: MessageType {
     var messageId: String
     var sentDate: Date
     var kind: MessageKind
+    
+    /// Get text from message
+    func getText() -> String {
+        if case .text(let value) = self.kind {
+            return value
+        }
+        return ""
+    }
 }
 
 extension MessageKind {

@@ -41,4 +41,27 @@ class FirestoreHandler {
             completion(.success(messages))
         }
     }
+    
+    /// Sends a message to the firestore database. 
+    public func sendMessage(for connectionId: String, with message: Message, completion: @escaping (Bool) -> Void) {
+            let messageData: [String: Any] = [
+                "content": message.getText(),
+                "senderId": message.sender.senderId,
+                "timestamp": Timestamp(date: message.sentDate),
+            ]
+        
+        let storageRef = db
+            .collection("chats")
+            .document(connectionId)
+            .collection("messages")
+            
+            storageRef.addDocument(data: messageData) { error in
+                if let error = error {
+                    print("Error sending message: \(error)")
+                    completion(false)
+                } else {
+                    completion(true)
+                }
+            }
+        }
 }
