@@ -20,6 +20,8 @@
 		FF2F30232D01745E009CF246 /* CareerGoalsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30222D01745E009CF246 /* CareerGoalsVC.swift */; };
 		FF2F30252D018A48009CF246 /* ChatHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF2F30242D018A48009CF246 /* ChatHeaderView.swift */; };
 		FF425B172D02A79B005A85BE /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = FF425B162D02A79B005A85BE /* SDWebImage */; };
+		FF425B192D02AB63005A85BE /* UserInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF425B182D02AB63005A85BE /* UserInfoVC.swift */; };
+		FF425B1E2D02C6ED005A85BE /* IconTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF425B1D2D02C6ED005A85BE /* IconTextScrollView.swift */; };
 		FF59F1752CFF9CAA00BA48CB /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = FF59F1742CFF9CAA00BA48CB /* MessageKit */; };
 		FF59F1772CFF9D4500BA48CB /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF59F1762CFF9D4500BA48CB /* ChatVC.swift */; };
 		FF654E702CFD18D9000E111E /* InfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E6F2CFD18D9000E111E /* InfoCardView.swift */; };
@@ -82,6 +84,8 @@
 		FF2F30202D0162FE009CF246 /* HeadingPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeadingPickerView.swift; sourceTree = "<group>"; };
 		FF2F30222D01745E009CF246 /* CareerGoalsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CareerGoalsVC.swift; sourceTree = "<group>"; };
 		FF2F30242D018A48009CF246 /* ChatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHeaderView.swift; sourceTree = "<group>"; };
+		FF425B182D02AB63005A85BE /* UserInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoVC.swift; sourceTree = "<group>"; };
+		FF425B1D2D02C6ED005A85BE /* IconTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTextScrollView.swift; sourceTree = "<group>"; };
 		FF59F1762CFF9D4500BA48CB /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		FF654E6F2CFD18D9000E111E /* InfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCardView.swift; sourceTree = "<group>"; };
 		FF654E732CFD2A16000E111E /* InteractiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveButton.swift; sourceTree = "<group>"; };
@@ -172,6 +176,14 @@
 				FF2F30242D018A48009CF246 /* ChatHeaderView.swift */,
 			);
 			path = Chat;
+			sourceTree = "<group>";
+		};
+		FF425B1C2D02C6D4005A85BE /* UserInfo */ = {
+			isa = PBXGroup;
+			children = (
+				FF425B1D2D02C6ED005A85BE /* IconTextScrollView.swift */,
+			);
+			path = UserInfo;
 			sourceTree = "<group>";
 		};
 		FF795CF52CFC19DA008E2C5B /* SwipeScreen */ = {
@@ -296,6 +308,7 @@
 		FFF8DE1D2CFA5A8D00E5D2A7 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				FF425B182D02AB63005A85BE /* UserInfoVC.swift */,
 				FFF8DE202CFA5D2100E5D2A7 /* AccountSetup */,
 				FFF8DE0D2CFA5A5100E5D2A7 /* SwipeScreenVC.swift */,
 				FF795CF12CFC0A94008E2C5B /* LocationAccessVC.swift */,
@@ -311,6 +324,7 @@
 		FFF8DE1E2CFA5A9800E5D2A7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				FF425B1C2D02C6D4005A85BE /* UserInfo */,
 				FF795CE92CFBCD28008E2C5B /* TextField.swift */,
 				FFF8DE252CFA5EA800E5D2A7 /* AccountSetup */,
 				FF795CF52CFC19DA008E2C5B /* SwipeScreen */,
@@ -465,6 +479,7 @@
 				FFF8DE222CFA5D6800E5D2A7 /* SignInVC.swift in Sources */,
 				FF795CE82CFBC47F008E2C5B /* AboutMeFieldView.swift in Sources */,
 				FF795CF02CFBF92F008E2C5B /* SelectPhotoView.swift in Sources */,
+				FF425B192D02AB63005A85BE /* UserInfoVC.swift in Sources */,
 				FFA857772CFBA71B00ED5C9D /* InternshipFieldView.swift in Sources */,
 				FF2F30162D01012C009CF246 /* AboutMeInternshipVC.swift in Sources */,
 				FF2F300C2D00FF77009CF246 /* SettingsVC.swift in Sources */,
@@ -480,6 +495,7 @@
 				FFBF3BA12CFACC9C008FD882 /* Utils.swift in Sources */,
 				FFA857702CFB8F9D00ED5C9D /* EducationView.swift in Sources */,
 				FFF8DE272CFA5EDB00E5D2A7 /* MultiChoiceView.swift in Sources */,
+				FF425B1E2D02C6ED005A85BE /* IconTextScrollView.swift in Sources */,
 				FFA857742CFB9F3500ED5C9D /* PickerView.swift in Sources */,
 				FF59F1772CFF9D4500BA48CB /* ChatVC.swift in Sources */,
 				FF91DD592D024E5B00A51030 /* CodableObjects.swift in Sources */,

@@ -9,6 +9,21 @@ import UIKit
 
 class Utils {
     
+    static func createPurpleHeading(with text: String) -> UILabel {
+        let label = UILabel()
+        label.textColor = .palette.purple
+        label.textAlignment = .left
+        label.font = UIFont(name: "GaretW05-Bold", size: 20)
+        label.text = text
+        return label
+    }
+    
+    static func createThinBorder() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .palette.purple
+        return view
+    }
+    
     static let questionMark = "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
     
     /// Creates a done button
@@ -124,4 +139,6 @@ class Utils {
         
         return attributedString
     }
+    
+    
 }

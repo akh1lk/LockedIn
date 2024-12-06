@@ -29,8 +29,14 @@ class SimpleIconTextView: UIView {
     
     // MARK: - Initializer
     
-    init(icon: UIImage?, text: String) {
+    init(icon: UIImage?, text: String, color: UIColor = .white, fontSize: CGFloat = 15) {
         super.init(frame: .zero)
+        
+        iconImageView.tintColor = color
+        textLabel.textColor = color
+        
+        textLabel.font = UIFont(name: "GaretW05-Regular", size: fontSize)
+        
         iconImageView.image = icon
         textLabel.text = text
         setupUI()
@@ -59,7 +65,7 @@ class SimpleIconTextView: UIView {
             
             textLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8),
             textLabel.trailingAnchor.constraint(equalTo: trailingAnchor),
-            textLabel.centerYAnchor.constraint(equalTo: centerYAnchor)
+            textLabel.centerYAnchor.constraint(equalTo: centerYAnchor, constant: 1)
         ])
     }
 }

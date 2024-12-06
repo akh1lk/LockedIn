@@ -57,7 +57,7 @@ class IconTextView: UIView {
     public var isSelected = false
     
     // MARK: - Life Cycle (Two Initializers)
-    init(icon: UIImage, text: String, delegate: IconTextViewDelegate) {
+    init(icon: UIImage?, text: String, delegate: IconTextViewDelegate) {
         data = IconTextOption(icon: icon, title: text)
         self.delegate = delegate
         
