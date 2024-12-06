@@ -2,9 +2,9 @@ version: '3'
 
 services:
   lockedin:
-    image: akh1lk/lockedin:v1.0.1
+    image: akh1lk/lockedin:v1.0.4
     env_file: .env
     volumes: 
-      - 
+      - ak2682/home/lockedin.db:/usr/app/lockedin.db
     ports:
-      - "80:5000"
+      - "80:8000"
