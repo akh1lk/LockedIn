@@ -5,8 +5,7 @@ import os
 from dotenv import load_dotenv
 from db import db, User, Connection, Message, Swipe, Asset  # Import models from db.py
 
-
-load_dotenv(dotenv_path='.env')
+load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")  # Secret key for session management
@@ -22,10 +21,10 @@ oauth = OAuth(app)
 
 linkedin = oauth.register(
     name="linkedin",
-    client_id=os.environ.get("LINKEDIN_CLIENT_ID"),
-    client_secret=os.environ.get("LINKEDIN_CLIENT_SECRET"),
+    client_id="77w8k8tmep8y6p",
+    client_secret="WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ==",
     authorize_url="https://www.linkedin.com/oauth/v2/authorization",
-    authorize_params=None,
+    authorize_params={"state": "secure_random_string"},
     access_token_url="https://www.linkedin.com/oauth/v2/accessToken",
     refresh_token_url=None,
     api_base_url='https://api.linkedin.com/v2/',
@@ -41,7 +40,7 @@ def failure_response(message, code=404):
 
 @app.route("/", methods=["GET"])
 def test():
-    return success_response("Hello World!")
+    return success_response(os.environ.get("HELLO"))
 
 # Routes for LinkedIn authentication - We can have a button that does this
 
