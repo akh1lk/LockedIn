@@ -7,6 +7,7 @@
 
 import UIKit
 import WebKit
+import Alamofire
 
 /// The Sign In screen. The first screen the user is presented with.
 class SignInVC: UIViewController {
@@ -176,15 +177,41 @@ class SignInVC: UIViewController {
     @objc func signInButtonTapped() {
         // TODO: Handle log in with LinkedIn
         
-        // If they do not have an account yet  (with us, in the database)::
-        let viewController = SetupAccountVC()
-        viewController.modalPresentationStyle = .fullScreen
-        self.navigationController?.pushViewController(viewController, animated: true)
+        let simulatedUser = User(
+            id: 1,
+            linkedinUrl: "https://www.linkedin.com/in/gabriel-castillo-783261288/",
+            name: "Gabriel Castillo",
+            goals: "Networking",
+            interests: "Tennis",
+            university: "Harvard",
+            major: "Computer Science",
+            company: "Amazon",
+            jobTitle: "Software Engineer",
+            experience: "Hey, I'm Gabriel!",
+            location: "Low Rise 7",
+            crackedRating: "35"
+        )
         
-        // If they do have an account (with us, in the database):
-        if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-            sceneDelegate.resetRootViewController()
+        NetworkManager.shared.createUser(simulatedUser) { result in
+            switch result {
+            case .success(let createdUser):
+                print("User successfully created: \(createdUser)")
+                // Handle success (e.g., navigate to next screen)
+            case .failure(let error):
+                print("Failed to create user: \(error)")
+                // Handle failure (e.g., show an error message)
+            }
         }
+//
+//        // If they do not have an account yet  (with us, in the database)::
+//        let viewController = SetupAccountVC()
+//        viewController.modalPresentationStyle = .fullScreen
+//        self.navigationController?.pushViewController(viewController, animated: true)
+//        
+//        // If they do have an account (with us, in the database):
+//        if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+//            sceneDelegate.resetRootViewController()
+//        }
     }
 }
 

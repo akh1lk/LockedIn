@@ -14,7 +14,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     private init() {}
     
-    private let baseUrl = "http://0.0.0.0:8000"
+    private let baseUrl = "http://35.245.37.189"
     
     // MARK: - User Endpoints
     func createUser(_ user: User, completion: @escaping (Result<User, AFError>) -> Void) {
