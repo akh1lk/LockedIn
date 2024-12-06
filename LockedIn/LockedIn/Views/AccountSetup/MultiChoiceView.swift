@@ -54,7 +54,6 @@ class MultiChoiceView: UIView {
     
     
     // MARK: - UI Setup
-    
     func setupUI() {
         self.addSubview(heading)
         heading.translatesAutoresizingMaskIntoConstraints = false
@@ -65,7 +64,6 @@ class MultiChoiceView: UIView {
             heading.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             heading.topAnchor.constraint(equalTo: self.topAnchor)
         ])
-        
         
         // Semi-randomly formats options.
         var currentTopAnchor = heading.bottomAnchor
@@ -110,6 +108,9 @@ class MultiChoiceView: UIView {
             currentTopAnchor = containerView.bottomAnchor
         }
     }
+    
+    // MARK: - Functions
+    public func fetchSelectedChoices() -> String { return selectedOptions.map { $0.title }.joined(separator: ",") }
 }
 
 // MARK: - IconTextViewDelegate

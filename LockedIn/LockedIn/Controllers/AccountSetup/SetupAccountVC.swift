@@ -12,6 +12,11 @@ protocol SetupAccountSubview {
     var parent: SetupAccountVC? { get set }
 }
 
+enum SetupAccountErrors {
+    case auth
+    case creation
+}
+
 class SetupAccountVC: UIViewController {
 
     // MARK: - UI Components
@@ -114,24 +119,75 @@ class SetupAccountVC: UIViewController {
         self.progressBar.setProgress(Float(Float(self.currentStep) / Float(self.totalSteps)), animated: true)
     }
     
+    private func exitWithError(_ type: SetupAccountErrors) {
+        if let parentVC = self.navigationController?.viewControllers.last(where: { $0 is SignInVC }) {
+            switch type {
+            case .auth:
+                AlertManager.showAuthErrorAlert(on: parentVC)
+            case .creation:
+                AlertManager.showCreateUserAlert(on: parentVC)
+            }
+        }
+        
+        self.navigationController?.popViewController(animated: true)
+        
+        return
+    }
+    
     // MARK: - Selectors
     @objc func continueButtonTapped() {
         if !views[currentStep - 1].canContinue() { return }
-        
         if currentStep != totalSteps {
             views[currentStep - 1].isHidden = true
             currentStep += 1
             views[currentStep - 1].isHidden = false
             
         } else {
-            // TODO: Finish setting up account
+            // Networking: Creating a New User.
+            guard let userId = DataManager.shared.userId else {
+                self.exitWithError(.auth)
+                return
+            }
             
+            guard let careerGoalsView = views[0] as? MultiChoiceView, let interestsView = views[1] as? MultiChoiceView, let educationView = views[2] as? EducationView, let aboutInternshipView = views[3] as? AboutInternshipView 
+            else {
+                fatalError("You need to have Education view at index 2 and AboutInternshipView at index 3.")
+            }
+            
+            let newUser = User(
+                id: userId,
+                linkedinUrl: "", // Created on backend
+                name: "", // Created on backend
+                goals: careerGoalsView.fetchSelectedChoices(),
+                interests: interestsView.fetchSelectedChoices(),
+                university: educationView.fetchUniverisy(),
+                major: educationView.fetchDegree(),
+                company: aboutInternshipView.fetchCompany(),
+                jobTitle: aboutInternshipView.fetchJobTitle(),
+                experience: aboutInternshipView.fetchAboutMe(),
+                location: "Low Rise 6 & 7",
+                crackedRating: "" // Created on backend
+            )
+            
+            // TODO: Remove this:
             if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.resetRootViewController()
             }
-
+            
+            NetworkManager.shared.createUser(newUser) { result in
+                switch result {
+                case .success(let createdUser):
+                    print("User successfully created: \(createdUser)!")
+                    if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                        sceneDelegate.resetRootViewController()
+                    }
+                    
+                case .failure(let error):
+                    print("Failed to create user: \(error)")
+                    self.exitWithError(.creation)
+                }
+            }
         }
-        
         refreshProgressBar()
     }
     
@@ -142,7 +198,7 @@ class SetupAccountVC: UIViewController {
             views[currentStep - 1].isHidden = false
             
         } else {
-            // TODO: Cancel account setup
+            // Cancel account setup
             self.navigationController?.popViewController(animated: true)
         }
         

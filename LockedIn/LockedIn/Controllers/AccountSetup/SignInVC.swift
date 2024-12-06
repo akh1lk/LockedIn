@@ -169,41 +169,17 @@ class SignInVC: UIViewController {
             termsTextView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -50),
             termsTextView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             termsTextView.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.7),
-            
         ])
     }
     
     // MARK: - Selectors
     @objc func signInButtonTapped() {
-        // TODO: Handle log in with LinkedIn
-//        
-//        let simulatedUser = User(
-//            id: 1,
-//            linkedinUrl: "https://www.linkedin.com/in/gabriel-castillo-783261288/",
-//            name: "Gabriel Castillo",
-//            goals: "Networking",
-//            interests: "Tennis",
-//            university: "Harvard",
-//            major: "Computer Science",
-//            company: "Amazon",
-//            jobTitle: "Software Engineer",
-//            experience: "Hey, I'm Gabriel!",
-//            location: "Low Rise 7",
-//            crackedRating: "35"
-//        )
-//        
-//        NetworkManager.shared.createUser(simulatedUser) { result in
-//            switch result {
-//            case .success(let createdUser):
-//                print("User successfully created: \(createdUser)")
-//                // Handle success (e.g., navigate to next screen)
-//            case .failure(let error):
-//                print("Failed to create user: \(error)")
-//                // Handle failure (e.g., show an error message)
-//            }
-//        }
-//
-        // If they do not have an account yet  (with us, in the database)::
+        // TODO: Handle Auth in with LinkedIn
+        
+        // Update datamanger to let SetupAccountVC access id data from response.
+        DataManager.shared.userId = 1
+
+        // If they do not have an account yet  (with us, in the database):
         let viewController = SetupAccountVC()
         viewController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(viewController, animated: true)

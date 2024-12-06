@@ -84,6 +84,11 @@ class EducationView: UIView {
             yearPickerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
         ])
     }
+    
+    // MARK: - Functions
+    public func fetchUniverisy() -> String { return universityPickerView.getSelectedValue() }
+    public func fetchDegree() -> String { return degreePickerView.getSelectedValue() }
+    public func fetchYear() -> String { return yearPickerView.getSelectedValue() }
 }
 
 extension EducationView: SetupAccountSubview {
@@ -94,7 +99,7 @@ extension EducationView: SetupAccountSubview {
             yearPickerView.getSelectedValue()
         ]
         
-        let emptyField = fields.first(where: { $0?.trimmingCharacters(in: .whitespaces).isEmpty ?? true })
+        let emptyField = fields.first(where: { $0.trimmingCharacters(in: .whitespaces).isEmpty })
         
         if let _ = emptyField, let papi = parent {
             AlertManager.showEmptyFieldsAlert(on: papi) // TODO: change messages on alert manager.

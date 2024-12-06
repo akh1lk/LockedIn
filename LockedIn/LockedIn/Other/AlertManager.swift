@@ -27,6 +27,14 @@ extension AlertManager {
     public static func showEmptyFieldsAlert(on vc: UIViewController) {
         showAlert(on: vc, title: "Fill in All Fields", message: "Please fill in the 'About Me' field or the 'Internship' fields (if applicable).")
     }
+    
+    public static func showAuthErrorAlert(on vc: UIViewController) {
+        showAlert(on: vc, title: "Authentication Error", message: "LinkedIn authentication failed. Please try again.")
+    }
+    
+    public static func showCreateUserAlert(on vc: UIViewController) {
+        showAlert(on: vc, title: "Failure to Create User", message: "Failed to create a new user. Please try again.")
+    }
 }
 
 

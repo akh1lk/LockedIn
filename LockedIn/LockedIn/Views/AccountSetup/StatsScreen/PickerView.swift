@@ -98,9 +98,9 @@ class PickerView: UIView {
         pickerTextField.resignFirstResponder()
     }
     
-    /// Returns the current text stored in the picker view.
-    public func getText() -> String? {
-        return pickerTextField.text
+    /// Returns the current text stored in the picker view or an empty string if there is none..
+    public func getText() -> String {
+        return pickerTextField.text ?? ""
     }
 }
 

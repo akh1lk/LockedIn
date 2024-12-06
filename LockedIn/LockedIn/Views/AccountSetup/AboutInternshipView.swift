@@ -129,20 +129,9 @@ class AboutInternshipView: UIView {
     }
     
     // MARK: - Methods
-//    public func fetchData() -> (Internship?, String) {
-//        
-//        var internshipData: Internship? = nil
-//        
-//        if !internshipFieldView.isHidden {
-//            internshipData = Internship(
-//                company: internshipFieldView.companyPickerView.getText() ?? "",
-//                position: internshipFieldView.positionPickerView.getText() ?? "",
-//                date: internshipFieldView.datePickerView.getText() ?? ""
-//            )
-//        }
-//        
-//        return (internshipData, aboutMeFieldView.aboutMeTextView.text ?? "")
-//    }
+    public func fetchAboutMe() -> String { return aboutMeFieldView.aboutMeTextView.text }
+    public func fetchCompany() -> String { return internshipFieldView.companyPickerView.getText() }
+    public func fetchJobTitle() -> String { return internshipFieldView.positionPickerView.getText() }
 }
 
 // MARK: - Setup Account Subview
@@ -155,9 +144,9 @@ extension AboutInternshipView: SetupAccountSubview {
         }
         
         if !internshipFieldView.isHidden { // if internship fields are shown, all must be filled in.
-            if internshipFieldView.companyPickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
-                internshipFieldView.positionPickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true ||
-                internshipFieldView.datePickerView.getText()?.trimmingCharacters(in: .whitespaces).isEmpty ?? true {
+            if internshipFieldView.companyPickerView.getText().trimmingCharacters(in: .whitespaces).isEmpty ||
+                internshipFieldView.positionPickerView.getText().trimmingCharacters(in: .whitespaces).isEmpty ||
+                internshipFieldView.datePickerView.getText().trimmingCharacters(in: .whitespaces).isEmpty {
                 if let p = parent { AlertManager.showEmptyFieldsAlert(on: p) }
                 return false
             }

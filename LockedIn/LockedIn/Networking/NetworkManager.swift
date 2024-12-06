@@ -21,6 +21,17 @@ class NetworkManager {
         let url = "\(baseUrl)/api/users/"
         AF.request(url, method: .post, parameters: user, encoder: JSONParameterEncoder.default)
             .responseDecodable(of: User.self) { response in
+                // Print the raw response for debugging
+                if let data = response.data {
+                    print("Response Data: \(String(data: data, encoding: .utf8) ?? "Invalid Data")")
+                }
+                
+                // Print any errors if present
+                if let error = response.error {
+                    print("Response Error: \(error.localizedDescription)")
+                }
+                
+                // Pass the response result to the completion handler
                 completion(response.result)
             }
     }

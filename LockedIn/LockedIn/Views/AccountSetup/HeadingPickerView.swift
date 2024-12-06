@@ -61,7 +61,7 @@ class HeadingPickerView: UIView {
     }
     
     // MARK: - Public Methods
-    func getSelectedValue() -> String? {
+    func getSelectedValue() -> String {
         pickerView.getText()
     }
 }

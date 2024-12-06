@@ -22,6 +22,7 @@
 		FF425B172D02A79B005A85BE /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = FF425B162D02A79B005A85BE /* SDWebImage */; };
 		FF425B192D02AB63005A85BE /* UserInfoVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF425B182D02AB63005A85BE /* UserInfoVC.swift */; };
 		FF425B1E2D02C6ED005A85BE /* IconTextScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF425B1D2D02C6ED005A85BE /* IconTextScrollView.swift */; };
+		FF425B202D02F232005A85BE /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF425B1F2D02F232005A85BE /* DataManager.swift */; };
 		FF59F1752CFF9CAA00BA48CB /* MessageKit in Frameworks */ = {isa = PBXBuildFile; productRef = FF59F1742CFF9CAA00BA48CB /* MessageKit */; };
 		FF59F1772CFF9D4500BA48CB /* ChatVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF59F1762CFF9D4500BA48CB /* ChatVC.swift */; };
 		FF654E702CFD18D9000E111E /* InfoCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FF654E6F2CFD18D9000E111E /* InfoCardView.swift */; };
@@ -86,6 +87,7 @@
 		FF2F30242D018A48009CF246 /* ChatHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatHeaderView.swift; sourceTree = "<group>"; };
 		FF425B182D02AB63005A85BE /* UserInfoVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoVC.swift; sourceTree = "<group>"; };
 		FF425B1D2D02C6ED005A85BE /* IconTextScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconTextScrollView.swift; sourceTree = "<group>"; };
+		FF425B1F2D02F232005A85BE /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 		FF59F1762CFF9D4500BA48CB /* ChatVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatVC.swift; sourceTree = "<group>"; };
 		FF654E6F2CFD18D9000E111E /* InfoCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCardView.swift; sourceTree = "<group>"; };
 		FF654E732CFD2A16000E111E /* InteractiveButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InteractiveButton.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 			children = (
 				FF91DD502D02496A00A51030 /* NetworkManager.swift */,
 				FF91DD5A2D024EFF00A51030 /* AuthManager.swift */,
+				FF425B1F2D02F232005A85BE /* DataManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -477,6 +480,7 @@
 				FFBF3BA32CFAD2D7008FD882 /* WebViewerController.swift in Sources */,
 				FFD04E8F2CFEBC4200E199A1 /* IconTextOption.swift in Sources */,
 				FFF8DE222CFA5D6800E5D2A7 /* SignInVC.swift in Sources */,
+				FF425B202D02F232005A85BE /* DataManager.swift in Sources */,
 				FF795CE82CFBC47F008E2C5B /* AboutMeFieldView.swift in Sources */,
 				FF795CF02CFBF92F008E2C5B /* SelectPhotoView.swift in Sources */,
 				FF425B192D02AB63005A85BE /* UserInfoVC.swift in Sources */,
