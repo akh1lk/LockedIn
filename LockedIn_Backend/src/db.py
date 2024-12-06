@@ -9,11 +9,10 @@ from io import BytesIO #I/O streams
 from mimetypes import guess_extension, guess_type #guess file type from base64 string
 import os
 from PIL import Image # how we represent images
-import random #create random name for image
 import re # regular expresssions
 import string # perform string manipulation in Python
 import cracked_weights
-from Cryptography import Fernet
+from cryptography.fernet import Fernet
 
 # SQLAlchemy and message encryption implementation
 db = SQLAlchemy()
@@ -24,9 +23,9 @@ EXTENSIONS = ["png", "gif", "jpg", "jpeg"]
 #base directory
 BASE_DIR = os.getcwd()
 
-S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME") #"locked-in" 
-ACCESS_KEY = os.environ.get("ACCESS_KEY") #"AKIAWNHTHOO25VJ6URCX"
-SECRET_ACCESS_KEY = os.environ.get("SECRET_ACCESS_KEY") #"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"
+S3_BUCKET_NAME = os.environ.get("AWS_S3_BUCKET_NAME") #"locked-in" 
+ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY") #"AKIAWNHTHOO25VJ6URCX"
+SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY") #"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"
 S3_BASE_URL = f"https://{S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com"
 
 class User(db.Model):
@@ -37,19 +36,20 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    linkedin_username = db.Column(db.String, unique=True, nullable=False)
+    linkedin_sub = db.Column(db.String, unique=True, nullable=False)
+    linkedin_url = db.Column(db.String, unique=False, nullable=True)
     name = db.Column(db.String, nullable=False)
-    goals = db.Column(db.String, nullable=False)  # Comma-separated values
-    interests = db.Column(db.String, nullable=False)  # Comma-separated values
+    goals = db.Column(db.String, nullable=True)  # Comma-separated values
+    interests = db.Column(db.String, nullable=True)  # Comma-separated values
     university = db.Column(db.String, nullable=True)  # College/major input
     major = db.Column(db.String, nullable=True)
     company = db.Column(db.String, nullable=True)  # Job title/company input
     job_title = db.Column(db.String, nullable=True)
     project = db.Column(db.String(150), nullable=True)
-    location = db.Column(db.String, nullable=False)
+    location = db.Column(db.String, nullable=True)
     cracked_rating = db.Column(db.Float, default=0)
     profile_pic = db.relationship("Asset", cascade="delete", uselist=False, backref="user")
-    chat = db.Relationship("Chat", cascade="delete")
+    chat = db.relationship("Chat", cascade="all, delete")
 
     connections = db.relationship(
         "Connection", 
@@ -61,8 +61,9 @@ class User(db.Model):
         """
         Initialize User object
         """
-        self.linkedin_username = kwargs.get("linkedin_username")
+        self.linkedin_sub = kwargs.get("linkedin_sub")
         self.name = kwargs.get("name")
+        self.linkedin_url = f"https://www.linkedin.com/search/results/all/?keywords={self.name.strip().replace(' ', '%20')}&origin=GLOBAL_SEARCH_HEADER&sid=1v1",
         self.goals = kwargs.get("goals")
         self.interests = kwargs.get("interests")
         self.university = kwargs.get("university")
@@ -356,6 +357,7 @@ class Chat(db.Model):
 class Asset(db.Model):
     """
     Asset Model - based off of AppDev Backend's Image Demo
+    1-to-1 w/ User
     """
     __tablename__ = "assets"
 
