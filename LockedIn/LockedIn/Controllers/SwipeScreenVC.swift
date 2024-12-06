@@ -57,7 +57,7 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
-    let cardViews: [CompleteCardView] = TestingData.users
+    let cardViews: [CompleteCardView] = []
     var activeCardView: CompleteCardView?
     private var isAnimating: Bool = false
     
@@ -109,10 +109,10 @@ class SwipeScreenVC: UIViewController {
         }
         
         NSLayoutConstraint.activate([
-            cardDepthImage.topAnchor.constraint(equalTo: cardViews[0].bottomAnchor, constant: -88),
+            cardDepthImage.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor, constant: -263),
             cardDepthImage.heightAnchor.constraint(equalToConstant: 120),
-            cardDepthImage.leadingAnchor.constraint(equalTo:  cardViews[0].leadingAnchor, constant: 5),
-            cardDepthImage.trailingAnchor.constraint(equalTo:  cardViews[0].trailingAnchor, constant: -5),
+            cardDepthImage.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 15),
+            cardDepthImage.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -15),
             
             logoImageView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor, constant: 10),
             logoImageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
