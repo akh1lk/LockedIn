@@ -11,6 +11,8 @@ import MessageKit
 
 class Utils {
     
+    // MARK: - Default User
+    /// Returns a default `User` object with pre-filled values.
     static func defaultUser() -> User {
         return User(
             id: 0, // Default id value, assuming it's an Int.
@@ -28,6 +30,8 @@ class Utils {
         )
     }
     
+    // MARK: - UI Elements
+    /// Creates a purple heading label with a specified text.
     static func createPurpleHeading(with text: String) -> UILabel {
         let label = UILabel()
         label.textColor = .palette.purple
@@ -37,19 +41,34 @@ class Utils {
         return label
     }
     
+    /// Creates a thin border view.
     static func createThinBorder() -> UIView {
         let view = UIView()
         view.backgroundColor = .palette.purple
         return view
     }
     
-    static func questionUrl(_ url: String?) -> URL? {
-        return URL(string: url ?? Utils.questionMark)
+    /// Creates a thin view for the complete swipe screen view.
+    static func createThinView() -> UIView {
+        let view = UIView()
+        view.backgroundColor = .palette.gray
+        view.layer.cornerRadius = 5
+        view.clipsToBounds = true
+        return view
     }
     
-    static let questionMark = "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
+    /// Generates a label for text fields in account setup screen.
+    static func generateFieldLabel(for text: String) -> UILabel {
+        let label = UILabel()
+        label.textColor = .palette.offBlack
+        label.textAlignment = .left
+        label.font = UIFont(name: "GaretW05-Regular", size: 18)
+        label.text = text
+        return label
+    }
     
-    /// Creates a done button
+    // MARK: - Custom Buttons
+    /// Creates a custom "Done" button for the navigation bar.
     static func customDoneButton(for navigationItem: UINavigationItem, target: Any, action: Selector) {
         let doneButton = UIBarButtonItem(
             title: "Done",
@@ -65,16 +84,7 @@ class Utils {
         navigationItem.rightBarButtonItem = doneButton
     }
     
-    /// Shows a web view controller
-    static func showWebViewController(on vc: UIViewController, with urlString: String) {
-        let webView = WebViewerController(with: urlString)
-        let nav = UINavigationController(rootViewController: webView)
-        vc.present(nav, animated: true, completion: nil)
-    }
-    
-    /// WebView Controller with completion:
-    
-    /// Creates a custom back button
+    /// Creates a custom back button for the navigation bar.
     static func customBackButton(for navigationItem: UINavigationItem, target: Any, action: Selector) {
         let backButton = UIBarButtonItem(
             image: UIImage(systemName: "chevron.left"),
@@ -86,9 +96,20 @@ class Utils {
         navigationItem.leftBarButtonItem = backButton
     }
     
+    // MARK: - Web View
+    
+    /// Shows a web view controller with a given URL string.
+    static func showWebViewController(on vc: UIViewController, with urlString: String) {
+        let webView = WebViewerController(with: urlString)
+        let nav = UINavigationController(rootViewController: webView)
+        vc.present(nav, animated: true, completion: nil)
+    }
+    
+    // MARK: - Gradient Utilities
+    
     /// Adds a gradient to a given UIView.
-    /// > Warning: Must be called within the ``override func viewDidLayoutSubviews()`` method to work.
-    static func addGradient(to view: UIView){
+    /// - Warning: Must be called within the `viewDidLayoutSubviews` method to work.
+    static func addGradient(to view: UIView) {
         let gradientLayer = CAGradientLayer()
         gradientLayer.colors = [UIColor.palette.blue.cgColor, UIColor.palette.pink.cgColor]
         gradientLayer.startPoint = CGPoint(x: 0, y: 0.5)
@@ -97,7 +118,6 @@ class Utils {
         gradientLayer.cornerRadius = view.layer.cornerRadius
         view.layer.insertSublayer(gradientLayer, at: 0)
     }
-    
     
     /// Adds a gradient border to a given UILabel.
     /// The border is created using the same colors as the `addGradient` function.
@@ -119,7 +139,9 @@ class Utils {
         label.layer.addSublayer(gradientLayer)
     }
     
-    /// Creates a placeholder NSAttributedString that is more opaque than regular text.
+    // MARK: - Attributed Strings
+    
+    /// Creates a placeholder `NSAttributedString` that is more opaque than regular text.
     static func createPlaceholder(for text: String) -> NSAttributedString {
         return NSAttributedString(
             string: text,
@@ -129,27 +151,7 @@ class Utils {
         )
     }
     
-    /// Used to generate labels for text fields in account setup screen.
-    static func generateFieldLabel(for text: String) -> UILabel {
-        let label = UILabel()
-        label.textColor = .palette.offBlack
-        label.textAlignment = .left
-        label.font = UIFont(name: "GaretW05-Regular", size: 18)
-        label.text = text
-        return label
-    }
-    
-    
-    /// Used to generate a thin view for the compelte swipe screen view.
-    static func createThinView() -> UIView {
-        let view = UIView()
-        view.backgroundColor = .palette.gray
-        view.layer.cornerRadius = 5
-        view.clipsToBounds = true
-        return view
-    }
-    
-    /// Create a bold attributed text for the cracked label
+    /// Creates a bold attributed string for the cracked label with percentage.
     static func createBoldPercentageAttributedString(percentage: String, crackedText: String = "Cracked") -> NSAttributedString {
         let fullText = "\(percentage)%\n\(crackedText)"
         let attributedString = NSMutableAttributedString(string: fullText)
@@ -166,16 +168,24 @@ class Utils {
 
 // MARK: - Networking
 extension Utils {
-    static func createMessage(from data: [String: Any]) -> Message? {
-            guard let content = data["content"] as? String,
-                  let senderId = data["senderId"] as? String,
-                  let timeStamp = (data["timestamp"] as? Timestamp)?.dateValue() else {
-                      print("Failed to get required fields from Firebase database.")
-                      return nil
-                  }
+    /// Returns a URL for a question mark image, or a default URL if the input is nil.
+    static func questionUrl(_ url: String?) -> URL? {
+        return URL(string: url ?? Utils.questionMark)
+    }
 
-            let finalKind: MessageKind = .text(content)
-            let sender = Sender(senderId: senderId, displayName: "")
-            return Message(sender: sender, messageId: UUID().uuidString, sentDate: timeStamp, kind: finalKind)
-        }
+    static let questionMark = "https://upload.wikimedia.org/wikipedia/commons/5/5a/Black_question_mark.png"
+    
+    /// Creates a `Message` object from a dictionary of data.
+    static func createMessage(from data: [String: Any]) -> Message? {
+        guard let content = data["content"] as? String,
+              let senderId = data["senderId"] as? String,
+              let timeStamp = (data["timestamp"] as? Timestamp)?.dateValue() else {
+                  print("Failed to get required fields from Firebase database.")
+                  return nil
+              }
+
+        let finalKind: MessageKind = .text(content)
+        let sender = Sender(senderId: senderId, displayName: "")
+        return Message(sender: sender, messageId: UUID().uuidString, sentDate: timeStamp, kind: finalKind)
+    }
 }

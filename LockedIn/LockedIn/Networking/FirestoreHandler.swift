@@ -10,9 +10,8 @@ import MessageKit
 import FirebaseFirestore
 import FirebaseCore
 
-
+/// Handles everything to do with Firebase.
 class FirestoreHandler {
-    // Handles everything to do with Firebase.
     
     // Used to register, sign in, sign out, and check authentication for the user.
     let constantToNeverTouch: Void = FirebaseApp.configure()
@@ -42,7 +41,7 @@ class FirestoreHandler {
         }
     }
     
-    /// Sends a message to the firestore database. 
+    /// Sends a message to the firestore database.
     public func sendMessage(for connectionId: String, with message: Message, completion: @escaping (Bool) -> Void) {
             let messageData: [String: Any] = [
                 "content": message.getText(),
