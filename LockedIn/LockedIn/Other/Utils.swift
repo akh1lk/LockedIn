@@ -27,7 +27,7 @@ class Utils {
             jobTitle: "Unknown", // Default job title
             experience: "", // Default experience (empty string if not available)
             location: "Unknown", // Default location
-            crackedRating: "0" // Default Cracked Rating
+            crackedRating: 0 // Default Cracked Rating
         )
     }
     
@@ -153,7 +153,7 @@ class Utils {
     }
     
     /// Creates a bold attributed string for the cracked label with percentage.
-    static func createBoldPercentageAttributedString(percentage: String, crackedText: String = "Cracked") -> NSAttributedString {
+    static func createBoldPercentageAttributedString(percentage: Float, crackedText: String = "Cracked") -> NSAttributedString {
         let fullText = "\(percentage)%\n\(crackedText)"
         let attributedString = NSMutableAttributedString(string: fullText)
         

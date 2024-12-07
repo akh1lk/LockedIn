@@ -19,14 +19,21 @@ class NetworkManager {
     // MARK: - User Endpoints
     func checkUser(firebaseId: String, completion: @escaping (Bool) -> Void) {
         let url = "\(baseUrl)/api/users/\(firebaseId)"
+        
         AF.request(url, method: .get).response { response in
-            if response.error == nil, let data = response.data {
-                // Check if the response contains the user
-                if let responseObject = try? JSONDecoder().decode([String: String].self, from: data),
-                   responseObject["message"] == "User exists" {
-                    completion(true)
-                } else {
-                    completion(false)
+            if let error = response.error {
+                completion(false)
+                return
+            }
+            
+            if let data = response.data {
+                if let rawResponse = String(data: data, encoding: .utf8) {
+                    
+                    if rawResponse == "{\"error\": \"User not found\"}" {
+                        completion(false)
+                    } else {
+                        completion(true)
+                    }
                 }
             } else {
                 completion(false)

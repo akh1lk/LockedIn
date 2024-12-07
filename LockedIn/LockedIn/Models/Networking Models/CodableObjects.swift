@@ -23,7 +23,7 @@ struct User: Codable {
     var experience: String
     var location: String
     var profilePic: String?
-    var crackedRating: String
+    var crackedRating: Float
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -92,4 +92,10 @@ struct ConnectionWithDetails: Codable {
         case otherUser = "other_user"
         case latestMessage = "latest_message"
     }
+}
+
+
+struct UserCheckResponse: Codable {
+    let message: String
+    let user: User?
 }
