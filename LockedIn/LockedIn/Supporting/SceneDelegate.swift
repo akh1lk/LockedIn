@@ -40,16 +40,14 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
            self.window?.rootViewController = navigationController
            
            if let currentUser = Auth.auth().currentUser {
-               var isExisting = false
-               
                NetworkManager.shared.checkUser(firebaseId: currentUser.uid) { exists in
-                   isExisting = exists
-               }
-               
-               if isExisting {
-                   self.resetRootViewController()
-               } else {
-                   signInVC.navigationController?.pushViewController(SetupAccountVC(), animated: false)
+                   if exists {
+                       print("user exists!")
+                       self.resetRootViewController()
+                   } else {
+                       print("user does not exist")
+                       signInVC.navigationController?.pushViewController(SetupAccountVC(), animated: false)
+                   }
                }
            }
        }

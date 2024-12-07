@@ -43,6 +43,21 @@ class SetupAccountVC: UIViewController {
         return progressBar
     }()
     
+    private lazy var backButton: UIButton = {
+        let button = UIButton()
+        button.tintColor = .palette.offBlack
+        button.setImage(UIImage(systemName: "chevron.left"), for: .normal)
+        button.layer.cornerRadius = 10
+        button.backgroundColor = .clear
+        
+        button.imageView?.contentMode = .scaleAspectFit
+        button.contentVerticalAlignment = .fill
+        button.contentHorizontalAlignment = .fill
+        button.addTarget(self, action: #selector(backBtnTapped), for: .touchUpInside)
+//        button.backgroundColor = .blue
+        return button
+    }()
+    
     
     // MARK: - Data
     private let views: [UIView & SetupAccountSubview] = [
@@ -75,6 +90,9 @@ class SetupAccountVC: UIViewController {
         
         self.view.backgroundColor = .white
         
+        self.view.addSubview(backButton)
+        backButton.translatesAutoresizingMaskIntoConstraints = false
+        
         self.view.addSubview(progressBar)
         progressBar.translatesAutoresizingMaskIntoConstraints = false
         
@@ -82,6 +100,11 @@ class SetupAccountVC: UIViewController {
         continueButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
+            backButton.centerYAnchor.constraint(equalTo: progressBar.centerYAnchor),
+            backButton.trailingAnchor.constraint(equalTo: progressBar.leadingAnchor, constant: -10),
+            backButton.heightAnchor.constraint(equalToConstant: 20),
+            backButton.widthAnchor.constraint(equalToConstant: 20),
+            
             progressBar.heightAnchor.constraint(equalToConstant: 16),
             progressBar.widthAnchor.constraint(equalTo: self.view.widthAnchor, multiplier: 0.75),
             progressBar.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 68),
