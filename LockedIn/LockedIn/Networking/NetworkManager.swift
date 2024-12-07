@@ -167,15 +167,68 @@ class NetworkManager {
     // MARK: - Connection Endpoints
     func getUserConnections(userId: Int, completion: @escaping (Result<[ConnectionWithDetails], AFError>) -> Void) {
         let url = "\(baseUrl)/api/users/\(userId)/connections/"
-        AF.request(url, method: .get).responseDecodable(of: ConnectionsResponse.self) { response in
+        
+        AF.request(url, method: .get).responseData { response in
+                switch response.result {
+                case .success(let data):
+                    if let jsonString = String(data: data, encoding: .utf8) {
+                        print("Raw JSON response: \(jsonString)")
+                    }
+                    
+                    do {
+                        let connectionsResponse = try JSONDecoder().decode(ConnectionsResponse.self, from: data)
+                        completion(.success(connectionsResponse.connections))
+                    } catch let decodeError {
+                        print("Decoding error: \(decodeError)")
+                        completion(.failure(AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)))
+                    }
+    
+                case .failure(let error):
+                    print("Request failed with error: \(error)")
+                    completion(.failure(error))
+                }
+            }
+        
+        /*
+        AF.request(url, method: .get).responseJSON { response in
             switch response.result {
-            case .success(let connectionsResponse):
-                completion(.success(connectionsResponse.connections))
+            case .success(let jsonResponse):
+                // Print out the top-level response
+                if let json = jsonResponse as? [String: Any] {
+                    print("JSON response: \(json)")
+                    
+                    // Check for the connections array
+                    if let connections = json["connections"] as? [[String: Any]] {
+                        print("Connections array: \(connections)")
+                        
+                        // Check each connection object
+                        for connection in connections {
+                            print("Connection: \(connection)")
+                            
+                            // Print each field in the ConnectionWithDetails object
+                            for (key, value) in connection {
+                                print("Key: \(key), Value: \(value)")
+                            }
+                        }
+                    }
+                }
+                
+                // Now try to decode the response into the ConnectionsResponse struct
+                do {
+                    let connectionsResponse = try JSONDecoder().decode(ConnectionsResponse.self, from: response.data ?? Data())
+                    completion(.success(connectionsResponse.connections))
+                } catch let decodeError {
+                    print("Decoding error: \(decodeError)")
+                    completion(.failure(AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)))
+                }
             case .failure(let error):
+                print("Request failed with error: \(error)")
                 completion(.failure(error))
             }
         }
+         */
     }
+
     
     func checkConnection(user1Id: Int, user2Id: Int, completion: @escaping (Result<Bool, AFError>) -> Void) {
         let url = "\(baseUrl)/api/connections/check/"

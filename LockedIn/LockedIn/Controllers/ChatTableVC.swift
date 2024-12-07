@@ -35,6 +35,9 @@ class ChatTableVC: UIViewController {
         
         tableView.delegate = self
         tableView.dataSource = self
+        
+        // Fetch data and reload table view
+        fetchChats()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -49,7 +52,6 @@ class ChatTableVC: UIViewController {
         self.navigationItem.title = "Chats"
     }
     
-    // MARK: - UI Setup
     private func setupUI() {
         self.view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -68,6 +70,31 @@ class ChatTableVC: UIViewController {
             tableView.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
         ])
+    }
+    
+    // MARK: - Data Fetching
+    private func fetchChats() {
+        // Replace with your actual userId
+        guard let userId = DataManager.shared.userId else {
+            return 
+        }
+        
+        NetworkManager.shared.getUserConnections(userId: userId) { [weak self] result in
+            switch result {
+            case .success(let connections):
+                self?.chats = connections.compactMap { connection in
+                    let message = Message(sender: Sender(senderId: "\(connection.otherUser.id)", displayName: connection.otherUser.name), messageId: "\(connection.latestMessage?.id ?? 0)", sentDate: Date(), kind: .text(connection.latestMessage?.content ?? ""))
+                    return message
+                }
+                
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+                    
+            case .failure(let error):
+                print("Error fetching connections: \(error)")
+            }
+        }
     }
 }
 
