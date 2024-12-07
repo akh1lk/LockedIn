@@ -14,7 +14,6 @@ import FirebaseCore
 class FirestoreHandler {
     
     // Used to register, sign in, sign out, and check authentication for the user.
-    let constantToNeverTouch: Void = FirebaseApp.configure()
     public static let shared = FirestoreHandler()
     private let db = Firestore.firestore()
     

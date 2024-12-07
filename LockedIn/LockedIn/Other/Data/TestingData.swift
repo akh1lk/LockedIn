@@ -19,7 +19,7 @@ struct TestingData {
     ]
     static let users: [CompleteCardView] = [
         CompleteCardView(with: User(
-            id: 1,
+            id: "1",
             linkedinUrl: "https://www.linkedin.com/in/johndoe",
             name: "John Doe",
             goals: "Internships, Networking",
@@ -35,7 +35,7 @@ struct TestingData {
         )),
         
         CompleteCardView(with: User(
-            id: 2,
+            id: "2",
             linkedinUrl: "https://www.linkedin.com/in/janedoe",
             name: "Jane Doe",
             goals: "Start-ups, Upskilling",
@@ -50,7 +50,7 @@ struct TestingData {
         )),
         
         CompleteCardView(with: User(
-            id: 3,
+            id:"3",
             linkedinUrl: "https://www.linkedin.com/in/smithjohn",
             name: "Smith John",
             goals: "Mentor, Research",

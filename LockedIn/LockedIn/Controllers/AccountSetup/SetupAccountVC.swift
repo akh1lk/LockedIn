@@ -155,7 +155,7 @@ class SetupAccountVC: UIViewController {
             }
             
             let newUser = User(
-                id: userId,
+                id: String(userId),
                 linkedinUrl: "", // Created on backend
                 name: "", // Created on backend
                 goals: careerGoalsView.fetchSelectedChoices(),

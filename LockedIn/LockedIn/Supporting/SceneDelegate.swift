@@ -7,29 +7,44 @@
 
 import UIKit
 import FirebaseCore
+import FirebaseAuth
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
+        self.setupWindow(with: scene)
+        Task {
+            await self.checkAuthentication()
+        }
+    }
+    
+    private func setupWindow(with scene: UIScene) {
+        // SceneDelgate setup window.
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        
-        let signInVC = SignInVC() // TODO: change this to SignInVC
-        let navigationController = UINavigationController(rootViewController: signInVC)
-        
+        windowScene.windows.first?.backgroundColor = .white
         let window = UIWindow(windowScene: windowScene)
-        
-        
-        window.rootViewController = navigationController //  // TODO: Change this to navigationController
         self.window = window
         self.window?.makeKeyAndVisible()
     }
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        FirebaseApp.configure()
-        return true
-    }
+    // MARK: - Auth & Animation Functions
+       public func checkAuthentication() async {
+           // Check if the user is logged in, removes all views from hierarchy.
+           self.window?.rootViewController = nil
+           self.window?.subviews.forEach { $0.removeFromSuperview() }
+           
+           // If not logged in present LoginController, otherwise go to present home controller.
+           if Auth.auth().currentUser == nil {
+               let signInVC = LoginController() // TODO: change this to SignInVC
+               let navigationController = UINavigationController(rootViewController: signInVC)
+               self.window?.rootViewController = navigationController
+               
+           } else {
+               self.window?.rootViewController = TabController()
+           }
+       }
     
     /// Resets the root view controller to the TabController()
     func resetRootViewController(animated: Bool = true) {

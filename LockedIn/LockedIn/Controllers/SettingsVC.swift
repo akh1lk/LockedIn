@@ -135,7 +135,18 @@ class SettingsVC: UIViewController {
     
     // MARK: - Selectors & Functions
     @objc private func didTapLogout() {
-        print("logout boi")
+        AuthService.shared.signOut { [weak self] error in
+            guard let self = self else { return }
+            if let error = error {
+                AlertManager.showLogOutErrorAlert(on: self, with: error)
+                return
+            }
+            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                Task {
+                    await sceneDelegate.checkAuthentication()
+                }
+            }
+        }
     }
     
     func presentSettingsController(with settingOption: String ) {
