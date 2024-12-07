@@ -11,6 +11,7 @@ import Foundation
 // MARK: - Codable Models
 struct User: Codable {
     let id: String
+    let firebaseId: String
     let linkedinUrl: String
     var name: String
     var goals: String
@@ -26,6 +27,7 @@ struct User: Codable {
     
     enum CodingKeys: String, CodingKey {
         case id
+        case firebaseId = "firebase_id"
         case linkedinUrl = "linkedin_url"
         case name
         case goals

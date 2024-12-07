@@ -35,14 +35,22 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
            self.window?.rootViewController = nil
            self.window?.subviews.forEach { $0.removeFromSuperview() }
            
-           // If not logged in present LoginController, otherwise go to present home controller.
-           if Auth.auth().currentUser == nil {
-               let signInVC = LoginController() // TODO: change this to SignInVC
-               let navigationController = UINavigationController(rootViewController: signInVC)
-               self.window?.rootViewController = navigationController
+           let signInVC = LoginController() // TODO: change this to SignInVC
+           let navigationController = UINavigationController(rootViewController: signInVC)
+           self.window?.rootViewController = navigationController
+           
+           if let currentUser = Auth.auth().currentUser {
+               var isExisting = false
                
-           } else {
-               self.window?.rootViewController = TabController()
+               NetworkManager.shared.checkUser(firebaseId: currentUser.uid) { exists in
+                   isExisting = exists
+               }
+               
+               if isExisting {
+                   self.resetRootViewController()
+               } else {
+                   signInVC.navigationController?.pushViewController(SetupAccountVC(), animated: false)
+               }
            }
        }
     
@@ -53,7 +61,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         if animated {
             let transition = CATransition()
             transition.type = .fade
-            transition.duration = 0.3
+            transition.duration = 0.5
             window.layer.add(transition, forKey: kCATransition)
         }
         

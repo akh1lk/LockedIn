@@ -18,11 +18,11 @@ class ChatVC: MessagesViewController {
     // MARK: - Data
     private var messages: [Message] = []
     var selfSender: Sender
-    let connectionId: String
+    let connectionId: Int
     private var messagesListener: ListenerRegistration?
     
     // MARK: - Life Cycle
-    init(with sender: Sender, connectionId: String) {
+    init(with sender: Sender, connectionId: Int) {
         self.selfSender = sender
         self.connectionId = connectionId
         
@@ -111,7 +111,7 @@ class ChatVC: MessagesViewController {
         
         let storageRef = db
             .collection("chats")
-            .document(connectionId)
+            .document("\(connectionId)")
             .collection("messages")
         
         messagesListener = storageRef.addSnapshotListener { [weak self] querySnapshot, error in
@@ -133,8 +133,6 @@ class ChatVC: MessagesViewController {
             self?.messages = newMessages.sorted { $0.sentDate < $1.sentDate }
             DispatchQueue.main.async {
                 self?.messagesCollectionView.reloadData()
-                // Scroll to the bottom
-                // self?.messagesCollectionView.scrollToBottom(animated: true)
                 self?.messagesCollectionView.scrollToLastItem()
             }
         }
@@ -238,6 +236,8 @@ extension ChatVC: InputBarAccessoryViewDelegate {
             kind: .text(text)
         )
         
+        
+        
         messages.append(newMessage)
         messagesCollectionView.reloadData()
         messagesCollectionView.scrollToLastItem(animated: true)
@@ -248,6 +248,20 @@ extension ChatVC: InputBarAccessoryViewDelegate {
                 self.fetchAllMessages()
             } else {
                 print("Failed to send message.")
+            }
+        }
+        
+        let messageCodable = MessageCodable(id: nil, connectionId: connectionId, senderId: Int(selfSender.senderId)!, content: newMessage.getText())
+        
+        // Send the message using NetworkManager
+        NetworkManager.shared.sendMessage(connectionId: connectionId, message: messageCodable) { result in
+            switch result {
+            case .success(let returnedMessage):
+                print("Message sent successfully: \(returnedMessage)")
+                self.fetchAllMessages() // Refresh messages
+            case .failure(let error):
+                print("Failed to send message: \(error.localizedDescription)")
+                // Optionally handle failure (e.g., retry mechanism or alert)
             }
         }
     }

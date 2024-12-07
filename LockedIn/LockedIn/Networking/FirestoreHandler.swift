@@ -20,10 +20,10 @@ class FirestoreHandler {
     private init() {}
     
     /// Returns all messages for a conversation given a taskUID (which is the convo UID).
-    public func returnAllMessages(for connectionId: String, completion: @escaping (Result<[Message], Error>) -> Void) {
+    public func returnAllMessages(for connectionId: Int, completion: @escaping (Result<[Message], Error>) -> Void) {
         let storageRef = db
             .collection("chats")
-            .document(connectionId)
+            .document("\(connectionId)")
             .collection("messages")
         
         storageRef.getDocuments { (querySnapshot, error) in
@@ -41,7 +41,7 @@ class FirestoreHandler {
     }
     
     /// Sends a message to the firestore database.
-    public func sendMessage(for connectionId: String, with message: Message, completion: @escaping (Bool) -> Void) {
+    public func sendMessage(for connectionId: Int, with message: Message, completion: @escaping (Bool) -> Void) {
             let messageData: [String: Any] = [
                 "content": message.getText(),
                 "senderId": message.sender.senderId,
@@ -50,7 +50,7 @@ class FirestoreHandler {
         
         let storageRef = db
             .collection("chats")
-            .document(connectionId)
+            .document("\(connectionId)")
             .collection("messages")
             
             storageRef.addDocument(data: messageData) { error in

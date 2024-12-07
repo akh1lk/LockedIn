@@ -106,7 +106,7 @@ extension ChatTableVC: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let sender = chats[indexPath.row].sender as? Sender {
-            let viewController = ChatVC(with: sender, connectionId: "connectionID")
+            let viewController = ChatVC(with: sender, connectionId: 34)
             viewController.modalPresentationStyle = .fullScreen
             self.navigationController?.pushViewController(viewController, animated: true)
         } else {

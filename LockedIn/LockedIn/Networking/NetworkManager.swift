@@ -17,6 +17,23 @@ class NetworkManager {
     public let baseUrl = "http://35.245.37.189"
     
     // MARK: - User Endpoints
+    func checkUser(firebaseId: String, completion: @escaping (Bool) -> Void) {
+        let url = "\(baseUrl)/api/user/\(firebaseId)"
+        AF.request(url, method: .get).response { response in
+            if response.error == nil, let data = response.data {
+                // Check if the response contains the user
+                if let responseObject = try? JSONDecoder().decode([String: String].self, from: data),
+                   responseObject["message"] == "User exists" {
+                    completion(true)
+                } else {
+                    completion(false)
+                }
+            } else {
+                completion(false)
+            }
+        }
+    }
+    
     func loginLinkedIn(completion: @escaping (Result<String, AFError>) -> Void) {
         let url = "\(baseUrl)/login"
         AF.request(url, method: .get).responseString { response in

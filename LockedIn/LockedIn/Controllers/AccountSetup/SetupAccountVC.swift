@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 protocol SetupAccountSubview {
     func canContinue() -> Bool
@@ -18,7 +19,7 @@ enum SetupAccountErrors {
 }
 
 class SetupAccountVC: UIViewController {
-
+    
     // MARK: - UI Components
     private lazy var continueButton: UIButton = {
         let button = UIButton()
@@ -62,7 +63,6 @@ class SetupAccountVC: UIViewController {
         setupUI()
         setupSubviews()
         refreshProgressBar()
-        // TODO: Katherine, make a branch of this repository and test installing: https://github.com/hackiftekhar/IQKeyboardManager to see if it works. 
     }
     
     override func viewDidLayoutSubviews() {
@@ -149,13 +149,18 @@ class SetupAccountVC: UIViewController {
                 return
             }
             
-            guard let careerGoalsView = views[0] as? MultiChoiceView, let interestsView = views[1] as? MultiChoiceView, let educationView = views[2] as? EducationView, let aboutInternshipView = views[3] as? AboutInternshipView 
+            guard let careerGoalsView = views[0] as? MultiChoiceView, let interestsView = views[1] as? MultiChoiceView, let educationView = views[2] as? EducationView, let aboutInternshipView = views[3] as? AboutInternshipView
             else {
                 fatalError("You need to have Education view at index 2 and AboutInternshipView at index 3.")
             }
             
+            guard let userUID = Auth.auth().currentUser?.uid else {
+                fatalError("No current user.")
+            }
+            
             let newUser = User(
                 id: String(userId),
+                firebaseId: userUID,
                 linkedinUrl: "", // Created on backend
                 name: "", // Created on backend
                 goals: careerGoalsView.fetchSelectedChoices(),
@@ -170,18 +175,17 @@ class SetupAccountVC: UIViewController {
             )
             do {
                 let jsonData = try JSONEncoder().encode(newUser)
-                // Convert the JSON data to a string for printing
-                    if let jsonString = String(data: jsonData, encoding: .utf8) {
-                        print("Sending user: \(jsonString)")
-                    }
+                if let jsonString = String(data: jsonData, encoding: .utf8) {
+                    print("Sending user: \(jsonString)")
+                }
             } catch {
                 print("didn't work")
             }
             
             // TODO: Remove this:
-            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-                sceneDelegate.resetRootViewController()
-            }
+            //            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+            //                sceneDelegate.resetRootViewController()
+            //            }
             
             NetworkManager.shared.createOrUpdateUser(id: userId, user: newUser, completion: { result in
                 switch result {
@@ -196,7 +200,7 @@ class SetupAccountVC: UIViewController {
                     self.exitWithError(.creation)
                 }
             }
-        )}
+            )}
         refreshProgressBar()
     }
     
