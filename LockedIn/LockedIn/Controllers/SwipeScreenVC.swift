@@ -59,7 +59,12 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
-    var cardViews: [CompleteCardView] = []
+    var cardViews: [CompleteCardView] = [
+        CompleteCardView(with: User(id: <#T##Int#>, firebaseId: <#T##String#>, linkedinUrl: <#T##String#>, name: <#T##String#>, goals: <#T##String#>, interests: <#T##String#>, university: <#T##String#>, major: <#T##String#>, company: <#T##String#>, jobTitle: <#T##String#>, experience: <#T##String#>, location: <#T##String#>, crackedRating: <#T##Float#>)),
+        CompleteCardView(with: User(id: <#T##Int#>, firebaseId: <#T##String#>, linkedinUrl: <#T##String#>, name: <#T##String#>, goals: <#T##String#>, interests: <#T##String#>, university: <#T##String#>, major: <#T##String#>, company: <#T##String#>, jobTitle: <#T##String#>, experience: <#T##String#>, location: <#T##String#>, crackedRating: <#T##Float#>)),
+        CompleteCardView(with: User(id: <#T##Int#>, firebaseId: <#T##String#>, linkedinUrl: <#T##String#>, name: <#T##String#>, goals: <#T##String#>, interests: <#T##String#>, university: <#T##String#>, major: <#T##String#>, company: <#T##String#>, jobTitle: <#T##String#>, experience: <#T##String#>, location: <#T##String#>, crackedRating: <#T##Float#>)),
+        CompleteCardView(with: User(id: <#T##Int#>, firebaseId: <#T##String#>, linkedinUrl: <#T##String#>, name: <#T##String#>, goals: <#T##String#>, interests: <#T##String#>, university: <#T##String#>, major: <#T##String#>, company: <#T##String#>, jobTitle: <#T##String#>, experience: <#T##String#>, location: <#T##String#>, crackedRating: <#T##Float#>))
+    ]
     var activeCardView: CompleteCardView? {
         didSet {
             setupGestureRecognizers()
@@ -92,7 +97,7 @@ class SwipeScreenVC: UIViewController {
             fatalError("mom")
         }
         
-        fetchRecommendations(for: userId)
+//        fetchRecommendations(for: userId)
         setupUI()
     }
     

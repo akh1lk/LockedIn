@@ -37,7 +37,7 @@ class ChatTableVC: UIViewController {
         tableView.dataSource = self
         
         // Fetch data and reload table view
-        fetchChats()
+//        fetchChats()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -83,6 +83,7 @@ class ChatTableVC: UIViewController {
             switch result {
             case .success(let connections):
                 self?.chats = connections.compactMap { connection in
+                    print("connection!")
                     let message = Message(sender: Sender(senderId: "\(connection.otherUser.id)", displayName: connection.otherUser.name), messageId: "\(connection.latestMessage?.id ?? 0)", sentDate: Date(), kind: .text(connection.latestMessage?.content ?? ""))
                     return message
                 }

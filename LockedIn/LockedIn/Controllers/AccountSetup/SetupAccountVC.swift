@@ -184,7 +184,8 @@ class SetupAccountVC: UIViewController {
                       let imageData = image.jpegData(compressionQuality: 0.8) else {
                     return ""
                 }
-                return imageData.base64EncodedString()
+                let base64String = imageData.base64EncodedString()
+                return "data:image/jpeg;base64,\(base64String)"
             }()
             
             let newUser = User(
