@@ -34,6 +34,11 @@ class LoginController: UIViewController {
         self.forgotPasswordButton.addTarget(self, action: #selector(didTapForgotPassword), for: .touchUpInside)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        Utils.addGradient(to: signInButton)
+    }
+    
     @objc private func didTapSignIn() {
 
         let loginUserRequest = LoginUserRequest(

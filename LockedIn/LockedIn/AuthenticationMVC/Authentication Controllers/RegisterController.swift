@@ -117,7 +117,15 @@ class RegisterController: UIViewController {
                 }
             }
         }
+        
+        
     }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        Utils.addGradient(to: signUpButton)
+    }
+    
     
     @objc private func didTapHasAccount() {
         self.navigationController?.popToRootViewController(animated: true)
