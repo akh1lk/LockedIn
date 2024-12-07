@@ -83,11 +83,11 @@ class SwipeScreenVC: UIViewController {
         
         setupCardViews()
         
-        guard let userId = Auth.auth().getUserID() else {
+        guard let userId = DataManager.shared.userId else {
             fatalError("mom")
         }
         
-//        fetchRecommendations(for: userId)
+        fetchRecommendations(for: userId)
         setupUI()
         setupGestureRecognizers()
     }

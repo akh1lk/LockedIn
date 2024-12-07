@@ -13,7 +13,7 @@ class DataManager {
     static let shared = DataManager()
     private init() {}
     
-    let userId: Int? = nil
+    var userId: Int? = nil
     
     
 }

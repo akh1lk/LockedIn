@@ -40,9 +40,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
            self.window?.rootViewController = navigationController
            
            if let currentUser = Auth.auth().currentUser {
-               NetworkManager.shared.checkUser(firebaseId: currentUser.uid) { exists in
-                   if exists {
-                       print("user exists!")
+               NetworkManager.shared.checkUser(firebaseId: currentUser.uid) { id in
+                   if id != -1 {
+                       DataManager.shared.userId = id
                        self.resetRootViewController()
                    } else {
                        print("user does not exist")

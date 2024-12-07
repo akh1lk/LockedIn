@@ -26,42 +26,71 @@ class NetworkManager {
             parameters["max_results"] = maxResults
         }
 
-        AF.request(url, method: .get, parameters: parameters).responseDecodable(of: RecommendationsResponse.self) { response in
+        AF.request(url, method: .get, parameters: parameters).responseJSON { response in
             switch response.result {
-            case .success(let recommendationsResponse):
-                completion(.success(recommendationsResponse.recommendations))
+            case .success(let jsonResponse):
+                // Print out each value to check what is being returned
+                if let json = jsonResponse as? [String: Any] {
+                    // Print top-level values
+                    print("JSON response: \(json)")
+                    
+                    // Check for nested "recommendations" array
+                    if let recommendations = json["recommendations"] as? [[String: Any]] {
+                        print("Recommendations array: \(recommendations)")
+                        
+                        // Check each recommendation object
+                        for recommendation in recommendations {
+                            print("Recommendation: \(recommendation)")
+                            
+                            // Check each field in the User object
+                            for (key, value) in recommendation {
+                                print("Key: \(key), Value: \(value)")
+                            }
+                        }
+                    }
+                }
+                
+                // Now try to decode it
+                do {
+                    let recommendationsResponse = try JSONDecoder().decode(RecommendationsResponse.self, from: response.data ?? Data())
+                    completion(.success(recommendationsResponse.recommendations))
+                } catch let decodeError {
+                    print("Decoding error: \(decodeError)")
+                    completion(.failure(AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)))
+                }
             case .failure(let error):
+                print("Request failed with error: \(error)")
                 completion(.failure(error))
             }
         }
     }
+
+
     
     // MARK: - User Endpoints
-    func checkUser(firebaseId: String, completion: @escaping (Bool) -> Void) {
+    func checkUser(firebaseId: String, completion: @escaping (Int) -> Void) {
         let url = "\(baseUrl)/api/users/\(firebaseId)"
         
         AF.request(url, method: .get).response { response in
             if let data = response.data {
                 if let rawResponse = String(data: data, encoding: .utf8) {
                     if rawResponse.contains("\"error\":") {
-                        completion(false)
+                        completion(-1)
                     } else {
                         if let userId = self.parseUserId(from: rawResponse) {
-                            print("User ID: \(userId)")
-                            completion(true)
+                            completion(Int(userId))
                         } else {
-                            print("User ID not found in response.")
-                            completion(false)
+                            completion(-1)
                         }
                     }
                 }
             } else if let error = response.error {
-                completion(false)
+                completion(-1)
             }
         }
     }
     
-    // I had to manually create a string parser because for the life of me I cannot use the decodable method. 
+    // I had to manually create a string parser because for the life of me I cannot use the decodable method.
     func parseUserId(from response: String) -> Int? {
         if let range = response.range(of: "\"user\": {") {
             let subResponse = String(response[range.upperBound...])

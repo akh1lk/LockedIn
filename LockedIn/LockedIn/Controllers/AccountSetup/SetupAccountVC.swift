@@ -200,7 +200,7 @@ class SetupAccountVC: UIViewController {
                 jobTitle: aboutInternshipView.fetchJobTitle(),
                 experience: aboutInternshipView.fetchAboutMe(),
                 location: "Low Rise 6 & 7",
-                profilePic: ProfilePic(url: base64EncodedString, createdAt: Date()),
+                profilePic: ProfilePic(url: base64EncodedString, createdAt: ""),
                 crackedRating: 0 // Created on backend
             )
             do {
@@ -215,13 +215,12 @@ class SetupAccountVC: UIViewController {
             NetworkManager.shared.createUser(user: newUser, completion: { result in
                 switch result {
                 case .success(let createdUser):
-                    print("User successfully created: \(createdUser)!")
+                    DataManager.shared.userId = createdUser.id
                     if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
                         sceneDelegate.resetRootViewController()
                     }
                     
-                case .failure(let error):
-                    print("Failed to create user: \(error)")
+                case .failure(_):
                     self.exitWithError(.creation)
                 }
             }

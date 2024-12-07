@@ -24,6 +24,7 @@ struct User: Codable {
     var location: String
     var profilePic: ProfilePic? // Updated to ProfilePic object
     var crackedRating: Float
+    var timestamp: Date? // Added to handle timestamp as Date
     
     enum CodingKeys: String, CodingKey {
         case id
@@ -41,6 +42,13 @@ struct User: Codable {
         case profilePic = "profile_pic" // Updated key for profilePic
         case crackedRating = "cracked_rating"
     }
+    
+    // Date decoding strategy
+    static let decoder: JSONDecoder = {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
+    }()
 }
 
 struct Swipe: Codable {
@@ -100,7 +108,7 @@ struct RecommendationsResponse: Decodable {
 
 struct ProfilePic: Codable {
     let url: String
-    let createdAt: Date
+    let createdAt: String // Change this to String to decode the date as a string
 
     enum CodingKeys: String, CodingKey {
         case url
