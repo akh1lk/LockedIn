@@ -19,45 +19,27 @@ class NetworkManager {
     // MARK: - User Endpoints
     func checkUser(firebaseId: String, completion: @escaping (Bool) -> Void) {
         let url = "\(baseUrl)/api/users/\(firebaseId)"
-        print("Attempting to get response from: \(url)")
         
         AF.request(url, method: .get).response { response in
             if let error = response.error {
-                // Log the error details
-                print("Error occurred while making the request: \(error.localizedDescription)")
                 completion(false)
                 return
             }
             
             if let data = response.data {
-                // Log the raw response data
                 if let rawResponse = String(data: data, encoding: .utf8) {
-                    print("Raw response data: \(rawResponse)")
-                }
-                
-                // Decode the response and check the "message" field
-                do {
-                    let decodedResponse = try JSONDecoder().decode(UserCheckResponse.self, from: data)
-                    if decodedResponse.message == "User exists" {
-                        print("User exists in the system.")
-                        completion(true)
-                    } else {
-                        print("User does not exist.")
+                    
+                    if rawResponse == "{\"error\": \"User not found\"}" {
                         completion(false)
+                    } else {
+                        completion(true)
                     }
-                } catch {
-                    // Log decoding errors
-                    print("Failed to decode response: \(error.localizedDescription)")
-                    completion(false)
                 }
             } else {
-                // Log when data is nil
-                print("No data received in the response.")
                 completion(false)
             }
         }
     }
-
     
     func loginLinkedIn(completion: @escaping (Result<String, AFError>) -> Void) {
         let url = "\(baseUrl)/login"

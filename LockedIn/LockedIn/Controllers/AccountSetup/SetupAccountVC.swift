@@ -201,7 +201,7 @@ class SetupAccountVC: UIViewController {
                 experience: aboutInternshipView.fetchAboutMe(),
                 location: "Low Rise 6 & 7",
                 profilePic: base64EncodedString,
-                crackedRating: "" // Created on backend
+                crackedRating: 0 // Created on backend
             )
             do {
                 let jsonData = try JSONEncoder().encode(newUser)
