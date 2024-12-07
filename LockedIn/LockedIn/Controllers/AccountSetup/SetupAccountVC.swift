@@ -200,7 +200,7 @@ class SetupAccountVC: UIViewController {
                 jobTitle: aboutInternshipView.fetchJobTitle(),
                 experience: aboutInternshipView.fetchAboutMe(),
                 location: "Low Rise 6 & 7",
-                profilePic: base64EncodedString,
+                profilePic: ProfilePic(url: base64EncodedString, createdAt: Date()),
                 crackedRating: 0 // Created on backend
             )
             do {

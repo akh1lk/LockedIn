@@ -132,7 +132,7 @@ class UserInfoVC: UIViewController {
         
         super.init(nibName: nil, bundle: nil)
         
-        profileImage.sd_setImage(with: Utils.questionUrl(data.profilePic))
+        profileImage.sd_setImage(with: Utils.questionUrl(data.profilePic?.url))
         nameLabel.text = data.name
         companyNameLabel.text = data.company
         aboutMeTextView.text = data.experience

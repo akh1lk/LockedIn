@@ -22,7 +22,7 @@ struct User: Codable {
     var jobTitle: String
     var experience: String
     var location: String
-    var profilePic: String?
+    var profilePic: ProfilePic? // Updated to ProfilePic object
     var crackedRating: Float
     
     enum CodingKeys: String, CodingKey {
@@ -38,7 +38,7 @@ struct User: Codable {
         case jobTitle = "job_title"
         case experience
         case location
-        case profilePic = "profile_pic"
+        case profilePic = "profile_pic" // Updated key for profilePic
         case crackedRating = "cracked_rating"
     }
 }
@@ -96,6 +96,16 @@ struct ConnectionWithDetails: Codable {
 
 struct RecommendationsResponse: Decodable {
     let recommendations: [User]
+}
+
+struct ProfilePic: Codable {
+    let url: String
+    let createdAt: Date
+
+    enum CodingKeys: String, CodingKey {
+        case url
+        case createdAt = "created_at"
+    }
 }
 
 struct UserCheckResponse: Codable {

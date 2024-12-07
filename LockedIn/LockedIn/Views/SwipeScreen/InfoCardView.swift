@@ -76,7 +76,7 @@ class InfoCardView: UIView {
     init(with data: User) {
         super.init(frame: .zero)
         
-        let url = URL(string: data.profilePic ?? Utils.questionMark)
+        let url = URL(string: data.profilePic?.url ?? Utils.questionMark)
         backgroundImage.sd_setImage(with: url)
         
         if data.company == "" {

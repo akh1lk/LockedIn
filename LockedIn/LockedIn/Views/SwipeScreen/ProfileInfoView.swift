@@ -61,7 +61,7 @@ class ProfileInfoView: UIView {
     
     // MARK: - Life Cycle
     init(with data: User) {
-        let url = URL(string: data.profilePic ?? Utils.questionMark)
+        let url = URL(string: data.profilePic?.url ?? Utils.questionMark)
         profileImageView.sd_setImage(with: url)
         
         nameLabel.text = data.name

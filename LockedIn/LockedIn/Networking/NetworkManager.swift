@@ -41,25 +41,44 @@ class NetworkManager {
         let url = "\(baseUrl)/api/users/\(firebaseId)"
         
         AF.request(url, method: .get).response { response in
-            if let _ = response.error {
-                completion(false)
-                return
-            }
-            
             if let data = response.data {
                 if let rawResponse = String(data: data, encoding: .utf8) {
-                    
-                    if rawResponse == "{\"error\": \"User not found\"}" {
+                    if rawResponse.contains("\"error\":") {
                         completion(false)
                     } else {
-                        completion(true)
+                        if let userId = self.parseUserId(from: rawResponse) {
+                            print("User ID: \(userId)")
+                            completion(true)
+                        } else {
+                            print("User ID not found in response.")
+                            completion(false)
+                        }
                     }
                 }
-            } else {
+            } else if let error = response.error {
                 completion(false)
             }
         }
     }
+    
+    // I had to manually create a string parser because for the life of me I cannot use the decodable method. 
+    func parseUserId(from response: String) -> Int? {
+        if let range = response.range(of: "\"user\": {") {
+            let subResponse = String(response[range.upperBound...])
+            
+            if let idRange = subResponse.range(of: "\"id\":") {
+                let idSubstring = subResponse[idRange.upperBound...]
+                let idEndRange = idSubstring.range(of: ",")
+                let idString = idSubstring[..<idEndRange!.lowerBound].trimmingCharacters(in: .whitespacesAndNewlines)
+                
+                if let id = Int(idString) {
+                    return id
+                }
+            }
+        }
+        return nil
+    }
+
     
     func loginLinkedIn(completion: @escaping (Result<String, AFError>) -> Void) {
         let url = "\(baseUrl)/login"
