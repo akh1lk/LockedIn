@@ -167,12 +167,8 @@ class SetupAccountVC: UIViewController {
             
         } else {
             // Networking: Creating a New User.
-            guard let userId = DataManager.shared.userId else {
-                self.exitWithError(.auth)
-                return
-            }
             
-            guard let careerGoalsView = views[0] as? MultiChoiceView, let interestsView = views[1] as? MultiChoiceView, let educationView = views[2] as? EducationView, let aboutInternshipView = views[3] as? AboutInternshipView
+            guard let careerGoalsView = views[0] as? MultiChoiceView, let interestsView = views[1] as? MultiChoiceView, let educationView = views[2] as? EducationView, let aboutInternshipView = views[3] as? AboutInternshipView, let selectPhotoView = views[4] as? SelectPhotoView
             else {
                 fatalError("You need to have Education view at index 2 and AboutInternshipView at index 3.")
             }
@@ -181,11 +177,21 @@ class SetupAccountVC: UIViewController {
                 fatalError("No current user.")
             }
             
+            
+            let selectedImage = selectPhotoView.fetchImage()
+            let base64EncodedString: String = {
+                guard let image = selectedImage,
+                      let imageData = image.jpegData(compressionQuality: 0.8) else {
+                    return ""
+                }
+                return imageData.base64EncodedString()
+            }()
+            
             let newUser = User(
-                id: String(userId),
+                id: 0, // created on backend.
                 firebaseId: userUID,
                 linkedinUrl: "", // Created on backend
-                name: "", // Created on backend
+                name: "John Doe", // Created on backend
                 goals: careerGoalsView.fetchSelectedChoices(),
                 interests: interestsView.fetchSelectedChoices(),
                 university: educationView.fetchUniverisy(),
@@ -194,6 +200,7 @@ class SetupAccountVC: UIViewController {
                 jobTitle: aboutInternshipView.fetchJobTitle(),
                 experience: aboutInternshipView.fetchAboutMe(),
                 location: "Low Rise 6 & 7",
+                profilePic: base64EncodedString,
                 crackedRating: "" // Created on backend
             )
             do {
@@ -205,12 +212,7 @@ class SetupAccountVC: UIViewController {
                 print("didn't work")
             }
             
-            // TODO: Remove this:
-            //            if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-            //                sceneDelegate.resetRootViewController()
-            //            }
-            
-            NetworkManager.shared.createOrUpdateUser(id: userId, user: newUser, completion: { result in
+            NetworkManager.shared.createUser(user: newUser, completion: { result in
                 switch result {
                 case .success(let createdUser):
                     print("User successfully created: \(createdUser)!")

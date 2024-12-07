@@ -18,7 +18,7 @@ class NetworkManager {
     
     // MARK: - User Endpoints
     func checkUser(firebaseId: String, completion: @escaping (Bool) -> Void) {
-        let url = "\(baseUrl)/api/user/\(firebaseId)"
+        let url = "\(baseUrl)/api/users/\(firebaseId)"
         AF.request(url, method: .get).response { response in
             if response.error == nil, let data = response.data {
                 // Check if the response contains the user
@@ -50,7 +50,20 @@ class NetworkManager {
             }
     }
     
-    func createOrUpdateUser(id: Int, user: User, completion: @escaping (Result<User, AFError>) -> Void) {
+    func createUser(user: User, completion: @escaping (Result<User, AFError>) -> Void) {
+        let url = "\(baseUrl)/api/users/"
+        AF.request(url, method: .post, parameters: user, encoder: JSONParameterEncoder.default)
+            .responseDecodable(of: User.self) { response in
+                // Debug print for the full response
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Response Data: \(jsonString)")
+                }
+
+                completion(response.result)
+            }
+    }
+    
+    func updateUser(id: Int, user: User, completion: @escaping (Result<User, AFError>) -> Void) {
         let url = "\(baseUrl)/api/users/\(id)/"
         AF.request(url, method: .post, parameters: user, encoder: JSONParameterEncoder.default)
             .responseDecodable(of: User.self) { response in
@@ -62,6 +75,7 @@ class NetworkManager {
                 completion(response.result)
             }
     }
+    
     
     func getUser(id: Int, completion: @escaping (Result<User, AFError>) -> Void) {
         let url = "\(baseUrl)/api/users/\(id)/"

@@ -10,7 +10,7 @@ import Foundation
 
 // MARK: - Codable Models
 struct User: Codable {
-    let id: String
+    let id: Int
     let firebaseId: String
     let linkedinUrl: String
     var name: String

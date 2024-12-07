@@ -65,6 +65,7 @@ class SelectPhotoView: UIView {
     var parent: SetupAccountVC?
     var delegate: SelectPhotoViewDelegate?
     var selectedImage = false
+    var finalImage: UIImage?
     
     // MARK: - Life Cycle
     init() {
@@ -119,10 +120,11 @@ class SelectPhotoView: UIView {
         imagePicker.sourceType = .photoLibrary
         imagePicker.allowsEditing = true
         
-        parent?.present(imagePicker, animated: true, completion: {
-            // TODO: upload image to database. 
-            print("Selected Image!")
-        })
+        parent?.present(imagePicker, animated: true, completion: nil)
+    }
+    
+    public func fetchImage() -> UIImage? {
+        return addImageButton.imageView?.image
     }
 }
 

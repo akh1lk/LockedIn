@@ -13,7 +13,5 @@ class DataManager {
     static let shared = DataManager()
     private init() {}
     
-    var currentUser: User?
-    var userId: Int? // pass userId info from SignInVC to SetupAccountVC
     
 }

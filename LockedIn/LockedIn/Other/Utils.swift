@@ -15,7 +15,7 @@ class Utils {
     /// Returns a default `User` object with pre-filled values.
     static func defaultUser() -> User {
         return User(
-            id: "0", // Default id value, assuming it's an Int.
+            id: 0, // Default id value, assuming it's an Int.
             firebaseId: "noob",
             linkedinUrl: "https://www.linkedin.com/in/default", // Default LinkedIn URL
             name: "Default User", // Default name

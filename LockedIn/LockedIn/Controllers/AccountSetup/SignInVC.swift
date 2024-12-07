@@ -177,8 +177,6 @@ class SignInVC: UIViewController {
         let viewController = SetupAccountVC()
         viewController.modalPresentationStyle = .fullScreen
         self.navigationController?.pushViewController(viewController, animated: true)
-
-        DataManager.shared.userId = 1
         
 //        let loginURL = "\(NetworkManager.shared.baseUrl)/login"
 //
