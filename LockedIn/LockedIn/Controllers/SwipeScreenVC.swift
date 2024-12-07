@@ -6,6 +6,7 @@
 //
 import UIKit
 import FirebaseAuth
+import Alamofire
 
 private enum SwipeDirection {
     case right
@@ -59,7 +60,11 @@ class SwipeScreenVC: UIViewController {
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
     var cardViews: [CompleteCardView] = []
-    var activeCardView: CompleteCardView?
+    var activeCardView: CompleteCardView? {
+        didSet {
+            setupGestureRecognizers()
+        }
+    }
     private var isAnimating: Bool = false
     private var recommendedUsers: [User] = [] // To hold recommended users
     
@@ -89,7 +94,6 @@ class SwipeScreenVC: UIViewController {
         
         fetchRecommendations(for: userId)
         setupUI()
-        setupGestureRecognizers()
     }
     
     
@@ -103,6 +107,7 @@ class SwipeScreenVC: UIViewController {
                 
                 // Create card views for the recommended users
                 self?.createCardViews(for: users)
+                self?.activeCardView = self?.cardViews.last
                 
             case .failure(let error):
                 print("Failed to fetch recommendations: \(error.localizedDescription)")
@@ -353,7 +358,17 @@ class SwipeScreenVC: UIViewController {
             }) { _ in
                 cardView.removeFromSuperview()
                 let directionText = direction == .right ? "right" : "left"
-                print("Swiped \(directionText) on \(cardView.userData.name) baby!")
+                
+                guard let userId = DataManager.shared.userId, let id = self.activeCardView?.userData.id else {
+                    return
+                }
+                
+                if direction == .right {
+                    
+                    NetworkManager.shared.createSwipe(swiperId: userId, swipedId: id) { error in
+                        return
+                    }
+                }
 
                 self.isAnimating = false
 

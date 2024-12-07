@@ -29,37 +29,13 @@ class NetworkManager {
         AF.request(url, method: .get, parameters: parameters).responseJSON { response in
             switch response.result {
             case .success(let jsonResponse):
-                // Print out each value to check what is being returned
-                if let json = jsonResponse as? [String: Any] {
-                    // Print top-level values
-                    print("JSON response: \(json)")
-                    
-                    // Check for nested "recommendations" array
-                    if let recommendations = json["recommendations"] as? [[String: Any]] {
-                        print("Recommendations array: \(recommendations)")
-                        
-                        // Check each recommendation object
-                        for recommendation in recommendations {
-                            print("Recommendation: \(recommendation)")
-                            
-                            // Check each field in the User object
-                            for (key, value) in recommendation {
-                                print("Key: \(key), Value: \(value)")
-                            }
-                        }
-                    }
-                }
-                
-                // Now try to decode it
                 do {
                     let recommendationsResponse = try JSONDecoder().decode(RecommendationsResponse.self, from: response.data ?? Data())
                     completion(.success(recommendationsResponse.recommendations))
                 } catch let decodeError {
-                    print("Decoding error: \(decodeError)")
                     completion(.failure(AFError.responseSerializationFailed(reason: .inputDataNilOrZeroLength)))
                 }
             case .failure(let error):
-                print("Request failed with error: \(error)")
                 completion(.failure(error))
             }
         }
