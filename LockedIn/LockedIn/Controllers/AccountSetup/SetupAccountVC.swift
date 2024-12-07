@@ -143,7 +143,7 @@ class SetupAccountVC: UIViewController {
     }
     
     private func exitWithError(_ type: SetupAccountErrors) {
-        if let parentVC = self.navigationController?.viewControllers.last(where: { $0 is SignInVC }) {
+        if let parentVC = self.navigationController?.viewControllers.last(where: { $0 is RegisterController || $0 is LoginController}) {
             switch type {
             case .auth:
                 AlertManager.showAuthErrorAlert(on: parentVC)

@@ -16,12 +16,32 @@ class NetworkManager {
     
     public let baseUrl = "http://35.245.37.189"
     
+    // MARK: - Recommendations
+    func getUserRecommendations(userId: Int, maxResults: Int = 10, completion: @escaping (Result<[User], AFError>) -> Void) {
+        let url = "\(baseUrl)/api/users/\(userId)/recommendations/"
+        
+        // Add the max_results parameter to the request URL if it's greater than the default value
+        var parameters: [String: Any] = [:]
+        if maxResults != 10 {
+            parameters["max_results"] = maxResults
+        }
+
+        AF.request(url, method: .get, parameters: parameters).responseDecodable(of: RecommendationsResponse.self) { response in
+            switch response.result {
+            case .success(let recommendationsResponse):
+                completion(.success(recommendationsResponse.recommendations))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
     // MARK: - User Endpoints
     func checkUser(firebaseId: String, completion: @escaping (Bool) -> Void) {
         let url = "\(baseUrl)/api/users/\(firebaseId)"
         
         AF.request(url, method: .get).response { response in
-            if let error = response.error {
+            if let _ = response.error {
                 completion(false)
                 return
             }

@@ -94,6 +94,9 @@ struct ConnectionWithDetails: Codable {
     }
 }
 
+struct RecommendationsResponse: Decodable {
+    let recommendations: [User]
+}
 
 struct UserCheckResponse: Codable {
     let message: String

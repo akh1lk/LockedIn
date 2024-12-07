@@ -5,6 +5,7 @@
 //  Created by Gabriel Castillo on 11/29/24.
 //
 import UIKit
+import FirebaseAuth
 
 private enum SwipeDirection {
     case right
@@ -57,9 +58,10 @@ class SwipeScreenVC: UIViewController {
     
     // MARK: - Data
     /// Stores the card views currently present. where the last one is the one on top.
-    let cardViews: [CompleteCardView] = TestingData.users
+    var cardViews: [CompleteCardView] = []
     var activeCardView: CompleteCardView?
     private var isAnimating: Bool = false
+    private var recommendedUsers: [User] = [] // To hold recommended users
     
     // MARK: - Life Cycle
     init() {
@@ -70,6 +72,7 @@ class SwipeScreenVC: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Properties
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .palette.offWhite
@@ -80,8 +83,45 @@ class SwipeScreenVC: UIViewController {
         
         setupCardViews()
         
+        guard let userId = Auth.auth().getUserID() else {
+            fatalError("mom")
+        }
+        
+//        fetchRecommendations(for: userId)
         setupUI()
         setupGestureRecognizers()
+    }
+    
+    
+    // MARK: - Fetch Recommendations
+    private func fetchRecommendations(for userId: Int) {
+        NetworkManager.shared.getUserRecommendations(userId: userId, maxResults: 5) { [weak self] result in
+            switch result {
+            case .success(let users):
+                // Store the recommended users
+                self?.recommendedUsers = users
+                
+                // Create card views for the recommended users
+                self?.createCardViews(for: users)
+                
+            case .failure(let error):
+                print("Failed to fetch recommendations: \(error.localizedDescription)")
+            }
+        }
+    }
+    
+    // MARK: - Create Card Views
+    private func createCardViews(for users: [User]) {
+        var newCardViews: [CompleteCardView] = []
+        
+        for user in users {
+            let cardView = CompleteCardView(with: user)
+            newCardViews.append(cardView)
+        }
+        
+        // Add the new card views to the view
+        self.cardViews = newCardViews
+        setupCardViews() // Re-setup card views with the new data
     }
     
     // MARK: - UI Setup

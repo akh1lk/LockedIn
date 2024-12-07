@@ -25,21 +25,7 @@ class ChatTableVC: UIViewController {
     }()
     
     // MARK: - Data
-    private var chats: [Message] = [
-        Message(
-            sender: Sender(avatar: UIImage(named: "ye"), senderId: "1", displayName: "Kanye West"),
-            messageId: "1",
-            sentDate: Date(),
-            kind: .text("hey mona lisa, come home you know you can't roam without caesar")
-        ),
-        
-        Message(
-            sender: Sender(avatar: UIImage(named: "diddy"), senderId: "2", displayName: "Diddy"),
-            messageId: "1",
-            sentDate: Date(),
-            kind: .text("Where you at, tell me now.")
-        ),
-    ]
+    private var chats: [Message] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
