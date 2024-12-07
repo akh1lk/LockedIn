@@ -27,7 +27,7 @@ class Utils {
             jobTitle: "Unknown", // Default job title
             experience: "", // Default experience (empty string if not available)
             location: "Unknown", // Default location
-            crackedRating: "0" // Default Cracked Rating
+            crackedRating: 0 // Default Cracked Rating
         )
     }
     
