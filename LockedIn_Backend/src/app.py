@@ -8,28 +8,12 @@ from db import db, User, Connection, Message, Swipe, Asset  # Import models from
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("FLASK_SECRET_KEY")  # Secret key for session management
 db_filename = "lockedin.db"
 app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{db_filename}"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 db.init_app(app)
 
 SERVER_IP=os.environ.get("SERVER_IP")
-
-# OAuth setup
-oauth = OAuth(app)
-
-linkedin = oauth.register(
-    name="linkedin",
-    client_id="77w8k8tmep8y6p",
-    client_secret="WPL_AP1.iSxHIYD46qrXhsHS.UtMqJQ==",
-    authorize_url="https://www.linkedin.com/oauth/v2/authorization",
-    authorize_params={"state": "secure_random_string"},
-    access_token_url="https://www.linkedin.com/oauth/v2/accessToken",
-    refresh_token_url=None,
-    api_base_url='https://api.linkedin.com/v2/',
-    client_kwargs={"scope": "openid profile email"},
-)
 
 # Helper functions for response formatting
 def success_response(data, code=200):
@@ -42,65 +26,74 @@ def failure_response(message, code=404):
 def test():
     return success_response(os.environ.get("HELLO"))
 
-# Routes for LinkedIn authentication - We can have a button that does this
+# Check if firebase user_id is in our database
+@app.route("/api/users/<string:firebase_id>", methods=["GET"])
+def check_user(firebase_id):
+    user = User.query.filter_by(firebase_id=firebase_id).first()
+    if user:
+        return success_response({"message": "User exists", "user": user.serialize()})
+    return failure_response("User not found", 404)
 
 #Beginning of User Creation Routes (all must be called to finish creating user)
-@app.route("/login", methods=["GET"])
-def login():
-    return linkedin.authorize_redirect(redirect_uri=f"http://{SERVER_IP}/auth")
-
-@app.route("/auth", methods=["GET"])
-def auth():
-    try:
-        token = linkedin.authorize_access_token()               
-        #base of token
-        user = linkedin.get("https://api.linkedin.com/v2/userinfo", token=token)
-        user_data = user.json()
-
-        # Extract and validate fields - from Linkedin API's user_data
-        name = user_data.get("name")
-        if not name:
-            return failure_response("Name not found", 400)
-        name = name.strip()
-        
-        linkedin_sub = user_data.get("linkedin_sub")
-        if not linkedin_sub:
-            return failure_response("LinkedIn Sub not found", 404)
-        
-        # Check if user already exists in the database
-        existing_user = User.query.filter_by(linkedin_sub=linkedin_sub).first()
-        if existing_user:
-            return success_response({"message": "Logging In", "user": existing_user.serialize()})
-
-        # Create a new user with default or empty values for missing optional fields
-        new_user = User(
-            linkedin_sub=linkedin_sub,
-            name=name,
-            goals="",
-            interests="",
-            university="",
-            major="",
-            company="",
-            job_title="",
-            experience="",
-            location=""
-        )
-        db.session.add(new_user)
-        db.session.commit()
-
-        return success_response({"message": "User authenticated & creating", "user": new_user.serialize()})
-    except Exception as e:
-        return failure_response(f"Authentication failed: {str(e)}", 500)
     
-@app.route("/api/users/<int:user_id>", methods=["POST"])
-def create_update_user(user_id):
+@app.route("/api/users/", methods=["POST"])
+def create_user():
     """
-    Finishes Creating Or Updates User - Name Unchangable From LinkedIn
+    Creates a new user
     """
     body = json.loads(request.data)
-    name = body.get("name") # idk if i should have for testing
-    goals = body.get("goals") #CSV
-    interests = body.get("interests") #CSV
+    firebase_id = body.get("firebase_id")
+    name = body.get("name")  # Mandatory for creating a user
+    goals = body.get("goals")  # CSV
+    interests = body.get("interests")  # CSV
+    university = body.get("university")
+    major = body.get("major")
+    company = body.get("company")
+    job_title = body.get("job_title")
+    experience = body.get("experience")
+    location = body.get("location")
+    profile_pic = body.get("profile_pic")
+
+    if not name:
+        return failure_response("Name is required to create a user", 400)
+
+    if experience and len(experience.split()) > 52:  # Greater than 50 words with leniency
+        return failure_response("Experience too long", 400)
+
+    new_user = User(
+        firebase_id = firebase_id,
+        name=name,
+        goals=goals,
+        interests=interests,
+        university=university,
+        major=major,
+        company=company,
+        job_title=job_title,
+        experience=experience,
+        location=location,
+    )
+
+    # Save user to the database
+    db.session.add(new_user)
+
+    # Add profile picture if provided
+    if profile_pic:
+        new_asset = Asset(user_id=new_user.id, image_data=profile_pic)
+        db.session.add(new_asset)
+
+    db.session.commit()
+
+    return success_response(new_user.serialize(), 201)
+
+
+@app.route("/api/users/<int:user_id>/", methods=["POST"])
+def update_user(user_id):
+    """
+    Updates an existing user
+    """
+    body = json.loads(request.data)
+    goals = body.get("goals")  # CSV
+    interests = body.get("interests")  # CSV
     university = body.get("university")
     major = body.get("major")
     company = body.get("company")
@@ -108,15 +101,16 @@ def create_update_user(user_id):
     experience = body.get("experience")
     location = body.get("location")
     image_data = body.get("image_data")
-    
-    if len(experience.split()) > 52: #Greater than 50 words w/ leniency
-        return failure_response("Experience Too Long", 400)
-    
+
     existing_user = User.query.filter_by(id=user_id).first()
-    
+
     if not existing_user:
-        return failure_response("User Does Not Exist or Auth Unfinished", 404)
-    #Update user with real info - if provided
+        return failure_response("User not found", 404)
+
+    if experience and len(experience.split()) > 52:  # Greater than 50 words with leniency
+        return failure_response("Experience too long", 400)
+
+    # Update user fields if provided
     if goals:
         existing_user.goals = goals
     if interests:
@@ -127,42 +121,21 @@ def create_update_user(user_id):
         existing_user.major = major
     if company:
         existing_user.company = company
-    if experience:
-        existing_user.experience = experience
     if job_title:
         existing_user.job_title = job_title
+    if experience:
+        existing_user.experience = experience
     if location:
         existing_user.location = location
 
-    #Image Uploading Process
-
+    # Handle profile picture update
     if image_data:
         if existing_user.profile_pic:
-            # Replace existing profile picture
             existing_user.profile_pic.replace(image_data)
         else:
             new_asset = Asset(user_id=user_id, image_data=image_data)
             db.session.add(new_asset)
 
-    # Validate that all required fields are filled in
-    missing_fields = []
-    if not existing_user.goals:
-        missing_fields.append("goals")
-    if not existing_user.interests:
-        missing_fields.append("interests")
-    if not existing_user.university:
-        missing_fields.append("university")
-    if not existing_user.major:
-        missing_fields.append("major")
-    if not existing_user.location:
-        missing_fields.append("location")
-    if not existing_user.profile_pic:
-        missing_fields.append("profile_pic")
-
-    if missing_fields:
-        return failure_response(f"Missing required fields: {', '.join(missing_fields)}", 400)
-
-    #save changes
     db.session.commit()
 
     return success_response(existing_user.serialize(), 200)
@@ -176,9 +149,29 @@ def get_all_users():
     return success_response({"users": [user.serialize() for user in User.query.all()]})
 
 @app.route("/api/users/<int:user_id>/", methods=["GET"])
-def get_user(user_id):
+def get_user(user_id): #firebase_id
+    #user = User.query.filter_by(id=firebased_id).first()
     user = User.query.filter_by(id=user_id).first()
     return success_response({"user": user.serialize()}) if user else failure_response("User not found")
+
+@app.route("/api/users/<int:user_id>/recommendations/", methods=["GET"])
+def recommend_users(user_id): #firebase_id
+    """
+    Recommends users based on the current user's preferences and data.
+    """
+    # Retrieve the current user
+    current_user = User.query.fi
+    current_user = User.query.filter_by(id=user_id).first()
+    if not current_user:
+        return failure_response("User not found", 404)
+
+    # Optional: Number of recommendations to return (default: 10)
+    max_results = request.args.get("max_results", default=10, type=int)
+
+    # Get recommendations using the model's method
+    recommendations = current_user.recommend_users(max_results=max_results)
+
+    return success_response({"recommendations": recommendations})
 
 @app.route("/api/users/<int:user_id>/", methods=["DELETE"])
 def delete_user(user_id):
