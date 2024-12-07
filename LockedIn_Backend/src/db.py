@@ -20,9 +20,9 @@ EXTENSIONS = ["png", "gif", "jpg", "jpeg"]
 #base directory
 BASE_DIR = os.getcwd()
 
-S3_BUCKET_NAME = os.environ.get("AWS_S3_BUCKET_NAME") #"locked-in" 
-ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY") #"AKIAWNHTHOO25VJ6URCX"
-SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY") #"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"
+S3_BUCKET_NAME = os.environ.get("AWS_S3_BUCKET_NAME") 
+ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
+SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 S3_BASE_URL = f"https://{S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com"
 
 class User(db.Model):
@@ -36,8 +36,8 @@ class User(db.Model):
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    linkedin_sub = db.Column(db.String, unique=True, nullable=False)
-    linkedin_url = db.Column(db.String, unique=False, nullable=True)
+    firebase_id = db.Column(db.String, nullable=False)
+    linkedin_url = db.Column(db.String, nullable=True)
     name = db.Column(db.String, nullable=False)
     goals = db.Column(db.String, nullable=True)  # Comma-separated values
     interests = db.Column(db.String, nullable=True)  # Comma-separated values
@@ -65,7 +65,7 @@ class User(db.Model):
         """
         Initialize User object
         """
-        self.linkedin_sub = kwargs.get("linkedin_sub")
+        self.firebase_id = kwargs.get("firebase_id")
         self.name = kwargs.get("name")
         self.linkedin_url = f"https://www.linkedin.com/search/results/all/?keywords={self.name.strip().replace(' ', '%20')}&origin=GLOBAL_SEARCH_HEADER&sid=1v1"
         self.goals = kwargs.get("goals")
@@ -181,11 +181,11 @@ class User(db.Model):
         """
         return {
             "id": self.id,
-            "linkedin_sub": self.linkedin_sub,
+            "firebase_id":self.firebase_id,
             "linkedin_url": self.linkedin_url,
             "name": self.name,
-            "goals": self.goals.split(",") if self.goals else [],
-            "interests": self.interests.split(",") if self.interests else [],
+            "goals": self.goals,
+            "interests": self.interests,
             "university": self.university,
             "major": self.major,
             "company": self.company,
@@ -208,7 +208,7 @@ class User(db.Model):
         #Don't add connected ids again
         connected_ids = {
             connection.user1_id if connection.user2_id == self.id else connection.user2_id
-            for connection in self.connections
+            for connection in self.connections_user1 + self.connections_user2
         }
 
         for user in all_users:
