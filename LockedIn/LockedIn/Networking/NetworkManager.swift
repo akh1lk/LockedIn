@@ -37,6 +37,11 @@ class NetworkManager {
         let url = "\(baseUrl)/api/users/\(id)/"
         AF.request(url, method: .post, parameters: user, encoder: JSONParameterEncoder.default)
             .responseDecodable(of: User.self) { response in
+                // Debug print for the full response
+                if let data = response.data, let jsonString = String(data: data, encoding: .utf8) {
+                    print("Response Data: \(jsonString)")
+                }
+
                 completion(response.result)
             }
     }
@@ -78,10 +83,15 @@ class NetworkManager {
     }
     
     // MARK: - Connection Endpoints
-    func getUserConnections(userId: Int, completion: @escaping (Result<[Connection], AFError>) -> Void) {
+    func getUserConnections(userId: Int, completion: @escaping (Result<[ConnectionWithDetails], AFError>) -> Void) {
         let url = "\(baseUrl)/api/users/\(userId)/connections/"
-        AF.request(url, method: .get).responseDecodable(of: [Connection].self) { response in
-            completion(response.result)
+        AF.request(url, method: .get).responseDecodable(of: ConnectionsResponse.self) { response in
+            switch response.result {
+            case .success(let connectionsResponse):
+                completion(.success(connectionsResponse.connections))
+            case .failure(let error):
+                completion(.failure(error))
+            }
         }
     }
     

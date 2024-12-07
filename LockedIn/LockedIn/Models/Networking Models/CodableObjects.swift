@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 // MARK: - Codable Models
 struct User: Codable {
     let id: Int
@@ -52,13 +53,6 @@ struct Connection: Codable {
     let user2Id: Int
 }
 
-struct MessageCodable: Codable {
-    let id: Int?
-    let connectionId: Int
-    let senderId: Int
-    let content: String
-}
-
 struct UserSwipes: Codable {
     let swipesInitiated: [Swipe]
     let swipesReceived: [Swipe]
@@ -66,4 +60,34 @@ struct UserSwipes: Codable {
 
 struct ConnectionCheck: Codable {
     let connected: Bool
+}
+
+struct MessageCodable: Codable {
+    let id: Int?
+    let connectionId: Int
+    let senderId: Int
+    let content: String
+    
+    enum CodingKeys: String, CodingKey {
+        case id
+        case connectionId = "connection_id"
+        case senderId = "sender_id"
+        case content
+    }
+}
+
+struct ConnectionsResponse: Decodable {
+    let connections: [ConnectionWithDetails]
+}
+
+struct ConnectionWithDetails: Codable {
+    let connection: Connection
+    let otherUser: User
+    let latestMessage: MessageCodable?
+    
+    enum CodingKeys: String, CodingKey {
+        case connection
+        case otherUser = "other_user"
+        case latestMessage = "latest_message"
+    }
 }

@@ -174,44 +174,48 @@ class SignInVC: UIViewController {
     
     // MARK: - Selectors
     @objc func signInButtonTapped() {
-        print("hello!!!")
+        let viewController = SetupAccountVC()
+        viewController.modalPresentationStyle = .fullScreen
+        self.navigationController?.pushViewController(viewController, animated: true)
 
-        let loginURL = "\(NetworkManager.shared.baseUrl)/login"
-
-        let webViewerController = WebViewerController(with: loginURL)
-        webViewerController.modalPresentationStyle = .pageSheet
-        webViewerController.onAuthCompletion = { [weak self] result in
-            switch result {
-            case .success(let data):
-                do {
-                    if let message = data["message"] as? String {
-                        if let userData = data["user"] as? [String: Any] {
-                            let jsonData = try JSONSerialization.data(withJSONObject: userData, options: [])
-                            let user = try JSONDecoder().decode(User.self, from: jsonData)
-                            print("Fetched User: \(user)")
-
-                            if message == "User authenticated & creating" {
-                                let viewController = SetupAccountVC()
-                                viewController.modalPresentationStyle = .fullScreen
-                                self?.navigationController?.pushViewController(viewController, animated: true)
-                                
-                            } else if message == "Logging In" {
-                                if let sceneDelegate = self?.view.window?.windowScene?.delegate as? SceneDelegate {
-                                    sceneDelegate.resetRootViewController()
-                                }
-                            } else {
-                                print("Invalid front end message.")
-                            }
-                        }
-                    }
-                } catch {
-                    print("Error decoding user: \(error.localizedDescription)")
-                }
-            case .failure(let error):
-                print("Auth failed: \(error.localizedDescription)")
-            }
-        }
-        self.present(webViewerController, animated: true, completion: nil)
+        DataManager.shared.userId = 1
+        
+//        let loginURL = "\(NetworkManager.shared.baseUrl)/login"
+//
+//        let webViewerController = WebViewerController(with: loginURL)
+//        webViewerController.modalPresentationStyle = .pageSheet
+//        webViewerController.onAuthCompletion = { [weak self] result in
+//            switch result {
+//            case .success(let data):
+//                do {
+//                    if let message = data["message"] as? String {
+//                        if let userData = data["user"] as? [String: Any] {
+//                            let jsonData = try JSONSerialization.data(withJSONObject: userData, options: [])
+//                            let user = try JSONDecoder().decode(User.self, from: jsonData)
+//                            print("Fetched User: \(user)")
+//
+//                            if message == "User authenticated & creating" {
+//                                let viewController = SetupAccountVC()
+//                                viewController.modalPresentationStyle = .fullScreen
+//                                self?.navigationController?.pushViewController(viewController, animated: true)
+//                                
+//                            } else if message == "Logging In" {
+//                                if let sceneDelegate = self?.view.window?.windowScene?.delegate as? SceneDelegate {
+//                                    sceneDelegate.resetRootViewController()
+//                                }
+//                            } else {
+//                                print("Invalid front end message.")
+//                            }
+//                        }
+//                    }
+//                } catch {
+//                    print("Error decoding user: \(error.localizedDescription)")
+//                }
+//            case .failure(let error):
+//                print("Auth failed: \(error.localizedDescription)")
+//            }
+//        }
+//        self.present(webViewerController, animated: true, completion: nil)
     }
 }
 

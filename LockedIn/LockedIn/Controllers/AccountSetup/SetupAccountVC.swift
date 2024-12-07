@@ -168,26 +168,35 @@ class SetupAccountVC: UIViewController {
                 location: "Low Rise 6 & 7",
                 crackedRating: "" // Created on backend
             )
+            do {
+                let jsonData = try JSONEncoder().encode(newUser)
+                // Convert the JSON data to a string for printing
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print("Sending user: \(jsonString)")
+                    }
+            } catch {
+                print("didn't work")
+            }
             
             // TODO: Remove this:
             if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
                 sceneDelegate.resetRootViewController()
             }
             
-//            NetworkManager.shared.createUser(newUser) { result in
-//                switch result {
-//                case .success(let createdUser):
-//                    print("User successfully created: \(createdUser)!")
-//                    if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
-//                        sceneDelegate.resetRootViewController()
-//                    }
-//                    
-//                case .failure(let error):
-//                    print("Failed to create user: \(error)")
-//                    self.exitWithError(.creation)
-//                }
-//            }
-        }
+            NetworkManager.shared.createOrUpdateUser(id: userId, user: newUser, completion: { result in
+                switch result {
+                case .success(let createdUser):
+                    print("User successfully created: \(createdUser)!")
+                    if let sceneDelegate = self.view.window?.windowScene?.delegate as? SceneDelegate {
+                        sceneDelegate.resetRootViewController()
+                    }
+                    
+                case .failure(let error):
+                    print("Failed to create user: \(error)")
+                    self.exitWithError(.creation)
+                }
+            }
+        )}
         refreshProgressBar()
     }
     
