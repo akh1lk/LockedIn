@@ -2,7 +2,7 @@
 The Tinder for LinkedIn, swipe to network!
 
 ## Screenshots:
-<img src="https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5" width="200">
+<img src="https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5" width="180">
 <img src="https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4" width="200">
 <img src="https://github.com/user-attachments/assets/c099db33-ace4-4f81-b98f-c130fa7e1e3d" width="200">
 <img src="https://github.com/user-attachments/assets/b794dc21-8c30-451d-8aad-a2431165730f" width="200">
