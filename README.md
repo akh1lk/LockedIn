@@ -2,12 +2,11 @@
 The Tinder for LinkedIn, swipe to network!
 
 ## Screenshots:
-<img src="https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5" width="48">
-![Simulator Screenshot - iPhone 15 Pro - 2024-12-04 at 18 57 52](https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5)
-![image](https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4)
-![image](https://github.com/user-attachments/assets/c099db33-ace4-4f81-b98f-c130fa7e1e3d)
-![image](https://github.com/user-attachments/assets/b794dc21-8c30-451d-8aad-a2431165730f)
-![image](https://github.com/user-attachments/assets/13783849-56fa-477f-8930-729b498706ed)
+<img src="https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5" width="200">
+<img src="https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4" width="200">
+<img src="https://github.com/user-attachments/assets/c099db33-ace4-4f81-b98f-c130fa7e1e3d" width="200">
+<img src="https://github.com/user-attachments/assets/b794dc21-8c30-451d-8aad-a2431165730f" width="200">
+<img src="https://github.com/user-attachments/assets/13783849-56fa-477f-8930-729b498706ed" width="200">
 
 ## Description:
 LinkedIn networking is dry and boring. Nowadays people just want to waste away their time at their phones on apps like Tiktok, Tinder, Netflix, etc. Well what if we told you, you can network while wasting away at your phone! Swipe right if you want to network with an individual, left if you don't. Match with people that want to network with you too! Trust us, this connection is significantly more intimate than the ones you make through dry messaging on LinkedIn, and on top of that, using our app is just fun and addictive!
