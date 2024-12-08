@@ -12,12 +12,12 @@ The Tinder for LinkedIn, swipe to network!
 LinkedIn networking is dry and boring. Nowadays people just want to waste away their time at their phones on apps like Tiktok, Tinder, Netflix, etc. Well what if we told you, you can network while wasting away at your phone! Swipe right if you want to network with an individual, left if you don't. Match with people that want to network with you too! Trust us, this connection is significantly more intimate than the ones you make through dry messaging on LinkedIn, and on top of that, using our app is just fun and addictive!
 
 ## Meeting Requirements:
-Frontend (iOS):
+### Frontend (iOS):
 - Multiple Screens: You can navigate between the Home page, Chat page, and Settings page (they are all part of a TabBarController). The chat and settings are both Navigation Controllers that present other screens.
 - Scroll View: The full info view you see by clicking on the arrow on a given person is a vertical scroll view (that actually has horizontal scroll views embeded in it for the Interests and Career goals of an individual).
 - Networking: We fetch all the people presented in your home screen from our back end API. Whenever you create your account your data is uploaded to the API.
 
-## Backend:
+### Backend:
 - 4 routes: GET for fetching users to present in the home screen, POST when creating a new user or updating a users profile, DELETE when deleting a connection between two users.
 - 2 tables: chat and messages, one to many relationship. Also one to one relationships between users.
 - API Specification: See the end of [this file](https://github.com/akh1lk/LockedIn/blob/main/LockedIn_Backend/src/app.py).
