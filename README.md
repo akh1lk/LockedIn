@@ -2,6 +2,8 @@
 The Tinder for LinkedIn, swipe to network!
 
 ## Screenshots:
+
+<img src="[image-url](https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4)" height="200">
 ![Simulator Screenshot - iPhone 15 Pro - 2024-12-04 at 18 57 52](https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5)
 ![image](https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4)
 ![image](https://github.com/user-attachments/assets/c099db33-ace4-4f81-b98f-c130fa7e1e3d)
