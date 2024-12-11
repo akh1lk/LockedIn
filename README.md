@@ -23,6 +23,3 @@ LinkedIn networking is dry and boring. Nowadays people just want to waste away t
 - API Specification: See the end of [this file](https://github.com/akh1lk/LockedIn/blob/main/LockedIn_Backend/src/app.py).
 At least 2 tables in database with a relationship between them
 API specification explaining each implemented route
-
-## Notes for Grader:
-- This app was a bit challenging, and unforutnately Akhil's account got suspended after publicly posting his Amazon Web Services API key when making this repo public. We have submitted an appeal, but images may not be there for networking. 
