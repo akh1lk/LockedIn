@@ -1,5 +1,3 @@
-# Team #3 MidPoint for AppDev Hackathon FA24
-
 from flask_sqlalchemy import SQLAlchemy
 import base64
 import boto3 #AWS
@@ -9,11 +7,9 @@ from io import BytesIO #I/O streams
 from mimetypes import guess_extension, guess_type #guess file type from base64 string
 import os
 from PIL import Image # how we represent images
-import random #create random name for image
 import re # regular expresssions
 import string # perform string manipulation in Python
 import cracked_weights
-from Cryptography import Fernet
 
 # SQLAlchemy and message encryption implementation
 db = SQLAlchemy()
@@ -24,54 +20,64 @@ EXTENSIONS = ["png", "gif", "jpg", "jpeg"]
 #base directory
 BASE_DIR = os.getcwd()
 
-S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME") #"locked-in" 
-ACCESS_KEY = os.environ.get("ACCESS_KEY") #"AKIAWNHTHOO25VJ6URCX"
-SECRET_ACCESS_KEY = os.environ.get("SECRET_ACCESS_KEY") #"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"
+S3_BUCKET_NAME = os.environ.get("AWS_S3_BUCKET_NAME") 
+ACCESS_KEY = os.environ.get("AWS_ACCESS_KEY")
+SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_KEY")
 S3_BASE_URL = f"https://{S3_BUCKET_NAME}.s3.us-east-2.amazonaws.com"
 
 class User(db.Model):
     """
     User Model
+    1-to-1 w/ Asset
+    Many-to-Many w/ Messages
+    Many-to-Many w/ Chat
     """
 
     __tablename__ = "users"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    linkedin_username = db.Column(db.String, unique=True, nullable=False)
+    firebase_id = db.Column(db.String, nullable=False)
+    linkedin_url = db.Column(db.String, nullable=True)
     name = db.Column(db.String, nullable=False)
-    goals = db.Column(db.String, nullable=False)  # Comma-separated values
-    interests = db.Column(db.String, nullable=False)  # Comma-separated values
+    goals = db.Column(db.String, nullable=True)  # Comma-separated values
+    interests = db.Column(db.String, nullable=True)  # Comma-separated values
     university = db.Column(db.String, nullable=True)  # College/major input
     major = db.Column(db.String, nullable=True)
     company = db.Column(db.String, nullable=True)  # Job title/company input
     job_title = db.Column(db.String, nullable=True)
-    project = db.Column(db.String(150), nullable=True)
-    location = db.Column(db.String, nullable=False)
+    experience = db.Column(db.String(150), nullable=True)
+    location = db.Column(db.String, nullable=True)
     cracked_rating = db.Column(db.Float, default=0)
-    profile_pic = db.relationship("Asset", cascade="delete", uselist=False, backref="user")
-    chat = db.Relationship("Chat", cascade="delete")
+    #Relationship (User to Asset - 1 to 1)
+    profile_pic = db.relationship("Asset", uselist=False, back_populates="user")
+    #Relationship to Swipes (1 to Many)
+    swipes_initiated = db.relationship("Swipe", foreign_keys="[Swipe.swiper_id]", back_populates="swiper", cascade="all, delete",passive_deletes=True)
+    swipes_received = db.relationship("Swipe", foreign_keys="[Swipe.swiped_id]", back_populates="swiper", cascade="all, delete",passive_deletes=True)
+    #Relationships to Connections (Many to Many)
+    connections_user1 = db.relationship("Connection", foreign_keys="[Connection.user1_id]",back_populates="user1", cascade="all, delete", passive_deletes=True)
+    connections_user2 = db.relationship("Connection", foreign_keys="[Connection.user2_id]",back_populates="user2", cascade="all, delete", passive_deletes=True)
+    #Relationship to Messages (One to Many)
+    sent_messages = db.relationship("Message", back_populates="sender", cascade="all, delete-orphan")
+    timestamp = db.Column(db.DateTime, nullable=False)
 
-    connections = db.relationship(
-        "Connection", 
-        primaryjoin = "or_(Connection.user1_id == User.id, Connection.user2_id == User.id)",
-        backref="users"
-    )
 
     def __init__(self, **kwargs):
         """
         Initialize User object
         """
-        self.linkedin_username = kwargs.get("linkedin_username")
+        self.firebase_id = kwargs.get("firebase_id")
         self.name = kwargs.get("name")
+        self.linkedin_url = f"https://www.linkedin.com/search/results/all/?keywords={self.name.strip().replace(' ', '%20')}&origin=GLOBAL_SEARCH_HEADER&sid=1v1"
         self.goals = kwargs.get("goals")
         self.interests = kwargs.get("interests")
         self.university = kwargs.get("university")
         self.major = kwargs.get("major")
         self.company = kwargs.get("company")
         self.job_title = kwargs.get("job_title")
-        self.project = kwargs.get("project")
+        self.experience = kwargs.get("experience")
         self.location = kwargs.get("location")
-        self.cracked_rating = kwargs.get("cracked_rating", 0)
+        self.cracked_rating = self.calculate_cracked_rating()
+        self.timestamp = datetime.datetime.now()
 
     #Cracked Rating Implementation
 
@@ -82,7 +88,13 @@ class User(db.Model):
         1. Both college/major and job_title/company
         2. College/major only
         3. Job_title/company only
-        """
+        """   
+
+        college_score = self.get_college_score(self.university)
+        major_score = self.get_major_score(self.major)
+        job_title_score = self.get_job_title_score(self.job_title)
+        company_score = self.get_company_score(self.company)
+
         if self.university and self.major and self.company and self.job_title:
             #college & major = 60%
             if college_score > 85:  # Top college threshold
@@ -114,12 +126,7 @@ class User(db.Model):
             job_title_weight = 0.6
             company_weight = 0.4
         else:
-            return 0  # No valid input for calculation        
-
-        college_score = self.get_college_score(self.university)
-        major_score = self.get_major_score(self.major)
-        job_title_score = self.get_job_title_score(self.job_title)
-        company_score = self.get_company_score(self.company)
+            return 0  # No valid input for calculation     
 
         cracked_rating = (
             college_score * college_weight
@@ -170,22 +177,24 @@ class User(db.Model):
 
     def serialize(self):
         """
-        Serialize User object
+        Serialize User object - relationships not included
         """
         return {
             "id": self.id,
-            "linkedin_username": self.linkedin_username,
-            "linkedin_url": f"https://www.linkedin.com/in/{self.linkedin_username}",
+            "firebase_id":self.firebase_id,
+            "linkedin_url": self.linkedin_url,
             "name": self.name,
-            "goals": self.goals.split(","),
-            "interests": self.interests.split(","),
+            "goals": self.goals,
+            "interests": self.interests,
             "university": self.university,
             "major": self.major,
             "company": self.company,
             "job_title": self.job_title,
-            "project": self.project,
+            "experience": self.experience,
             "location": self.location,
             "cracked_rating": self.cracked_rating,
+            "profile_pic": self.profile_pic.serialize() if self.profile_pic else None,
+            "timestamp": self.timestamp.isoformat()
         }
     
     def recommend_users(self, max_results=10):
@@ -199,7 +208,7 @@ class User(db.Model):
         #Don't add connected ids again
         connected_ids = {
             connection.user1_id if connection.user2_id == self.id else connection.user2_id
-            for connection in self.connections
+            for connection in self.connections_user1 + self.connections_user2
         }
 
         for user in all_users:
@@ -227,146 +236,134 @@ class User(db.Model):
 
         # Serialize recommended users
         return [user.serialize() for user in top_recommendations]
+    
+class Swipe(db.Model):
+    """
+    Swipe Model
 
+    Many-to-Many -> Users (2 users / swipe)
+    """
+
+    __tablename__ = "swipes"
+
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    swiper_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    swiped_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    is_right_swipe = db.Column(db.Boolean, default=True)
+    timestamp = db.Column(db.DateTime,nullable=False)
+
+    #Relationships - many to many
+    swiper = db.relationship("User", foreign_keys=[swiper_id], back_populates="swipes_initiated")
+    swiped = db.relationship("User", foreign_keys=[swiped_id], back_populates="swipes_received")
+
+    def __init__(self, **kwargs):
+        self.swiper_id = kwargs.get("swiper_id")
+        self.swiped_id = kwargs.get("swiped_id")
+        self.timestamp = datetime.datetime.now()
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "swiper": self.swiper.serialize() if self.swiper else None,
+            "swiped": self.swiped.serialize() if self.swiped else None,
+            "timestamp": self.timestamp.isoformat()
+        }
+    
 class Connection(db.Model):
     """
-    Connection Model for managing user connections.
+    Connection Class
+    Many-To-Many w/ User
     """
 
     __tablename__ = "connections"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user1_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    timestamp = db.Column(db.DateTime, default=db.func.now())
+    user1_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    user2_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    timestamp = db.Column(db.DateTime,nullable=False)
 
-    user1 = db.relationship("User", foreign_keys=[user1_id])
-    user2 = db.relationship("User", foreign_keys=[user2_id])
-    chat = db.relationship("Chat", cascade="all, delete", backref="connection")
+    __table_args__ = (
+        db.UniqueConstraint('user1_id', 'user2_id', name='unique_user_connection'),
+    )
 
+    user1 = db.relationship("User", foreign_keys=[user1_id], back_populates="connections_user1")
+    user2 = db.relationship("User", foreign_keys=[user2_id], back_populates="connections_user2")
 
+    messages = db.relationship("Message", back_populates="connection", cascade="all, delete-orphan", primaryjoin="Message.connection_id == Connection.id")
     def __init__(self, **kwargs):
         self.user1_id = kwargs.get("user1_id")
         self.user2_id = kwargs.get("user2_id")
+        self.timestamp = datetime.datetime.now()
 
     def serialize(self):
-        """
-        Serialize Connection
-        """
         return {
             "id": self.id,
-            "user1_id": self.user1_id,
-            "user2_id": self.user2_id,
-            "timestamp": self.timestamp,
+            "user1": self.user1.serialize() if self.user1 else None,
+            "user2": self.user2.serialize() if self.user2 else None,
+            "timestamp": self.timestamp.isoformat()
         }
-
+    
 class Message(db.Model):
     """
-    Message Model
+    Message Class
+    Represents individual messages exchanged between users in a Connection.
+    Message to Chat - Many to 1
     """
 
     __tablename__ = "messages"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    chat_id = db.Column(db.Integer, db.ForeignKey("chats.id"), nullable=False)
-    sender_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    #Many to One
+    connection_id = db.Column(db.Integer, db.ForeignKey('connections.id', ondelete="CASCADE"), nullable=False)
+ 
+    #Many to One - dont delete messages of a user
+    sender_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     content = db.Column(db.Text, nullable=False)
-    timestamp = db.Column(db.DateTime, default=db.func.now())
+    timestamp = db.Column(db.DateTime, nullable=False)
+
+    #Relationships
+    connection = db.relationship("Connection", back_populates="messages")
+    sender = db.relationship("User", back_populates="sent_messages")
 
     def __init__(self, **kwargs):
         """
-        Initialize Message object
+        Initialize a Message object.
         """
-        self.chat_id = kwargs.get("chat_id")
+        self.connection_id = kwargs.get("connection_id")
         self.sender_id = kwargs.get("sender_id")
-        self.content = Fernet.encrypt(kwargs.get("content").encode()).decode()
+        self.content = kwargs.get("content")
+        self.timestamp = datetime.datetime.now()
 
     def serialize(self):
         """
-        Serialize Message
+        Serialize a Message object.
         """
         return {
             "id": self.id,
-            "chat_id": self.chat_id,
-            "sender_id": self.sender_id,
-            "content": Fernet.decrypt(self.content.encode()).decode(),
-            "timestamp": self.timestamp.isoformat(),
+            "connection": self.connection.serialize() if self.connection else None,
+            "sender": self.sender.serialize() if self.sender else None,
+            "content": self.content,
+            "timestamp": self.timestamp.isoformat()
         }
 
-
-class Chat(db.Model):
-    """
-    Chat Model
-    """
-
-    __tablename__ = "chats"
-
-    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
-    user1_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    user2_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    messages = db.relationship("Message", cascade="all, delete")
-    timestamp = db.Column(db.DateTime, default=db.func.now())
-
-    def __init__(self, **kwargs):
-        """
-        Initialize Chat object
-        """
-        self.user1_id = kwargs.get("user1_id")
-        self.user2_id = kwargs.get("user2_id")
-
-    def serialize(self):
-        """
-        Serialize Chat
-        """
-        return {
-            "id": self.id,
-            "user1_id": self.user1_id,
-            "user2_id": self.user2_id,
-            "timestamp": self.timestamp.isoformat(),
-            "messages": [m.serialize() for m in self.messages]
-        }
-    
-    def short_serialize(self):
-        """
-        Serialize no message history
-        """
-        return {
-            "id": self.id,
-            "user1_id": self.user1_id,
-            "user2_id": self.user2_id
-        }
-    
-    def short_recentmsg_serialize(self):
-        """
-        Short Serialize with most recent message
-        """
-
-        recent = (Message.query.filter_by(chat_id=self.id).orderby(Message.timestamp.desc()).first())
-
-        return {
-            "id": self.id,
-            "user1_id": self.user1_id,
-            "user2_id": self.user2_id,
-            "recent_message": {
-                "message": recent.content if recent else None,
-                "timestamp": recent.timestamp.isoformat() if recent else None
-            }
-        }
-    
 class Asset(db.Model):
     """
     Asset Model - based off of AppDev Backend's Image Demo
+    1-to-1 w/ User
     """
     __tablename__ = "assets"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=True)
     base_url = db.Column(db.String, nullable=True)
     salt = db.Column(db.String, nullable=False)
     extension = db.Column(db.String, nullable=False)
     width = db.Column(db.Integer, nullable=False)
     height = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime, nullable=False)
+    #Relationship (User to Asset - 1 to 1)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    
+    user = db.relationship("User", back_populates="profile_pic")
 
     def __init__(self, **kwargs):
         """
@@ -438,43 +435,44 @@ class Asset(db.Model):
         except Exception as e:
             print(f"Error uploading image to S3 Bucket {e}")
 
-        def delete(self):
-            """
-            Deletes the current asset from AWS and removes it from the database.
-            """
-            try:
-                # Delete the file from AWS S3
-                s3_client = boto3.client(
-                    "s3",
-                    aws_access_key_id=ACCESS_KEY,
-                    aws_secret_access_key=SECRET_ACCESS_KEY,
-                )
-                s3_client.delete_object(
-                    Bucket=S3_BUCKET_NAME,
-                    Key=f"{self.salt}.{self.extension}"
-                )
-                print("Deleted image from S3")
-            except Exception as e:
-                print(f"Error deleting image from AWS: {e}")
-                raise e  # Raise the exception if AWS deletion fails
+    def delete(self):
+        """
+        Deletes the current asset from AWS and removes it from the database.
+        """
+        try:
+            # Delete the file from AWS S3
+            s3_client = boto3.client(
+                "s3",
+                aws_access_key_id=ACCESS_KEY,
+                aws_secret_access_key=SECRET_ACCESS_KEY,
+            )
+            s3_client.delete_object(
+                Bucket=S3_BUCKET_NAME,
+                Key=f"{self.salt}.{self.extension}"
+            )
+            print("Deleted image from S3")
+        except Exception as e:
+            print(f"Error deleting image from AWS: {e}")
+            raise e  # Raise the exception if AWS deletion fails
+        # Remove from the database
+        db.session.delete(self)
 
-            # Remove from the database
-            db.session.delete(self)
-
-        def replace(self, image_data):
-            """
-            Replaces the current asset with a new image.
-            1. Deletes the old asset from AWS.
-            2. Updates the object with the new image's properties.
-            """
-            try:
-                # Delete the old asset from AWS
-                self.delete()
-                self.create(image_data)
-            except Exception as e:
-                print(f"Error replacing image: {e}")
+    def replace(self, image_data):
+        """
+        Replaces the current asset with a new image.
+        1. Deletes the old asset from AWS.
+        2. Updates the object with the new image's properties.
+        """
+        try:
+            # Delete the old asset from AWS
+            self.delete()
+            self.create(image_data)
+        except Exception as e:
+            print(f"Error replacing image: {e}")
 
     def serialize(self):
+        if not self.base_url:
+            return 
         return {
             "url": f"{self.base_url}/{self.salt}.{self.extension}",
             "created_at": str(self.created_at)
