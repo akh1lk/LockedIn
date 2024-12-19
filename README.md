@@ -16,13 +16,13 @@ LinkedIn networking is dry and boring. Nowadays people just want to waste away t
 - Scroll View: The full info view you see by clicking on the arrow on a given person is a vertical scroll view (that actually has horizontal scroll views embeded in it for the Interests and Career goals of an individual).
 - Networking: We fetch all the people presented in your home screen from our back end API. Whenever you create your account your data is uploaded to the API.
 
-### Backend:
+### Backend - Routes:
 - GET routes: fetch all users, fetch a single user, fetch connections, fetch swipes, fetch messages.
 - POST routes: create a user, update a user's profile, create a swipe, create a connection, send a message.
 - DELETE routes: delete a user, delete a connection, delete a swipe.
 - Recommendation Algorithm: suggests users based on preferences and compatibility.
 
-## Tables:
+### Backend - Classes:
 - Users: stores user information, one-to-one relationship with profile pictures via the Asset table.
 - Swipes: represents swipe actions, one-to-many relationships with users (initiated and received swipes).
 - Connections: represents mutual matches, many-to-many relationships between users, one-to-many with messages.
