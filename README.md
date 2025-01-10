@@ -9,7 +9,7 @@ The Tinder for LinkedIn, swipe to network!
 <img src="https://github.com/user-attachments/assets/13783849-56fa-477f-8930-729b498706ed" width="180">
 
 ## Description:
-LinkedIn networking is dry and boring. Nowadays people just want to waste away their time at their phones on apps like Tiktok, Tinder, Netflix, etc. Well what if we told you, you can network while wasting away at your phone! Swipe right if you want to network with an individual, left if you don't. Match with people that want to network with you too! Trust us, this connection is significantly more intimate than the ones you make through dry messaging on LinkedIn, and on top of that, using our app is just fun and addictive!
+LinkedIn networking boring. Nowadays people just want to waste away their time at their phones on apps like Tiktok, Tinder, Netflix, etc. Well what if we told you, you can network while wasting away at your phone! Swipe right if you want to network with an individual, left if you don't. Match with people that want to network with you too! Trust us, this connection is significantly more intimate than the ones you make through dry messaging on LinkedIn, and on top of that, using our app is just fun and addictive!
 
 ### Frontend (iOS):
 - Multiple Screens: You can navigate between the Home page, Chat page, and Settings page (they are all part of a TabBarController). The chat and settings are both Navigation Controllers that present other screens.
