@@ -2,14 +2,15 @@
 The Tinder for LinkedIn, swipe to network!
 
 ## Screenshots:
-<img src="https://github.com/user-attachments/assets/11775e3b-6090-4b89-a8ef-4ecb798539f5" width="160">
-<img src="https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4" width="180">
-<img src="https://github.com/user-attachments/assets/c099db33-ace4-4f81-b98f-c130fa7e1e3d" width="180">
-<img src="https://github.com/user-attachments/assets/b794dc21-8c30-451d-8aad-a2431165730f" width="180">
-<img src="https://github.com/user-attachments/assets/13783849-56fa-477f-8930-729b498706ed" width="180">
+<img src="https://github.com/user-attachments/assets/2d884bd1-090b-47bc-8d8f-d3a1c9a98274" width="720">
+<br>
+<img src="https://github.com/user-attachments/assets/d647767d-13e1-47cb-b0f8-8edb040209b4" width="180" height="346">
+<img src="https://github.com/user-attachments/assets/c099db33-ace4-4f81-b98f-c130fa7e1e3d" width="180" height="346">
+<img src="https://github.com/user-attachments/assets/b794dc21-8c30-451d-8aad-a2431165730f" width="180" height="346">
+<img src="https://github.com/user-attachments/assets/13783849-56fa-477f-8930-729b498706ed" width="180" height="346">
 
 ## Description:
-LinkedIn networking boring. Nowadays people just want to waste away their time at their phones on apps like Tiktok, Tinder, Netflix, etc. Well what if we told you, you can network while wasting away at your phone! Swipe right if you want to network with an individual, left if you don't. Match with people that want to network with you too! Trust us, this connection is significantly more intimate than the ones you make through dry messaging on LinkedIn, and on top of that, using our app is just fun and addictive!
+LinkedIn networking is boring. Nowadays people just want to waste away their time at their phones on apps like Tiktok, Tinder, Netflix, etc. Well what if we told you, you can network while wasting away at your phone! Swipe right if you want to network with an individual, left if you don't. Match with people that want to network with you too! Trust us, this connection is significantly more intimate than the ones you make through dry messaging on LinkedIn, and on top of that, using our app is just fun and addictive!
 
 ### Frontend (iOS):
 - Multiple Screens: You can navigate between the Home page, Chat page, and Settings page (they are all part of a TabBarController). The chat and settings are both Navigation Controllers that present other screens.
