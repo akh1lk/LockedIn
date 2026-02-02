@@ -1,5 +1,5 @@
 # LockedIn - AppDev Hack Challenge FA24 (Best UI Award)
-The Tinder for LinkedIn, swipe to network!
+The Tinder for LinkedIn, swipe to network!!
 **[Watch Demo Video Here!](https://youtu.be/SzN27DizuoQ?si=nk78sZSSL3G4CcpU)** 
 
 ## Screenshots:
